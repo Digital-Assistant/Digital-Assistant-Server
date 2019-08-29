@@ -17,8 +17,8 @@ public class Clickevents {
     @GET
     @Path("/all")
     @Produces(MediaType.TEXT_PLAIN)
-    public String hello() {
-        return "hello";
+    public String listalldata() {
+        
     }
 
     @POST
@@ -28,6 +28,7 @@ public class Clickevents {
     @Transactional
     public JavascriptEvents indexeddata(JavascriptEvents javascriptevents){
         em.persist(javascriptevents);
+        em.flush();
         return javascriptevents;
     }
 

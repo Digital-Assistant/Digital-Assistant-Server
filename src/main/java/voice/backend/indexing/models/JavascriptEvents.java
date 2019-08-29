@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "USERS")
+@Table(name = "index_javascript_events")
 public class JavascriptEvents {
 
 	@Id
