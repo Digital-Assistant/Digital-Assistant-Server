@@ -1,4 +1,4 @@
-package voice.backend.indexing.models;
+package com.nistapp.voice.index.models;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -53,8 +53,8 @@ public class JavascriptEvents {
 	}
 
 	@PrePersist
-	public void preSave(){
-		this.created_at=new Date();
+	public void preSave() {
+		this.created_at = new Date();
 	}
 
 }

@@ -1,0 +1,29 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+group = 'com.nistapp.voice'
+version = '1.0-SNAPSHOT'
+
+description = ""
+
+sourceCompatibility = 1.5
+targetCompatibility = 1.5
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+
+repositories {
+
+    maven { url "https://repo.maven.apache.org/maven2" }
+}
+dependencies {
+    compile group: 'io.quarkus', name: 'quarkus-resteasy-jsonb', version: '0.21.1'
+    compile group: 'io.quarkus', name: 'quarkus-hibernate-orm', version: '0.21.1'
+    compile group: 'io.quarkus', name: 'quarkus-jdbc-mariadb', version: '0.21.1'
+    testCompile group: 'io.quarkus', name: 'quarkus-junit5', version: '0.21.1'
+    testCompile(group: 'io.rest-assured', name: 'rest-assured', version: '3.3.0') {
+        exclude(module: 'activation')
+        exclude(module: 'jaxb-osgi')
+    }
+}

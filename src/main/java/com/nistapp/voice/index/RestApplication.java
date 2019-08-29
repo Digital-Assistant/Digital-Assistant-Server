@@ -1,4 +1,4 @@
-package voice.backend.indexing;
+package com.nistapp.voice.index;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
