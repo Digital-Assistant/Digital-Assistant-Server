@@ -1,13 +1,18 @@
 package voice.backend.indexing;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import voice.backend.indexing.models.JavascriptEvents;
+
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 @Path("/clickevents")
 public class Clickevents {
+
+    @Inject
+    EntityManager em;
 
     @GET
     @Path("/all")
@@ -16,8 +21,14 @@ public class Clickevents {
         return "hello";
     }
 
-    @PUT
+    @POST
     @Path("/push")
-    @Produces(MediaType.TEXT_PLAIN)
-    public
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
+    public JavascriptEvents indexeddata(JavascriptEvents javascriptevents){
+        em.persist(javascriptevents);
+        return javascriptevents;
+    }
+
 }
