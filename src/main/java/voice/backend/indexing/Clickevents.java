@@ -18,7 +18,7 @@ public class Clickevents {
     @Path("/all")
     @Produces(MediaType.TEXT_PLAIN)
     public String listalldata() {
-        
+        return "hello";
     }
 
     @POST

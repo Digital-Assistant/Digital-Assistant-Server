@@ -12,7 +12,7 @@ public class ClickeventsTest {
     @Test
     public void testHelloEndpoint() {
         given()
-          .when().get("/clickeventspush")
+          .when().get("/voiceapi/clickevents/all")
           .then()
              .statusCode(200)
              .body(is("hello"));
