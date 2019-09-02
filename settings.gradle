@@ -11,4 +11,4 @@ pluginManagement {
         }
     }
 }
-rootProject.name = 'com.nistapp.voice.index'
+rootProject.name = 'index'
