@@ -7,11 +7,17 @@ repositories {
     mavenCentral()
 }
 
+test {
+    useJUnitPlatform()
+}
+
 dependencies {
     implementation enforcedPlatform('io.quarkus:quarkus-bom:0.21.1')
     implementation 'io.quarkus:quarkus-resteasy'
     implementation 'io.quarkus:quarkus-resteasy-jsonb'
     implementation 'io.quarkus:quarkus-hibernate-orm'
     implementation 'io.quarkus:quarkus-jdbc-mariadb'
+    testCompile group: 'io.quarkus', name: 'quarkus-junit5', version: '0.21.1'
+    testCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.3.0'
 }
 

@@ -4,9 +4,11 @@ import com.nistapp.voice.index.models.JavascriptEvents;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.Collection;
 
 @Path("/clickevents")
 public class Clickevents {
@@ -16,9 +18,10 @@ public class Clickevents {
 
 	@GET
 	@Path("/all")
-	@Produces(MediaType.TEXT_PLAIN)
-	public String listalldata() {
-		return "hello";
+	@Produces(MediaType.APPLICATION_JSON)
+	public (Collection<JavascriptEvents>) listalldata() {
+		Query query =  em.createQuery(JavascriptEvents.class);
+		return (Collection<JavascriptEvents>) query.getResultList();
 	}
 
 	@POST
