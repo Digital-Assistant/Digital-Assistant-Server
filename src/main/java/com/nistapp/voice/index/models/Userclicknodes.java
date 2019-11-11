@@ -1,6 +1,7 @@
 package com.nistapp.voice.index.models;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.time.Instant;
 
 @Entity
@@ -16,17 +17,24 @@ public class Userclicknodes {
 
 	private String clickednodename;
 
+	private String objectdata;
+
+	private Integer html5;
+
+	private String clickedpath;
+
 	private String urlpath;
 
 	private String domain;
 
 	//@JsonIgnore
 	@Column(name = "createdat", nullable = false)
-	private long createdat;
+	private Timestamp createdat;
 
 	@PrePersist
 	public void preSave() {
-		this.createdat = Instant.now().toEpochMilli();
+//		this.createdat = Instant.now().toEpochMilli();
+		this.createdat = new Timestamp(System.currentTimeMillis());
 	}
 
 	public Integer getId() {
@@ -69,12 +77,36 @@ public class Userclicknodes {
 		this.domain = domain;
 	}
 
-	public long getCreatedat() {
+	public Timestamp getCreatedat() {
 		return createdat;
 	}
 
-	public void setCreatedat(long createdat) {
+	public void setCreatedat(Timestamp createdat) {
 		this.createdat = createdat;
+	}
+
+	public String getObjectdata() {
+		return objectdata;
+	}
+
+	public void setObjectdata(String objectdata) {
+		this.objectdata = objectdata;
+	}
+
+	public Integer getHtml5() {
+		return html5;
+	}
+
+	public void setHtml5(Integer html5) {
+		this.html5 = html5;
+	}
+
+	public String getClickedpath() {
+		return clickedpath;
+	}
+
+	public void setClickedpath(String clickedpath) {
+		this.clickedpath = clickedpath;
 	}
 
 }
