@@ -12,7 +12,13 @@ public class JavascriptEvents {
 	@Column(name = "id", nullable = false, unique = true, length = 11)
 	private Integer id;
 
-	private String url;
+	private String sessionid;
+
+	private String clickednodename;
+
+	private String domain;
+
+	private String urlpath;
 
 	private String data;
 
@@ -28,12 +34,12 @@ public class JavascriptEvents {
 		this.id = id;
 	}
 
-	public String getUrl() {
-		return url;
+	public String getUrlpath() {
+		return urlpath;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public void setUrlpath(String url) {
+		this.urlpath = url;
 	}
 
 	public String getData() {
@@ -56,5 +62,31 @@ public class JavascriptEvents {
 	public void preSave() {
 		this.created_at = new Date();
 	}
+
+	public String getSessionid() {
+		return sessionid;
+	}
+
+	public void setSessionid(String sessionid) {
+		this.sessionid = sessionid;
+	}
+
+	public String getClickednodename() {
+		return clickednodename;
+	}
+
+	public void setClickednodename(String clickednodename) {
+		this.clickednodename = clickednodename;
+	}
+
+	public String getDomain() {
+		return domain;
+	}
+
+	public void setDomain(String domain) {
+		this.domain = domain;
+	}
+
+
 
 }

@@ -6,8 +6,6 @@ import com.nistapp.voice.index.repository.UserclicknodesRepository;
 import javax.inject.Inject;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,8 +24,7 @@ public class UserclicknodeConverter implements AttributeConverter<List<Userclick
 		}
 
 		StringBuilder sb = new StringBuilder();
-		for (Userclicknodes userclicknode : userclicknodes)
-		{
+		for (Userclicknodes userclicknode : userclicknodes) {
 			sb.append(userclicknode.getId());
 			sb.append(SEPARATOR);
 		}
@@ -48,10 +45,10 @@ public class UserclicknodeConverter implements AttributeConverter<List<Userclick
 		}
 
 		List<Userclicknodes> userclicknodes = new ArrayList<>();
-		for(String clickid:pieces){
-			Long clicknodeid=Long.parseLong(clickid);
+		for (String clickid : pieces) {
+			Long clicknodeid = Long.parseLong(clickid);
 			Userclicknodes userclicknode = userclicknodesRepository.findById(clicknodeid);
-			if(userclicknode.getId()!=null) {
+			if (userclicknode.getId() != null) {
 				userclicknodes.add(userclicknode);
 			}
 		}
