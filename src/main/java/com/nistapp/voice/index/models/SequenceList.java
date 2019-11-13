@@ -1,10 +1,7 @@
 package com.nistapp.voice.index.models;
 
-import com.nistapp.voice.index.repository.UserclicknodeConverter;
-
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.List;
 
 @Entity
 @Table(name = "SequenceList")

@@ -1,6 +1,7 @@
-package com.nistapp.voice.index.repository;
+package com.nistapp.voice.index.converters;
 
 import com.nistapp.voice.index.models.Userclicknodes;
+import com.nistapp.voice.index.repository.UserclicknodesRepository;
 
 import javax.inject.Inject;
 import javax.persistence.AttributeConverter;
@@ -49,8 +50,6 @@ public class UserclicknodeConverter implements AttributeConverter<List<Userclick
 		List<Userclicknodes> userclicknodes = new ArrayList<>();
 		for(String clickid:pieces){
 			Long clicknodeid=Long.parseLong(clickid);
-//			Query query=em.createQuery("select u from Userclicknodes u where u.id=:id",Userclicknodes.class);
-//			query.setParameter("id",clicknodeid);
 			Userclicknodes userclicknode = userclicknodesRepository.findById(clicknodeid);
 			if(userclicknode.getId()!=null) {
 				userclicknodes.add(userclicknode);
