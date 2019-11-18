@@ -83,6 +83,7 @@ public class Clickevents {
 	public SequenceList indexeddata(SequenceList sequenceList) {
 		em.persist(sequenceList);
 		em.flush();
+//		sequenceList.clicknodesdata=sequenceList.getClicknodesdata();
 		return sequenceList;
 	}
 }

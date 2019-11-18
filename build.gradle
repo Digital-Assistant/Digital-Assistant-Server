@@ -15,5 +15,7 @@ dependencies {
     implementation 'io.quarkus:quarkus-resteasy-jsonb'
     implementation 'io.quarkus:quarkus-jdbc-mariadb'
     implementation 'io.quarkus:quarkus-hibernate-orm-panache'
+//    implementation 'io.quarkus:quarkus-hibernate-orm'
+//    implementation 'org.jboss.jandex:jandex-maven-plugin'
 }
 
