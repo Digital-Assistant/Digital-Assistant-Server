@@ -1,119 +1,81 @@
 package com.nistapp.voice.index.models;
 
-import javax.json.bind.annotation.JsonbProperty;
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "SequenceList")
 public class SequenceList {
 
-	private static final String SEPARATOR = ",";
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, unique = true, length = 11)
+    private Integer id;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", nullable = false, unique = true, length = 11)
-	private Integer id;
+    private String name;
 
-	private String name;
+    private String usersessionid;
 
-	private String usersessionid;
+    private String userclicknodelist;
 
-	/*@Convert(converter = UserclicknodeConverter.class)
-	private List<Userclicknodes> userclicknodelist;*/
+    @Column(name = "createdat", nullable = false)
+    private Timestamp createdat;
+    @OneToMany
+    @JoinTable(name = "Sequenceuserclicknodemap", joinColumns = @JoinColumn(name = "sequencelistid"),
+            inverseJoinColumns = @JoinColumn(name = "userclicknodeid"))
+    private Set<Userclicknodes> userclicknodesSet;
 
-	private String userclicknodelist;
+    @PrePersist
+    public void preSave() {
+        this.createdat = new Timestamp(System.currentTimeMillis());
+    }
 
-	@Column(name = "createdat", nullable = false)
-	private Timestamp createdat;
+    public Integer getId() {
+        return id;
+    }
 
-	@PrePersist
-	public void preSave() {
-		this.createdat = new Timestamp(System.currentTimeMillis());
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public Integer getId() {
-		return id;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getUsersessionid() {
+        return usersessionid;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setUsersessionid(String usersessionid) {
+        this.usersessionid = usersessionid;
+    }
 
-	public String getUsersessionid() {
-		return usersessionid;
-	}
+    public String getUserclicknodelist() {
+        return userclicknodelist;
+    }
 
-	public void setUsersessionid(String usersessionid) {
-		this.usersessionid = usersessionid;
-	}
+    public void setUserclicknodelist(String userclicknodelist) {
+        this.userclicknodelist = userclicknodelist;
+    }
 
-	public String getUserclicknodelist() {
-		return userclicknodelist;
-	}
+    public Timestamp getCreatedat() {
+        return createdat;
+    }
 
-	public void setUserclicknodelist(String userclicknodelist) {
-		this.userclicknodelist = userclicknodelist;
-	}
+    public void setCreatedat(Timestamp createdat) {
+        this.createdat = createdat;
+    }
 
-	public Timestamp getCreatedat() {
-		return createdat;
-	}
+    public Set<Userclicknodes> getUserclicknodesSet() {
+        return userclicknodesSet;
+    }
 
-	public void setCreatedat(Timestamp createdat) {
-		this.createdat = createdat;
-	}
-
-	/*@Transient
-	private List<Sequenceuserclicknodemap> sequenceuserclicknodemaps;
-
-	@OneToMany(mappedBy="sequenceList", cascade = {CascadeType.ALL}, fetch=FetchType.EAGER)
-	public List<Sequenceuserclicknodemap> getSequenceuserclicknodemaps() {
-		return sequenceuserclicknodemaps;
-	}
-
-	public void setSequenceuserclicknodemaps(List<Sequenceuserclicknodemap> sequenceuserclicknodemaps) {
-		this.sequenceuserclicknodemaps = sequenceuserclicknodemaps;
-	}*/
-
-	@Transient
-	@JsonbProperty
-	public List<UserclicknodesEntity> clicknodesdata;
-
-	public List<UserclicknodesEntity> getClicknodesdata() {
-		if(this.userclicknodelist.isEmpty() && this.userclicknodelist!=null){
-			String[] pieces = userclicknodelist.split(SEPARATOR);
-
-			if (pieces == null || pieces.length == 0) {
-				System.out.println("not able to split");
-				return null;
-			}
-
-			List<UserclicknodesEntity> userclicknodes = new ArrayList<>();
-			for (String clickid : pieces) {
-				Long clicknodeid = Long.parseLong(clickid);
-				UserclicknodesEntity userclicknode = UserclicknodesEntity.findById(clicknodeid);
-				userclicknodes.add(userclicknode);
-			}
-			System.out.println("data found");
-			return userclicknodes;
-		} else {
-			System.out.println("no data");
-			return null;
-		}
-	}
-
-	public void setClicknodesdata(List<UserclicknodesEntity> userclicknodes){
-		this.clicknodesdata = userclicknodes;
-	}
+    public void setUserclicknodesSet(Set<Userclicknodes> userclicknodesSet) {
+        this.userclicknodesSet = userclicknodesSet;
+    }
 }

@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'io.quarkus' version '0.21.1'
+    id 'io.quarkus' version '1.0.0.CR1'
 }
 
 repositories {
@@ -10,10 +10,11 @@ repositories {
 group "com.nistapp.voice"
 version "0.0.1"
 dependencies {
-    implementation enforcedPlatform('io.quarkus:quarkus-bom:0.21.1')
+    implementation enforcedPlatform("io.quarkus:quarkus-bom:${quarkusVersion}")
     implementation 'io.quarkus:quarkus-resteasy'
     implementation 'io.quarkus:quarkus-resteasy-jsonb'
     implementation 'io.quarkus:quarkus-jdbc-mariadb'
+    implementation 'io.quarkus:quarkus-jdbc-postgresql'
     implementation 'io.quarkus:quarkus-hibernate-orm-panache'
 //    implementation 'io.quarkus:quarkus-hibernate-orm'
 //    implementation 'org.jboss.jandex:jandex-maven-plugin'
