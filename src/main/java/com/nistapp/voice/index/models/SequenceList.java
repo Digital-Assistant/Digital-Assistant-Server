@@ -1,7 +1,7 @@
 package com.nistapp.voice.index.models;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Set;
 
 @Entity
@@ -20,7 +20,8 @@ public class SequenceList {
     private String userclicknodelist;
 
     @Column(name = "createdat", nullable = false)
-    private Timestamp createdat;
+    private long createdat;
+
     @OneToMany
     @JoinTable(name = "Sequenceuserclicknodemap", joinColumns = @JoinColumn(name = "sequencelistid"),
             inverseJoinColumns = @JoinColumn(name = "userclicknodeid"))
@@ -28,7 +29,8 @@ public class SequenceList {
 
     @PrePersist
     public void preSave() {
-        this.createdat = new Timestamp(System.currentTimeMillis());
+//        this.createdat = new Timestamp(System.currentTimeMillis());
+        this.createdat = Instant.now().toEpochMilli();
     }
 
     public Integer getId() {
@@ -63,11 +65,11 @@ public class SequenceList {
         this.userclicknodelist = userclicknodelist;
     }
 
-    public Timestamp getCreatedat() {
+    public long getCreatedat() {
         return createdat;
     }
 
-    public void setCreatedat(Timestamp createdat) {
+    public void setCreatedat(long createdat) {
         this.createdat = createdat;
     }
 
