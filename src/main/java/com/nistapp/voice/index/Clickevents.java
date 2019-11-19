@@ -53,12 +53,12 @@ public class Clickevents {
 	@Path("/fetchrecorddata")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Userclicknodes> getuserrecordeddata(@QueryParam("start") long starttimestamp, @QueryParam("end") long endtimestamp, @QueryParam("sessionid") String sessionid, @QueryParam("domain") String domain) {
-		Date startdate = new Date(starttimestamp);
+		/*Date startdate = new Date(starttimestamp);
 		Date enddate = new Date(endtimestamp);
 		Timestamp startdatetime = new Timestamp(startdate.getTime());
-		Timestamp enddatetime = new Timestamp(enddate.getTime());
+		Timestamp enddatetime = new Timestamp(enddate.getTime());*/
 		Query query = em.createQuery("select u from Userclicknodes u where u.sessionid=:sessionid and u.domain=:domain and u.createdat between :startdate and :enddate",Userclicknodes.class);
-		query.setParameter("sessionid",sessionid).setParameter("domain",domain).setParameter("startdate",startdatetime).setParameter("enddate",enddatetime);
+		query.setParameter("sessionid",sessionid).setParameter("domain",domain).setParameter("startdate",starttimestamp).setParameter("enddate",endtimestamp);
 //		System.out.println(startdatetime.toString());
 //		System.out.println("starttimestamp:"+startdatetime);
 //		System.out.println("endtimestamp:"+enddatetime);
