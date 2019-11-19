@@ -29,12 +29,12 @@ public class Userclicknodes {
 
 	//@JsonIgnore
 	@Column(name = "createdat", nullable = false)
-	private Timestamp createdat;
+	private long createdat;
 
 	@PrePersist
 	public void preSave() {
 //		this.createdat = Instant.now().toEpochMilli();
-		this.createdat = new Timestamp(System.currentTimeMillis());
+		this.createdat = Instant.now().toEpochMilli();
 	}
 
 	public Integer getId() {
@@ -77,11 +77,11 @@ public class Userclicknodes {
 		this.domain = domain;
 	}
 
-	public Timestamp getCreatedat() {
+	public long getCreatedat() {
 		return createdat;
 	}
 
-	public void setCreatedat(Timestamp createdat) {
+	public void setCreatedat(long createdat) {
 		this.createdat = createdat;
 	}
 
