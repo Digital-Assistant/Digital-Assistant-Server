@@ -1,6 +1,7 @@
 package com.nistapp.voice.index.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
 import java.sql.Timestamp;
 import java.util.Set;
 
