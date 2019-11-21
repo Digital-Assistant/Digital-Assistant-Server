@@ -1,34 +1,49 @@
 package com.nistapp.voice.index.models;
 
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
 
 @Entity
 @Table(name = "Userclicknodes")
+@Indexed
 public class Userclicknodes {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false, unique = true, length = 11)
+	@GenericField
 	private Integer id;
 
+	@GenericField
 	private String sessionid;
 
+	@KeywordField
 	private String clickednodename;
 
+	@FullTextField(analyzer = "english")
 	private String objectdata;
 
+	@GenericField
 	private Integer html5;
 
+	@KeywordField
 	private String clickedpath;
 
+	@KeywordField
 	private String urlpath;
 
+	@KeywordField
 	private String domain;
 
 	//@JsonIgnore
 	@Column(name = "createdat", nullable = false)
+	@GenericField
 	private long createdat;
 
 	@PrePersist
