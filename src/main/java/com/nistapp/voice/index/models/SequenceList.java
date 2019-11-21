@@ -6,8 +6,7 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Set;
 
 @Entity
@@ -31,7 +30,8 @@ public class SequenceList {
 
     @Column(name = "createdat", nullable = false)
     @GenericField
-    private Timestamp createdat;
+    private long createdat;
+
     @OneToMany
     @JoinTable(name = "Sequenceuserclicknodemap", joinColumns = @JoinColumn(name = "sequencelistid"),
             inverseJoinColumns = @JoinColumn(name = "userclicknodeid"))
@@ -40,7 +40,8 @@ public class SequenceList {
 
     @PrePersist
     public void preSave() {
-        this.createdat = new Timestamp(System.currentTimeMillis());
+//        this.createdat = new Timestamp(System.currentTimeMillis());
+        this.createdat = Instant.now().toEpochMilli();
     }
 
     public Integer getId() {
@@ -75,11 +76,11 @@ public class SequenceList {
         this.userclicknodelist = userclicknodelist;
     }
 
-    public Timestamp getCreatedat() {
+    public long getCreatedat() {
         return createdat;
     }
 
-    public void setCreatedat(Timestamp createdat) {
+    public void setCreatedat(long createdat) {
         this.createdat = createdat;
     }
 

@@ -1,8 +1,7 @@
 package com.nistapp.voice.index.models;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
-import java.util.Date;
+import java.time.Instant;
 
 @Entity
 @Table(name = "domainpatterns")
@@ -22,7 +21,7 @@ public class DomainPatterns {
 
 	//	@JsonIgnore
 	@Column(name = "createdat", nullable = false)
-	private Timestamp createdat;
+	private long createdat;
 
 	public Integer getId() {
 		return id;
@@ -66,15 +65,15 @@ public class DomainPatterns {
 
 	@PrePersist
 	public void preSave() {
-//		this.createdat = Instant.now().toEpochMilli();
-		this.createdat = new Timestamp(System.currentTimeMillis());
+		this.createdat = Instant.now().toEpochMilli();
+//		this.createdat = new Timestamp(System.currentTimeMillis());
 	}
 
-	public Timestamp getCreatedat() {
+	public long getCreatedat() {
 		return createdat;
 	}
 
-	public void setCreatedat(Timestamp createdat) {
+	public void setCreatedat(long createdat) {
 		this.createdat = createdat;
 	}
 

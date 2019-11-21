@@ -1,7 +1,7 @@
 package com.nistapp.voice.index.models;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.Instant;
 
 @Entity
 @Table(name = "index_javascript_events")
@@ -24,7 +24,7 @@ public class JavascriptEvents {
 
 	//@JsonIgnore
 	@Column(name = "created_at", nullable = false)
-	private Date created_at;
+	private long created_at;
 
 	public Integer getId() {
 		return id;
@@ -50,17 +50,18 @@ public class JavascriptEvents {
 		this.data = data;
 	}
 
-	public Date getCreated_at() {
+	public long getCreated_at() {
 		return created_at;
 	}
 
-	public void setCreated_at(Date created_at) {
+	public void setCreated_at(long created_at) {
 		this.created_at = created_at;
 	}
 
 	@PrePersist
 	public void preSave() {
-		this.created_at = new Date();
+//		this.created_at = new Date();
+		this.created_at = Instant.now().toEpochMilli();
 	}
 
 	public String getSessionid() {
