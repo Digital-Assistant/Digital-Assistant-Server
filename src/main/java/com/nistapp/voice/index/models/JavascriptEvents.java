@@ -14,6 +14,8 @@ public class JavascriptEvents {
 
 	private String sessionid;
 
+	@Basic
+	@Column(length = 5000)
 	private String clickednodename;
 
 	private String domain;
