@@ -1,5 +1,6 @@
 package com.nistapp.voice.index.models;
 
+import org.hibernate.search.engine.backend.types.Searchable;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
@@ -24,11 +25,11 @@ public class Userclicknodes {
 	@Column(length=500)
 	private String sessionid;
 
-	@KeywordField
+	@FullTextField(analyzer = "english")
 	@Column(length=2000)
 	private String clickednodename;
 
-	@FullTextField(analyzer = "english")
+	@GenericField(searchable = Searchable.NO)
 	@Lob
 	private String objectdata;
 

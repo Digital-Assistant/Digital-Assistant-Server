@@ -123,7 +123,7 @@ public class Clickevents {
         Function<SearchPredicateFactory, PredicateFinalStep> function = f -> query == null || query.trim().isEmpty() ?
                 f.matchAll() :
                 f.simpleQueryString()
-                        .fields("name").matching(query);
+                        .fields("name","userclicknodesSet.clickednodename").matching(query);
 
         return Search.session(em).search(SequenceList.class).predicate(function).fetchAll().getHits();
     }
