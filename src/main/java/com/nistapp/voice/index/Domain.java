@@ -5,6 +5,7 @@ import com.nistapp.voice.index.models.DomainPatterns;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
@@ -18,7 +19,8 @@ public class Domain {
 	@Path("/patterns")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<DomainPatterns> listdatabyurl(@QueryParam("domain") @DefaultValue("NA") String domain) {
-		Query query = em.createQuery("select  e from DomainPatterns e where e.domain=:domain",DomainPatterns.class).setParameter("domain",domain);
+		TypedQuery<DomainPatterns> query = em.createQuery("select  e from DomainPatterns e where e.domain=:domain",DomainPatterns.class)
+				.setParameter("domain",domain);
 		return query.getResultList();
 	}
 }

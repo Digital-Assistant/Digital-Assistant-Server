@@ -90,7 +90,7 @@ public class Clickevents {
     }
 
     @GET
-    @Path("sequnce/search")
+    @Path("sequence/search")
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     public List<SequenceList> search(@QueryParam("query") String query) {
