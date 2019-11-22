@@ -6,7 +6,6 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.time.Instant;
 
 @Entity
@@ -21,24 +20,31 @@ public class Userclicknodes {
 	private Integer id;
 
 	@GenericField
+	@Column(length=500)
 	private String sessionid;
 
 	@KeywordField
+	@Column(length=2000)
 	private String clickednodename;
 
 	@FullTextField(analyzer = "english")
+	@Lob
 	private String objectdata;
 
 	@GenericField
 	private Integer html5;
 
 	@KeywordField
+	@Column(length=3000)
 	private String clickedpath;
 
 	@KeywordField
+//	@Column(length=5000)
+	@Lob
 	private String urlpath;
 
 	@KeywordField
+	@Column(length=500)
 	private String domain;
 
 	//@JsonIgnore

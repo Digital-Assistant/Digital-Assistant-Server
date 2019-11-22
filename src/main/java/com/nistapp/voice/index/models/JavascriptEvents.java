@@ -12,16 +12,20 @@ public class JavascriptEvents {
 	@Column(name = "id", nullable = false, unique = true, length = 11)
 	private Integer id;
 
+	@Column(length=500)
 	private String sessionid;
 
 	@Basic
 	@Column(length = 5000)
 	private String clickednodename;
 
+	@Column(length=500)
 	private String domain;
 
+	@Lob
 	private String urlpath;
 
+	@Lob
 	private String data;
 
 	//@JsonIgnore
