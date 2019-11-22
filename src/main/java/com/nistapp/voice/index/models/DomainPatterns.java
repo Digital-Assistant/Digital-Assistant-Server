@@ -11,12 +11,16 @@ public class DomainPatterns {
 	@Column(name = "id", nullable = false, unique = true, length = 11)
 	private Integer id;
 
+	@Column(length=500)
 	private String domain;
 
+	@Column(length=500)
 	private String patterntype;
 
+	@Column(length=500)
 	private String patternvalue;
 
+	@Column(length=500)
 	private String otherpatterntype;
 
 	//	@JsonIgnore

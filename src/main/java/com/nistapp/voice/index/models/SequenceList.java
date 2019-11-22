@@ -21,12 +21,18 @@ public class SequenceList {
     private Integer id;
 
     @FullTextField(analyzer = "english")
+    @Column(length=5000)
     private String name;
 
     @GenericField
+    @Column(length=500)
     private String usersessionid;
 
+    @Column(length=5000)
     private String userclicknodelist;
+
+    @Column(length=500)
+    private String domain;
 
     @Column(name = "createdat", nullable = false)
     @GenericField
@@ -72,6 +78,14 @@ public class SequenceList {
 
     public void setUserclicknodelist(String userclicknodelist) {
         this.userclicknodelist = userclicknodelist;
+    }
+
+    public String getDomain() {
+        return domain;
+    }
+
+    public void setDomain(String domain) {
+        this.domain = domain;
     }
 
     public long getCreatedat() {
