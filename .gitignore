@@ -37,3 +37,4 @@ release.properties
 # Gradle
 .gradle/
 build/
+local.properties
