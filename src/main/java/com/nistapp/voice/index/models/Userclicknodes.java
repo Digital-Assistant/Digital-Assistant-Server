@@ -5,6 +5,7 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericFie
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import java.time.Instant;
 
@@ -55,6 +56,7 @@ public class Userclicknodes {
 	@ManyToOne
 	@JoinTable(name = "Sequenceuserclicknodemap", joinColumns = @JoinColumn(name = "userclicknodeid"),
 			inverseJoinColumns = @JoinColumn(name = "sequencelistid"))
+	@JsonbTransient
 	private SequenceList sequenceList;
 
 	@PrePersist

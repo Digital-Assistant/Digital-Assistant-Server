@@ -7,7 +7,7 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmb
 
 import javax.persistence.*;
 import java.time.Instant;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "SequenceList")
@@ -21,17 +21,17 @@ public class SequenceList {
     private Integer id;
 
     @FullTextField(analyzer = "english")
-    @Column(length=5000)
+    @Column(length = 5000)
     private String name;
 
     @GenericField
-    @Column(length=500)
+    @Column(length = 500)
     private String usersessionid;
 
-    @Column(length=5000)
+    @Column(length = 5000)
     private String userclicknodelist;
 
-    @Column(length=500)
+    @Column(length = 500)
     private String domain;
 
     @Column(name = "createdat", nullable = false)
@@ -40,7 +40,7 @@ public class SequenceList {
 
     @OneToMany(mappedBy = "sequenceList")
     @IndexedEmbedded
-    private Set<Userclicknodes> userclicknodesSet;
+    private List<Userclicknodes> userclicknodesSet;
 
     @PrePersist
     public void preSave() {
@@ -96,11 +96,11 @@ public class SequenceList {
         this.createdat = createdat;
     }
 
-    public Set<Userclicknodes> getUserclicknodesSet() {
+    public List<Userclicknodes> getUserclicknodesSet() {
         return userclicknodesSet;
     }
 
-    public void setUserclicknodesSet(Set<Userclicknodes> userclicknodesSet) {
+    public void setUserclicknodesSet(List<Userclicknodes> userclicknodesSet) {
         this.userclicknodesSet = userclicknodesSet;
     }
 }
