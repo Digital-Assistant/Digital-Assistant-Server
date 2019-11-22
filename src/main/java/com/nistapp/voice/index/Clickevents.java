@@ -90,7 +90,7 @@ public class Clickevents {
     }
 
     @GET
-    @Path("sequnce/search")
+    @Path("sequence/search")
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
     public List<SequenceList> search(@QueryParam("query") String query) {
@@ -98,7 +98,7 @@ public class Clickevents {
         Function<SearchPredicateFactory, PredicateFinalStep> function = f -> query == null || query.trim().isEmpty() ?
                 f.matchAll() :
                 f.simpleQueryString()
-                        .fields("name").matching(query);
+                        .fields("name","userclicknodesSet.clickednodename").matching(query);
 
         return Search.session(em).search(SequenceList.class).predicate(function).fetchAll().getHits();
     }
