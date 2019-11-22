@@ -32,9 +32,7 @@ public class SequenceList {
     @GenericField
     private long createdat;
 
-    @OneToMany
-    @JoinTable(name = "Sequenceuserclicknodemap", joinColumns = @JoinColumn(name = "sequencelistid"),
-            inverseJoinColumns = @JoinColumn(name = "userclicknodeid"))
+    @OneToMany(mappedBy = "sequenceList")
     @IndexedEmbedded
     private Set<Userclicknodes> userclicknodesSet;
 

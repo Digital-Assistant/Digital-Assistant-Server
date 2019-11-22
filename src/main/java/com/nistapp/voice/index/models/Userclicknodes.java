@@ -46,6 +46,11 @@ public class Userclicknodes {
 	@GenericField
 	private long createdat;
 
+	@ManyToOne
+	@JoinTable(name = "Sequenceuserclicknodemap", joinColumns = @JoinColumn(name = "userclicknodeid"),
+			inverseJoinColumns = @JoinColumn(name = "sequencelistid"))
+	private SequenceList sequenceList;
+
 	@PrePersist
 	public void preSave() {
 //		this.createdat = Instant.now().toEpochMilli();
@@ -124,4 +129,11 @@ public class Userclicknodes {
 		this.clickedpath = clickedpath;
 	}
 
+	public SequenceList getSequenceList() {
+		return sequenceList;
+	}
+
+	public void setSequenceList(SequenceList sequenceList) {
+		this.sequenceList = sequenceList;
+	}
 }
