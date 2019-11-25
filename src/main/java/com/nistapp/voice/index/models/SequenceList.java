@@ -38,7 +38,7 @@ public class SequenceList {
     @GenericField
     private long createdat;
 
-    @OneToMany(mappedBy = "sequenceList")
+    @OneToMany(mappedBy = "sequenceList", fetch = FetchType.EAGER)
     @IndexedEmbedded
     private List<Userclicknodes> userclicknodesSet;
 
