@@ -3,7 +3,6 @@ package com.nistapp.voice.index;
 import com.nistapp.voice.index.models.JavascriptEvents;
 import com.nistapp.voice.index.models.SequenceList;
 import com.nistapp.voice.index.models.Userclicknodes;
-import io.quarkus.runtime.ConfigHelper;
 import io.quarkus.runtime.StartupEvent;
 import org.eclipse.microprofile.config.ConfigProvider;
 import org.hibernate.search.engine.search.predicate.dsl.PredicateFinalStep;
@@ -23,7 +22,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Function;
 
 @Path("/clickevents")
@@ -118,13 +116,28 @@ public class Clickevents {
     @Path("sequence/search")
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
-    public List<SequenceList> search(@QueryParam("query") String query) {
+    public List<SequenceList> search(@QueryParam("query") String query, @QueryParam("domain") String domain) {
+        final Function<SearchPredicateFactory, PredicateFinalStep> domainFilter;
+        final Function<SearchPredicateFactory, PredicateFinalStep> queryFunction;
+        if (domain != null && !domain.isEmpty()) {
+            domainFilter = f -> f.match().field("domain").matching(domain);
+        } else {
+            domainFilter = null;
+        }
+        if (query == null || query.isEmpty()) {
+            queryFunction = domainFilter == null ?
+                    SearchPredicateFactory::matchAll :
+                    f -> f.bool().must(domainFilter.apply(f)).must(f.matchAll());
+        } else {
+            queryFunction = domainFilter == null ?
+                    f -> f.simpleQueryString().fields("name", "userclicknodesSet.clickednodename")
+                            .matching(query) :
+                    f -> f.bool().must(domainFilter.apply(f))
+                            .must(f.simpleQueryString()
+                                    .fields("name", "userclicknodesSet.clickednodename")
+                            .matching(query));
+        }
 
-        Function<SearchPredicateFactory, PredicateFinalStep> function = f -> query == null || query.trim().isEmpty() ?
-                f.matchAll() :
-                f.simpleQueryString()
-                        .fields("name","userclicknodesSet.clickednodename").matching(query);
-
-        return Search.session(em).search(SequenceList.class).predicate(function).fetchAll().getHits();
+        return Search.session(em).search(SequenceList.class).predicate(queryFunction).fetchAll().getHits();
     }
 }
