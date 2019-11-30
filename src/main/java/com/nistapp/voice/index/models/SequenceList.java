@@ -31,6 +31,7 @@ public class SequenceList {
     @Column(length = 5000)
     private String userclicknodelist;
 
+    @FullTextField(analyzer = "english")
     @Column(length = 500)
     private String domain;
 
