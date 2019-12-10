@@ -1,9 +1,6 @@
 package com.nistapp.voice.index.models;
 
-import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
-import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
-import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
-import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.*;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -31,7 +28,8 @@ public class SequenceList {
     @Column(length = 5000)
     private String userclicknodelist;
 
-    @FullTextField(analyzer = "english")
+//    @FullTextField(analyzer = "english")
+    @KeywordField
     @Column(length = 500)
     private String domain;
 
