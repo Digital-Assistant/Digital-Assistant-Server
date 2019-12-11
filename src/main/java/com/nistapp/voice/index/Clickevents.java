@@ -135,7 +135,7 @@ public class Clickevents {
                     f -> f.bool().must(domainFilter.apply(f))
                             .must(f.simpleQueryString()
                                     .fields("name", "userclicknodesSet.clickednodename")
-                            .matching(query));
+                                    .matching(query));
         }
 
         return Search.session(em).search(SequenceList.class).predicate(queryFunction).fetchAll().getHits();
