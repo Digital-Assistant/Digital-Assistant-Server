@@ -160,11 +160,11 @@ public class Clickevents {
         if(dbuserid.equals(sentuserid)){
             dbresult.setDeleted(1);
             em.persist(dbresult);
-            System.out.println("updated data");
+//            System.out.println("updated data");
             return dbresult;
         } else {
-            System.out.println(dbuserid);
-            System.out.println(sentuserid);
+//            System.out.println(dbuserid);
+//            System.out.println(sentuserid);
             System.out.println("Not matched user sessionid");
             return null;
         }
