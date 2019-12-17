@@ -41,6 +41,7 @@ public class SequenceList {
     @IndexedEmbedded
     private List<Userclicknodes> userclicknodesSet;
 
+    @KeywordField
     private Integer deleted;
 
     @PrePersist
