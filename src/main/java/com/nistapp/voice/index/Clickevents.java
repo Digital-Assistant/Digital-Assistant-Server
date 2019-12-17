@@ -119,8 +119,8 @@ public class Clickevents {
     @Produces(MediaType.APPLICATION_JSON)
     public List<SequenceList> search(@QueryParam("query") String query, @QueryParam("domain") String domain) {
 
-        final Function<SearchPredicateFactory, PredicateFinalStep> deletedFilter;
-        deletedFilter = f -> f.match().field("deleted").matching("0");
+//        final Function<SearchPredicateFactory, PredicateFinalStep> deletedFilter;
+//        deletedFilter = f -> f.match().field("deleted").matching("0");
 //        f -> f.bool().must(deletedFilter.apply(f)).must(domainFilter.apply(f)).must(f.matchAll());
 
         final Function<SearchPredicateFactory, PredicateFinalStep> domainFilter;
