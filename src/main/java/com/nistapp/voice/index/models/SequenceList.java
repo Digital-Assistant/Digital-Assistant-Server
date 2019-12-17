@@ -41,6 +41,8 @@ public class SequenceList {
     @IndexedEmbedded
     private List<Userclicknodes> userclicknodesSet;
 
+    private Integer deleted;
+
     @PrePersist
     public void preSave() {
 //        this.createdat = new Timestamp(System.currentTimeMillis());
@@ -101,5 +103,13 @@ public class SequenceList {
 
     public void setUserclicknodesSet(List<Userclicknodes> userclicknodesSet) {
         this.userclicknodesSet = userclicknodesSet;
+    }
+
+    public Integer getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Integer deleted) {
+        this.deleted = deleted;
     }
 }

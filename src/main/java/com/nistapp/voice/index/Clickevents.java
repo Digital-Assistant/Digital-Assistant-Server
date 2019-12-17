@@ -18,6 +18,7 @@ import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -139,5 +140,33 @@ public class Clickevents {
         }
 
         return Search.session(em).search(SequenceList.class).predicate(queryFunction).fetchAll().getHits();
+    }
+
+    @POST
+    @Path("sequence/delete")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+//    @Produces(MediaType.TEXT_PLAIN)
+    @Transactional
+    public SequenceList deletesequence(SequenceList sequenceList){
+        TypedQuery<SequenceList> query = em.createQuery("select sq from SequenceList sq where sq.id=:id", SequenceList.class);
+        query.setParameter("id", sequenceList.getId());
+        SequenceList dbresult = query.getSingleResult();
+//        SequenceList dbresult = SequenceListDAO.findByID(sequenceList.getId());
+        if(dbresult == null)
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        String dbuserid=dbresult.getUsersessionid();
+        String sentuserid=sequenceList.getUsersessionid();
+        if(dbuserid.equals(sentuserid)){
+            dbresult.setDeleted(1);
+            em.persist(dbresult);
+            System.out.println("updated data");
+            return dbresult;
+        } else {
+            System.out.println(dbuserid);
+            System.out.println(sentuserid);
+            System.out.println("Not matched user sessionid");
+            return null;
+        }
     }
 }
