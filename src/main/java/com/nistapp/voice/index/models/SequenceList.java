@@ -15,7 +15,7 @@ public class SequenceList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true, length = 11)
     @GenericField
-    private Integer id;
+    private long id;
 
     @FullTextField(analyzer = "english")
     @Column(length = 5000)
@@ -42,7 +42,12 @@ public class SequenceList {
     private List<Userclicknodes> userclicknodesSet;
 
     @GenericField
-    private Integer deleted;
+    @Column(name = "deleted", columnDefinition = "integer default 0")
+    private Integer deleted=0;
+
+    /*@OneToMany(mappedBy = "sequenceList", fetch = FetchType.LAZY)
+    @IndexedEmbedded
+    private List<SequenceVotes> sequenceVotes;*/
 
     @PrePersist
     public void preSave() {
@@ -50,11 +55,11 @@ public class SequenceList {
         this.createdat = Instant.now().toEpochMilli();
     }
 
-    public Integer getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -113,4 +118,12 @@ public class SequenceList {
     public void setDeleted(Integer deleted) {
         this.deleted = deleted;
     }
+
+    /*public List<SequenceVotes> getSequenceVotes() {
+        return sequenceVotes;
+    }
+
+    public void setSequenceVotes(List<SequenceVotes> sequenceVotes) {
+        this.sequenceVotes = sequenceVotes;
+    }*/
 }

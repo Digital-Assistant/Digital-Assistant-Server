@@ -2,7 +2,9 @@ package com.nistapp.voice.index;
 
 import com.nistapp.voice.index.models.JavascriptEvents;
 import com.nistapp.voice.index.models.SequenceList;
+import com.nistapp.voice.index.models.SequenceVotes;
 import com.nistapp.voice.index.models.Userclicknodes;
+import com.nistapp.voice.index.repository.SequenceVotesDAO;
 import io.quarkus.runtime.StartupEvent;
 import org.eclipse.microprofile.config.ConfigProvider;
 import org.hibernate.search.engine.search.predicate.dsl.PredicateFinalStep;
@@ -32,6 +34,9 @@ public class Clickevents {
 
     @Inject
     EntityManager em;
+
+    @Inject
+    SequenceVotesDAO sequenceVotesDAO;
 
     @GET
     @Path("/all")
@@ -107,7 +112,7 @@ public class Clickevents {
     @Transactional
     void onStart(@Observes StartupEvent event) throws InterruptedException {
         logger.info(ConfigProvider.getConfig().getConfigSources().toString());
-        Long value = em.createQuery("SELECT COUNT(s.id) FROM SequenceList s", Long.class).getSingleResult();
+        Long value = em.createQuery("SELECT COUNT(s.id) FROM SequenceList s where s.deleted=0", Long.class).getSingleResult();
         if (value != null && value != 0) {
             Search.session(em).massIndexer(SequenceList.class).startAndWait();
         }
@@ -151,13 +156,11 @@ public class Clickevents {
     @Path("sequence/delete")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-//    @Produces(MediaType.TEXT_PLAIN)
     @Transactional
     public SequenceList deletesequence(SequenceList sequenceList){
         TypedQuery<SequenceList> query = em.createQuery("select sq from SequenceList sq where sq.id=:id", SequenceList.class);
         query.setParameter("id", sequenceList.getId());
         SequenceList dbresult = query.getSingleResult();
-//        SequenceList dbresult = SequenceListDAO.findByID(sequenceList.getId());
         if(dbresult == null)
             throw new WebApplicationException(Response.Status.NOT_FOUND);
         String dbuserid=dbresult.getUsersessionid();
@@ -165,13 +168,57 @@ public class Clickevents {
         if(dbuserid.equals(sentuserid)){
             dbresult.setDeleted(1);
             em.persist(dbresult);
-//            System.out.println("updated data");
             return dbresult;
         } else {
-//            System.out.println(dbuserid);
-//            System.out.println(sentuserid);
             System.out.println("Not matched user sessionid");
             return null;
+        }
+    }
+
+
+    @GET
+    @Path("sequence/votes/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<SequenceVotes> getsequencevotes(@PathParam("id") long id){
+        /*if(id == null){
+            return null;
+        } else {*/
+            System.out.println(id);
+            TypedQuery<SequenceVotes> query = em.createQuery("select sqv from SequenceVotes sqv where sqv.sequenceid=:id", SequenceVotes.class);
+            query.setParameter("id", id);
+            return query.getResultList();
+//        }
+    }
+
+    @POST
+    @Path("sequence/addvote")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
+    public SequenceVotes addsequencevote(SequenceVotes sequenceVotes){
+
+        try {
+            SequenceVotes dbsequenceVotes = sequenceVotesDAO.findbysequenceidusersessionid(sequenceVotes.getSequenceid(),sequenceVotes.getUsersessionid());
+            if(dbsequenceVotes!=null){
+                dbsequenceVotes.setUpvote(sequenceVotes.getUpvote());
+                dbsequenceVotes.setDownvote(sequenceVotes.getDownvote());
+                sequenceVotes = dbsequenceVotes;
+            }
+        } catch (Exception e) {
+
+        }
+
+        sequenceVotes.persist();
+        return sequenceVotes;
+    }
+
+    @DELETE
+    @Path("sequence/deletevote/{id}/{usersessionid}")
+    @Transactional
+    public void deletesequencevote(@PathParam("id") long id, @PathParam("usersessionid") String usersessionid){
+        SequenceVotes dbsequenceVotes = sequenceVotesDAO.findbyusersessionid(usersessionid);
+        if(dbsequenceVotes!=null){
+            dbsequenceVotes.delete();
         }
     }
 }
