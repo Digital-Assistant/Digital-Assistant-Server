@@ -124,9 +124,8 @@ public class Clickevents {
     @Produces(MediaType.APPLICATION_JSON)
     public List<SequenceList> search(@QueryParam("query") String query, @QueryParam("domain") String domain) {
 
-//        final Function<SearchPredicateFactory, PredicateFinalStep> deletedFilter;
-//        deletedFilter = f -> f.match().field("deleted").matching("0");
-//        f -> f.bool().must(deletedFilter.apply(f)).must(domainFilter.apply(f)).must(f.matchAll());
+        final Function<SearchPredicateFactory, PredicateFinalStep> deletedFilter;
+        deletedFilter = f -> f.match().field("deleted").matching(0);
 
         final Function<SearchPredicateFactory, PredicateFinalStep> domainFilter;
         final Function<SearchPredicateFactory, PredicateFinalStep> queryFunction;
@@ -138,12 +137,12 @@ public class Clickevents {
         if (query == null || query.isEmpty()) {
             queryFunction = domainFilter == null ?
                     SearchPredicateFactory::matchAll :
-                    f -> f.bool().must(domainFilter.apply(f)).must(f.matchAll());
+                    f -> f.bool().must(deletedFilter.apply(f)).must(domainFilter.apply(f)).must(f.matchAll());
         } else {
             queryFunction = domainFilter == null ?
-                    f -> f.simpleQueryString().fields("name", "userclicknodesSet.clickednodename")
-                            .matching(query) :
-                    f -> f.bool().must(domainFilter.apply(f))
+                    f -> f.bool().must(deletedFilter.apply(f)).must(f.simpleQueryString().fields("name", "userclicknodesSet.clickednodename")
+                            .matching(query)) :
+                    f -> f.bool().must(deletedFilter.apply(f)).must(domainFilter.apply(f))
                             .must(f.simpleQueryString()
                                     .fields("name", "userclicknodesSet.clickednodename")
                             .matching(query));
