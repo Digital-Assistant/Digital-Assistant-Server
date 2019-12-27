@@ -1,6 +1,10 @@
 package com.nistapp.voice.index;
 
+import com.nistapp.voice.index.models.UserAuthData;
+import com.nistapp.voice.index.models.UserSessionData;
 import com.nistapp.voice.index.models.Userclicknodes;
+import com.nistapp.voice.index.repository.UserAuthDataDAO;
+import com.nistapp.voice.index.repository.UserSessionDataDAO;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -18,6 +22,12 @@ public class User {
 
     @Inject
     EntityManager em;
+
+    @Inject
+    UserAuthDataDAO userAuthDataDAO;
+
+    @Inject
+    UserSessionDataDAO userSessionDataDAO;
 
     private static String getAlphaNumericString(int n) {
 
@@ -76,4 +86,43 @@ public class User {
         return userclicknodes;
     }
 
+    @POST
+    @Path("/checkauthid")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
+    public UserAuthData checkauthdata(UserAuthData postauthdata) {
+//        return postauthdata;
+        try{
+            UserAuthData userAuthData = userAuthDataDAO.findbyauthid(postauthdata.getAuthid(),postauthdata.getAuthsource());
+            if(userAuthData != null){
+                postauthdata=userAuthData;
+            }
+        } catch (Exception e){
+
+        }
+
+        postauthdata.persist();
+        return postauthdata;
+
+    }
+
+    @POST
+    @Path("/checkusersession")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
+    public UserSessionData checkusersession(UserSessionData postusersessiondata) {
+        try {
+            UserSessionData userSessionData = userSessionDataDAO.findbyusersessionid(postusersessiondata.getUsersessionid());
+            if (userSessionData != null) {
+                postusersessiondata = userSessionData;
+            }
+        } catch (Exception e){
+
+        }
+
+        postusersessiondata.persist();
+        return postusersessiondata;
+    }
 }
