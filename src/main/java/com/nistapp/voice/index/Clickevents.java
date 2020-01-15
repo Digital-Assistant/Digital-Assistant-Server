@@ -1,9 +1,6 @@
 package com.nistapp.voice.index;
 
-import com.nistapp.voice.index.models.JavascriptEvents;
-import com.nistapp.voice.index.models.SequenceList;
-import com.nistapp.voice.index.models.SequenceVotes;
-import com.nistapp.voice.index.models.Userclicknodes;
+import com.nistapp.voice.index.models.*;
 import com.nistapp.voice.index.repository.SequenceVotesDAO;
 import io.quarkus.runtime.StartupEvent;
 import org.eclipse.microprofile.config.ConfigProvider;
@@ -219,5 +216,13 @@ public class Clickevents {
         if(dbsequenceVotes!=null){
             dbsequenceVotes.delete();
         }
+    }
+
+    @PUT
+    @Path("userclick")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Transactional
+    public void adduserclick(ClickTrack clickTrack){
+        clickTrack.persist();
     }
 }
