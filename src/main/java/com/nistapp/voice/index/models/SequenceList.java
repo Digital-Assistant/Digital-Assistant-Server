@@ -45,6 +45,14 @@ public class SequenceList {
     @Column(name = "deleted", columnDefinition = "integer default 0")
     private Integer deleted=0;
 
+    @GenericField
+    @Column(name = "isValid")
+    private Integer isValid;
+
+    @GenericField
+    @Column(name = "isIgnored")
+    private Integer isIgnored;
+
     /*@OneToMany(mappedBy = "sequenceList", fetch = FetchType.LAZY)
     @IndexedEmbedded
     private List<SequenceVotes> sequenceVotes;*/
@@ -117,6 +125,22 @@ public class SequenceList {
 
     public void setDeleted(Integer deleted) {
         this.deleted = deleted;
+    }
+
+    public Integer getIsValid() {
+        return isValid;
+    }
+
+    public void setIsValid(Integer isValid) {
+        this.isValid = isValid;
+    }
+
+    public Integer getIsIgnored() {
+        return isIgnored;
+    }
+
+    public void setIsIgnored(Integer isIgnored) {
+        this.isIgnored = isIgnored;
     }
 
     /*public List<SequenceVotes> getSequenceVotes() {

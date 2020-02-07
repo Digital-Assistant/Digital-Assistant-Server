@@ -19,9 +19,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 
 @Path("/clickevents")
@@ -94,6 +92,8 @@ public class Clickevents {
         s2.setUsersessionid(sequenceList.getUsersessionid());
         s2.setName(sequenceList.getName());
         s2.setUserclicknodelist(sequenceList.getUserclicknodelist());
+        s2.setIsValid(sequenceList.getIsValid());
+        s2.setIsIgnored(sequenceList.getIsIgnored());
         em.persist(s2);
         List<Userclicknodes> list = new ArrayList<>();
         for (Userclicknodes userclicknodes : sequenceList.getUserclicknodesSet()) {
@@ -109,7 +109,7 @@ public class Clickevents {
     @Transactional
     void onStart(@Observes StartupEvent event) throws InterruptedException {
         logger.info(ConfigProvider.getConfig().getConfigSources().toString());
-        Long value = em.createQuery("SELECT COUNT(s.id) FROM SequenceList s where s.deleted=0", Long.class).getSingleResult();
+        Long value = em.createQuery("SELECT COUNT(s.id) FROM SequenceList s where s.deleted=0 and s.isValid=1 and s.isIgnored=0", Long.class).getSingleResult();
         if (value != null && value != 0) {
             Search.session(em).massIndexer(SequenceList.class).startAndWait();
         }
@@ -124,6 +124,12 @@ public class Clickevents {
         final Function<SearchPredicateFactory, PredicateFinalStep> deletedFilter;
         deletedFilter = f -> f.match().field("deleted").matching(0);
 
+        final Function<SearchPredicateFactory, PredicateFinalStep> validFilter;
+        validFilter = f -> f.match().field("isValid").matching(1);
+
+        final Function<SearchPredicateFactory, PredicateFinalStep> ignoreFilter;
+        ignoreFilter = f -> f.match().field("isIgnored").matching(0);
+
         final Function<SearchPredicateFactory, PredicateFinalStep> domainFilter;
         final Function<SearchPredicateFactory, PredicateFinalStep> queryFunction;
         if (domain != null && !domain.isEmpty()) {
@@ -134,12 +140,12 @@ public class Clickevents {
         if (query == null || query.isEmpty()) {
             queryFunction = domainFilter == null ?
                     SearchPredicateFactory::matchAll :
-                    f -> f.bool().must(deletedFilter.apply(f)).must(domainFilter.apply(f)).must(f.matchAll());
+                    f -> f.bool().must(deletedFilter.apply(f)).must(validFilter.apply(f)).must(ignoreFilter.apply(f)).must(domainFilter.apply(f)).must(f.matchAll());
         } else {
             queryFunction = domainFilter == null ?
-                    f -> f.bool().must(deletedFilter.apply(f)).must(f.simpleQueryString().fields("name", "userclicknodesSet.clickednodename")
+                    f -> f.bool().must(deletedFilter.apply(f)).must(validFilter.apply(f)).must(ignoreFilter.apply(f)).must(f.simpleQueryString().fields("name", "userclicknodesSet.clickednodename")
                             .matching(query)) :
-                    f -> f.bool().must(deletedFilter.apply(f)).must(domainFilter.apply(f))
+                    f -> f.bool().must(deletedFilter.apply(f)).must(validFilter.apply(f)).must(ignoreFilter.apply(f)).must(domainFilter.apply(f))
                             .must(f.simpleQueryString()
                                     .fields("name", "userclicknodesSet.clickednodename")
                                     .matching(query));
@@ -176,14 +182,9 @@ public class Clickevents {
     @Path("sequence/votes/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public List<SequenceVotes> getsequencevotes(@PathParam("id") long id){
-        /*if(id == null){
-            return null;
-        } else {*/
-            System.out.println(id);
-            TypedQuery<SequenceVotes> query = em.createQuery("select sqv from SequenceVotes sqv where sqv.sequenceid=:id", SequenceVotes.class);
-            query.setParameter("id", id);
-            return query.getResultList();
-//        }
+        TypedQuery<SequenceVotes> query = em.createQuery("select sqv from SequenceVotes sqv where sqv.sequenceid=:id", SequenceVotes.class);
+        query.setParameter("id", id);
+        return query.getResultList();
     }
 
     @POST
@@ -224,5 +225,35 @@ public class Clickevents {
     @Transactional
     public void adduserclick(ClickTrack clickTrack){
         clickTrack.persist();
+    }
+
+    @GET
+    @Path("/suggested")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Userclicknodes> suggestSequenceList(@QueryParam("domain") String domain){
+        List<Integer> nodeids = this.getrandomnumber();
+        List<Userclicknodes> userclicknodes = new ArrayList<>();
+
+        TypedQuery<Userclicknodes> query = em.createQuery("select u from Userclicknodes u where u.id in :id and u.domain=:domain", Userclicknodes.class);
+        query.setParameter("domain", domain);
+        query.setParameter("id", nodeids);
+        userclicknodes = query.getResultList();
+
+        return userclicknodes;
+    }
+
+    public static List<Integer> getrandomnumber(){
+
+        Random rand = new Random();
+
+        Integer generatelength=rand.nextInt((10-3)+1)+3;
+
+        List<Integer> intlist = new ArrayList<>();
+
+        for(int i=0;i<generatelength;i++){
+            intlist.add(rand.nextInt(100));
+        }
+
+        return intlist;
     }
 }

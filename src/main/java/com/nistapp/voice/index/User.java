@@ -66,8 +66,6 @@ public class User {
             c.setTime(dt);
             c.add(Calendar.DATE, 365);
             dt = c.getTime();
-//			NewCookie newCookie = new NewCookie("nist-voice-usersessionid","");
-//			NewCookie newCookie1 = new NewCookie("nist-voice-usersessionid", sessionkey, 365*24*60*60, dt, false, true);
             NewCookie newCookie1 = new NewCookie("nist-voice-usersessionid", sessionkey, "/", "", "Nistapp voice user session", 365 * 24 * 60 * 60, false);
             return Response.ok(sessionkey).cookie(newCookie1).build();
         } else {
