@@ -1,5 +1,6 @@
 package com.nistapp.voice.index.models;
 
+import org.hibernate.search.engine.backend.types.Sortable;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.*;
 
 import javax.persistence.*;
@@ -34,7 +35,7 @@ public class SequenceList {
     private String domain;
 
     @Column(name = "createdat", nullable = false)
-    @GenericField
+    @GenericField(name = "createdat_sort", sortable = Sortable.YES)
     private long createdat;
 
     @OneToMany(mappedBy = "sequenceList", fetch = FetchType.EAGER)

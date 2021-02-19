@@ -119,7 +119,7 @@ public class Clickevents {
     @Path("sequence/search")
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
-    public List<SequenceList> search(@QueryParam("query") String query, @QueryParam("domain") String domain) {
+    public List<SequenceList> search(@QueryParam("query") String query, @QueryParam("domain") String domain, @QueryParam("size") Optional<Integer> size) {
 
         final Function<SearchPredicateFactory, PredicateFinalStep> deletedFilter;
         deletedFilter = f -> f.match().field("deleted").matching(0);
@@ -141,6 +141,7 @@ public class Clickevents {
             queryFunction = domainFilter == null ?
                     SearchPredicateFactory::matchAll :
                     f -> f.bool().must(deletedFilter.apply(f)).must(validFilter.apply(f)).must(ignoreFilter.apply(f)).must(domainFilter.apply(f)).must(f.matchAll());
+            return Search.session(em).search(SequenceList.class).predicate(queryFunction).sort(f->f.field("createdat_sort").desc()).fetchHits(size.orElse(15));
         } else {
             queryFunction = domainFilter == null ?
                     f -> f.bool().must(deletedFilter.apply(f)).must(validFilter.apply(f)).must(ignoreFilter.apply(f)).must(f.simpleQueryString().fields("name", "userclicknodesSet.clickednodename")
@@ -149,9 +150,10 @@ public class Clickevents {
                             .must(f.simpleQueryString()
                                     .fields("name", "userclicknodesSet.clickednodename")
                                     .matching(query));
+            return Search.session(em).search(SequenceList.class).predicate(queryFunction).fetchHits(size.orElse(15));
         }
 
-        return Search.session(em).search(SequenceList.class).predicate(queryFunction).fetchAll().getHits();
+//        return Search.session(em).search(SequenceList.class).predicate(queryFunction).fetchAll().getHits();
     }
 
     @POST
