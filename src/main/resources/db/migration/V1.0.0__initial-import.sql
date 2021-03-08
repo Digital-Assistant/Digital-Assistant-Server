@@ -1,8 +1,8 @@
-CREATE DATABASE  IF NOT EXISTS `voice_plugin` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
-USE `voice_plugin`;
+CREATE DATABASE  IF NOT EXISTS `voice_plugin_prod` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
+USE `voice_plugin_prod`;
 -- MySQL dump 10.17  Distrib 10.3.20-MariaDB, for debian-linux-gnu (x86_64)
 --
--- Host: localhost    Database: voice_plugin
+-- Host: localhost    Database: voice_plugin_prod
 -- ------------------------------------------------------
 -- Server version	10.3.20-MariaDB-0ubuntu0.19.10.1
 
