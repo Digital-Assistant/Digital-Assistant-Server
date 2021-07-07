@@ -147,7 +147,7 @@ public class Clickevents {
             queryFunction = domainFilter == null ?
                     SearchPredicateFactory::matchAll :
                     f -> f.bool().must(deletedFilter.apply(f)).must(validFilter.apply(f)).must(ignoreFilter.apply(f)).must(domainFilter.apply(f)).must(f.matchAll());
-            searchresults = Search.session(em).search(SequenceList.class).predicate(queryFunction).sort(f->f.field("createdat_sort").desc()).fetchHits(size.orElse(15));
+            searchresults = Search.session(em).search(SequenceList.class).predicate(queryFunction).sort(f->f.field("createdat_sort").desc()).fetchHits(size.orElse(10));
 
         } else {
             queryFunction = domainFilter == null ?
@@ -157,7 +157,7 @@ public class Clickevents {
                             .must(f.simpleQueryString()
                                     .fields("name", "userclicknodesSet.clickednodename")
                                     .matching(query));
-            searchresults = Search.session(em).search(SequenceList.class).predicate(queryFunction).fetchHits(size.orElse(15));
+            searchresults = Search.session(em).search(SequenceList.class).predicate(queryFunction).fetchHits(size.orElse(10));
         }
         logger.info("elastic search results end time:" + formatter.format(new Date()));
         logger.info("--------------------------------------------------------------------------------------------------");
