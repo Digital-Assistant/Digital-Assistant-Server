@@ -9,7 +9,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "SequenceList")
-@Indexed
+/**
+ * we are changing the index name due to the conflict issue with the two instances running on the same server.
+ */
+@Indexed(index = "prod_sequencelist")
 public class SequenceList {
 
     @Id
