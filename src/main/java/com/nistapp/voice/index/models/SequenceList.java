@@ -9,7 +9,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "SequenceList")
-@Indexed
+@Indexed(index = "test_sequencelist")
 public class SequenceList {
 
     @Id
