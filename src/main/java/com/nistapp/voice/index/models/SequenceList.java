@@ -1,11 +1,13 @@
 package com.nistapp.voice.index.models;
 
+import org.hibernate.annotations.Type;
 import org.hibernate.search.engine.backend.types.Sortable;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.*;
 
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "SequenceList")
@@ -60,6 +62,14 @@ public class SequenceList {
     /*@OneToMany(mappedBy = "sequenceList", fetch = FetchType.LAZY)
     @IndexedEmbedded
     private List<SequenceVotes> sequenceVotes;*/
+
+    /***
+     * Saving additional info
+     */
+    @Column(name = "additionalParams")
+    @Type(type = "StringJsonObject")
+    @Field(name="", bridge = @FieldBridge( impl = AdditionalParams.class))
+    private Map<String, Object> additionalParams;
 
     @PrePersist
     public void preSave() {

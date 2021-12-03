@@ -18,6 +18,7 @@ dependencies {
     implementation 'io.quarkus:quarkus-hibernate-orm-panache'
     implementation 'io.quarkus:quarkus-hibernate-search-elasticsearch'
     implementation 'io.quarkus:quarkus-flyway'
+    implementation 'io.quarkus:quarkus-hibernate-validator:2.5.1.Final'
 
 //    implementation 'io.quarkus:quarkus-hibernate-orm'
 //    implementation 'org.jboss.jandex:jandex-maven-plugin'
