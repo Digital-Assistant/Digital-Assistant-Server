@@ -1,7 +1,13 @@
 package com.nistapp.voice.index.models;
 
+import com.vladmihalcea.hibernate.type.json.JsonType;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
 import org.hibernate.search.engine.backend.types.Sortable;
+import org.hibernate.search.mapper.pojo.bridge.mapping.annotation.PropertyBinderRef;
+import org.hibernate.search.mapper.pojo.extractor.mapping.annotation.ContainerExtract;
+import org.hibernate.search.mapper.pojo.extractor.mapping.annotation.ContainerExtraction;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.*;
 
 import javax.persistence.*;
@@ -9,11 +15,14 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
-@Entity
-@Table(name = "SequenceList")
 /**
  * we are changing the index name due to the conflict issue with the two instances running on the same server.
  */
+@Entity
+@Table(name = "SequenceList")
+@TypeDefs({
+        @TypeDef(name = "json", typeClass = JsonType.class)
+})
 @Indexed(index = "prod_sequencelist")
 public class SequenceList {
 
@@ -67,8 +76,12 @@ public class SequenceList {
      * Saving additional info
      */
     @Column(name = "additionalParams")
-    @Type(type = "StringJsonObject")
-    @Field(name="", bridge = @FieldBridge( impl = AdditionalParams.class))
+    @Basic
+    @Type(type = "json")
+    @PropertyBinding(binder = @PropertyBinderRef(type = AdditionalParamsBinder.class))
+    @IndexingDependency(
+            //TODO create appropriate dependencies check this stackoverflow https://stackoverflow.com/questions/68532341/index-hashmap-using-keys-as-fields-names-hibernatesearch
+            derivedFrom = {}, extraction = @ContainerExtraction(extract = ContainerExtract.NO))
     private Map<String, Object> additionalParams;
 
     @PrePersist
@@ -155,6 +168,14 @@ public class SequenceList {
 
     public void setIsIgnored(Integer isIgnored) {
         this.isIgnored = isIgnored;
+    }
+
+    public Map<String, Object> getAdditionalParams() {
+        return additionalParams;
+    }
+
+    public void setAdditionalParams(Map<String, Object> additionalParams) {
+        this.additionalParams = additionalParams;
     }
 
     /*public List<SequenceVotes> getSequenceVotes() {
