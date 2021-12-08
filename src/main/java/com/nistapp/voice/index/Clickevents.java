@@ -27,7 +27,7 @@ import java.text.SimpleDateFormat;
 @Path("/clickevents")
 public class Clickevents {
 
-    private static Logger logger = LoggerFactory.getLogger(Clickevents.class);
+    private static final Logger logger = LoggerFactory.getLogger(Clickevents.class);
 
     @Inject
     EntityManager em;
@@ -147,7 +147,7 @@ public class Clickevents {
             queryFunction = domainFilter == null ?
                     SearchPredicateFactory::matchAll :
                     f -> f.bool().must(deletedFilter.apply(f)).must(validFilter.apply(f)).must(ignoreFilter.apply(f)).must(domainFilter.apply(f)).must(f.matchAll());
-            searchresults = Search.session(em).search(SequenceList.class).predicate(queryFunction).sort(f->f.field("createdat_sort").desc()).fetchHits(size.orElse(10));
+            searchresults = Search.session(em).search(SequenceList.class).where(queryFunction).sort(f -> f.field("createdat_sort").desc()).fetchHits(size.orElse(10));
 
         } else {
             queryFunction = domainFilter == null ?
@@ -157,7 +157,7 @@ public class Clickevents {
                             .must(f.simpleQueryString()
                                     .fields("name", "userclicknodesSet.clickednodename")
                                     .matching(query));
-            searchresults = Search.session(em).search(SequenceList.class).predicate(queryFunction).fetchHits(size.orElse(10));
+            searchresults = Search.session(em).search(SequenceList.class).where(queryFunction).fetchHits(size.orElse(10));
         }
         logger.info("elastic search results end time:" + formatter.format(new Date()));
         logger.info("--------------------------------------------------------------------------------------------------");
@@ -171,15 +171,15 @@ public class Clickevents {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public SequenceList deletesequence(SequenceList sequenceList){
+    public SequenceList deletesequence(SequenceList sequenceList) {
         TypedQuery<SequenceList> query = em.createQuery("select sq from SequenceList sq where sq.id=:id", SequenceList.class);
         query.setParameter("id", sequenceList.getId());
         SequenceList dbresult = query.getSingleResult();
-        if(dbresult == null)
+        if (dbresult == null)
             throw new WebApplicationException(Response.Status.NOT_FOUND);
-        String dbuserid=dbresult.getUsersessionid();
-        String sentuserid=sequenceList.getUsersessionid();
-        if(dbuserid.equals(sentuserid)){
+        String dbuserid = dbresult.getUsersessionid();
+        String sentuserid = sequenceList.getUsersessionid();
+        if (dbuserid.equals(sentuserid)) {
             dbresult.setDeleted(1);
             em.persist(dbresult);
             return dbresult;
@@ -193,7 +193,7 @@ public class Clickevents {
     @GET
     @Path("sequence/votes/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<SequenceVotes> getsequencevotes(@PathParam("id") long id){
+    public List<SequenceVotes> getsequencevotes(@PathParam("id") long id) {
         TypedQuery<SequenceVotes> query = em.createQuery("select sqv from SequenceVotes sqv where sqv.sequenceid=:id", SequenceVotes.class);
         query.setParameter("id", id);
         return query.getResultList();
@@ -204,11 +204,11 @@ public class Clickevents {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public SequenceVotes addsequencevote(SequenceVotes sequenceVotes){
+    public SequenceVotes addsequencevote(SequenceVotes sequenceVotes) {
 
         try {
-            SequenceVotes dbsequenceVotes = sequenceVotesDAO.findbysequenceidusersessionid(sequenceVotes.getSequenceid(),sequenceVotes.getUsersessionid());
-            if(dbsequenceVotes!=null){
+            SequenceVotes dbsequenceVotes = sequenceVotesDAO.findbysequenceidusersessionid(sequenceVotes.getSequenceid(), sequenceVotes.getUsersessionid());
+            if (dbsequenceVotes != null) {
                 dbsequenceVotes.setUpvote(sequenceVotes.getUpvote());
                 dbsequenceVotes.setDownvote(sequenceVotes.getDownvote());
                 sequenceVotes = dbsequenceVotes;
@@ -224,9 +224,9 @@ public class Clickevents {
     @DELETE
     @Path("sequence/deletevote/{id}/{usersessionid}")
     @Transactional
-    public void deletesequencevote(@PathParam("id") long id, @PathParam("usersessionid") String usersessionid){
+    public void deletesequencevote(@PathParam("id") long id, @PathParam("usersessionid") String usersessionid) {
         SequenceVotes dbsequenceVotes = sequenceVotesDAO.findbyusersessionid(usersessionid);
-        if(dbsequenceVotes!=null){
+        if (dbsequenceVotes != null) {
             dbsequenceVotes.delete();
         }
     }
@@ -235,14 +235,14 @@ public class Clickevents {
     @Path("userclick")
     @Consumes(MediaType.APPLICATION_JSON)
     @Transactional
-    public void adduserclick(ClickTrack clickTrack){
+    public void adduserclick(ClickTrack clickTrack) {
         clickTrack.persist();
     }
 
     @GET
     @Path("/suggested")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Userclicknodes> suggestSequenceList(@QueryParam("domain") String domain){
+    public List<Userclicknodes> suggestSequenceList(@QueryParam("domain") String domain) {
         List<Integer> nodeids = this.getrandomnumber();
         List<Userclicknodes> userclicknodes = new ArrayList<>();
 
@@ -254,15 +254,15 @@ public class Clickevents {
         return userclicknodes;
     }
 
-    public static List<Integer> getrandomnumber(){
+    public static List<Integer> getrandomnumber() {
 
         Random rand = new Random();
 
-        Integer generatelength=rand.nextInt((10-3)+1)+3;
+        Integer generatelength = rand.nextInt((10 - 3) + 1) + 3;
 
         List<Integer> intlist = new ArrayList<>();
 
-        for(int i=0;i<generatelength;i++){
+        for (int i = 0; i < generatelength; i++) {
             intlist.add(rand.nextInt(100));
         }
 
