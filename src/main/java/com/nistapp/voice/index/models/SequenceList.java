@@ -30,7 +30,7 @@ public class SequenceList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true, length = 11)
     @GenericField
-    private long id;
+    private int id;
 
     @FullTextField(analyzer = "english")
     @Column(length = 5000)
@@ -76,9 +76,9 @@ public class SequenceList {
      * Saving additional info
      */
     @Column(name = "additionalParams")
-    @Basic
+//    @Basic
     @Type(type = "json")
-    @PropertyBinding(binder = @PropertyBinderRef(type = AdditionalParamsBinder.class))
+        @PropertyBinding(binder = @PropertyBinderRef(type = AdditionalParamsBinder.class))
     @IndexingDependency(
             //TODO create appropriate dependencies check this stackoverflow https://stackoverflow.com/questions/68532341/index-hashmap-using-keys-as-fields-names-hibernatesearch
             derivedFrom = {}, extraction = @ContainerExtraction(extract = ContainerExtract.NO))
@@ -94,7 +94,7 @@ public class SequenceList {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
