@@ -1,0 +1,1 @@
+ALTER TABLE IF EXISTS sequencelist ADD COLUMN additionalparams json;

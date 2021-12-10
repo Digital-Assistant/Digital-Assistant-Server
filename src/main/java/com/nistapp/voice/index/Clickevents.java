@@ -96,13 +96,14 @@ public class Clickevents {
         s2.setUserclicknodelist(sequenceList.getUserclicknodelist());
         s2.setIsValid(sequenceList.getIsValid());
         s2.setIsIgnored(sequenceList.getIsIgnored());
+        s2.setAdditionalParams(sequenceList.getAdditionalParams());
         em.persist(s2);
         List<Userclicknodes> list = new ArrayList<>();
-        for (Userclicknodes userclicknodes : sequenceList.getUserclicknodesSet()) {
+        /*for (Userclicknodes userclicknodes : sequenceList.getUserclicknodesSet()) {
             Userclicknodes u2 = em.find(Userclicknodes.class, userclicknodes.getId());
             u2.setSequenceList(s2);
             list.add(u2);
-        }
+        }*/
         s2.setUserclicknodesSet(list);
         em.persist(s2);
         return s2;

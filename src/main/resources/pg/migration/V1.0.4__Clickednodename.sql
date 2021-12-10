@@ -1,0 +1,1 @@
+Alter table userclicknodes  ALTER clickednodename TYPE TEXT;

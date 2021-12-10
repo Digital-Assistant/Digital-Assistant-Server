@@ -15,7 +15,8 @@ public class AdditionalParamsBinder implements PropertyBinder {
         context.dependencies().useRootOnly();
         IndexSchemaElement schemaElement = context.indexSchemaElement();
         IndexSchemaObjectField objectField = schemaElement.objectField("additionalParams");
+        objectField.fieldTemplate("additionalParamsData", f -> f.asString().analyzer("english"));
         final AdditionalParamsBridge bridge = new AdditionalParamsBridge(objectField.toReference());
-        context.bridge(Map.class,  bridge);
+        context.bridge(Map.class, bridge);
     }
 }

@@ -30,7 +30,7 @@ public class SequenceList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true, length = 11)
     @GenericField
-    private long id;
+    private Integer id;
 
     @FullTextField(analyzer = "english")
     @Column(length = 5000)
@@ -75,7 +75,7 @@ public class SequenceList {
     /***
      * Saving additional info
      */
-    @Column(name = "additionalParams")
+    @Column(name = "additionalParams", columnDefinition = "json")
     @Basic
     @Type(type = "json")
     @PropertyBinding(binder = @PropertyBinderRef(type = AdditionalParamsBinder.class))
@@ -90,11 +90,11 @@ public class SequenceList {
         this.createdat = Instant.now().toEpochMilli();
     }
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
