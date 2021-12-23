@@ -6,7 +6,9 @@ import io.quarkus.runtime.StartupEvent;
 import org.eclipse.microprofile.config.ConfigProvider;
 import org.hibernate.search.engine.search.predicate.dsl.PredicateFinalStep;
 import org.hibernate.search.engine.search.predicate.dsl.SearchPredicateFactory;
+import org.hibernate.search.engine.search.query.dsl.SearchQueryOptionsStep;
 import org.hibernate.search.mapper.orm.Search;
+import org.hibernate.search.mapper.orm.search.loading.dsl.SearchLoadingOptionsStep;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,10 +21,9 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Function;
-
-import java.text.SimpleDateFormat;
 
 @Path("/clickevents")
 public class Clickevents {
@@ -99,11 +100,11 @@ public class Clickevents {
         s2.setAdditionalParams(sequenceList.getAdditionalParams());
         em.persist(s2);
         List<Userclicknodes> list = new ArrayList<>();
-        /*for (Userclicknodes userclicknodes : sequenceList.getUserclicknodesSet()) {
+        for (Userclicknodes userclicknodes : sequenceList.getUserclicknodesSet()) {
             Userclicknodes u2 = em.find(Userclicknodes.class, userclicknodes.getId());
             u2.setSequenceList(s2);
             list.add(u2);
-        }*/
+        }
         s2.setUserclicknodesSet(list);
         em.persist(s2);
         return s2;
@@ -122,10 +123,17 @@ public class Clickevents {
     @Path("sequence/search")
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
-    public List<SequenceList> search(@QueryParam("query") String query, @QueryParam("domain") String domain, @QueryParam("size") Optional<Integer> size) {
+    public List<SequenceList> search(@QueryParam("query") String query, @QueryParam("domain") String domain, @QueryParam("size") Optional<Integer> size, @QueryParam("additionalParams") Optional<String> additionalParams) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss:SSS");
         logger.info("--------------------------------------------------------------------------------------------------");
         logger.info("Api invoked at:" + formatter.format(new Date()));
+
+        String jsonString = additionalParams.toString().replaceAll("\\[","").replaceAll("\\]","").replaceAll("Optional","").replaceAll("\\{","").replaceAll("\\}","").toString();
+
+        System.out.println(jsonString);
+
+        String elasticQuery = "deleted:0 AND isValid:1 AND isIgnored:0";
+
         final Function<SearchPredicateFactory, PredicateFinalStep> deletedFilter;
         deletedFilter = f -> f.match().field("deleted").matching(0);
 
@@ -139,16 +147,17 @@ public class Clickevents {
         final Function<SearchPredicateFactory, PredicateFinalStep> queryFunction;
         if (domain != null && !domain.isEmpty()) {
             domainFilter = f -> f.match().field("domain").matching(domain);
+            elasticQuery += "AND domain:"+domain;
         } else {
             domainFilter = null;
         }
         List<SequenceList> searchresults;
+        SearchQueryOptionsStep<?, SequenceList, SearchLoadingOptionsStep, ?, ?> searchSession;
         logger.info("elastic search results start time:" + formatter.format(new Date()));
         if (query == null || query.isEmpty()) {
             queryFunction = domainFilter == null ?
                     SearchPredicateFactory::matchAll :
                     f -> f.bool().must(deletedFilter.apply(f)).must(validFilter.apply(f)).must(ignoreFilter.apply(f)).must(domainFilter.apply(f)).must(f.matchAll());
-            searchresults = Search.session(em).search(SequenceList.class).where(queryFunction).sort(f -> f.field("createdat_sort").desc()).fetchHits(size.orElse(10));
 
         } else {
             queryFunction = domainFilter == null ?
@@ -158,8 +167,34 @@ public class Clickevents {
                             .must(f.simpleQueryString()
                                     .fields("name", "userclicknodesSet.clickednodename")
                                     .matching(query));
-            searchresults = Search.session(em).search(SequenceList.class).where(queryFunction).fetchHits(size.orElse(10));
+            elasticQuery += "AND (name:"+query+" OR userclicknodesSet.clickednodename:"+query+")";
         }
+
+        final ArrayList<Function<SearchPredicateFactory, PredicateFinalStep>> additionalParamsFilter = new ArrayList<>();
+
+//        final Function<SearchPredicateFactory, PredicateFinalStep> additionalFilter;
+
+        String[] params = jsonString.split(",");
+        if(params.length>0) {
+            for (int i = 0; i < params.length; i++) {
+                String[] param = params[i].toString().replaceAll("\"", "").split(":");
+                System.out.println(param[0] + ":" + param[1]);
+                SearchPredicateFactory additionalFilter;
+                additionalFilter.bool().match().field("additionalParams." + param[0]).matching(param[1]);
+                queryFunction.apply(additionalFilter);
+//            additionalParamsFilter.add(f -> f.match().field("additionalParams."+param[0]).matching(param[1]));
+//            additionalParamsFilter.add(f -> f.match().field("additionalParams."+param[0]).matching(0));
+            }
+        }
+
+        searchSession = Search.session(em).search(SequenceList.class).where(queryFunction);
+//        searchSession = Search.session(em).search(SequenceList.class).where(elasticQuery);
+        if (query == null || query.isEmpty()){
+            searchSession = searchSession.sort(f -> f.field("createdat_sort").desc());
+        }
+
+        searchresults = searchSession.fetchHits(size.orElse(10));
+
         logger.info("elastic search results end time:" + formatter.format(new Date()));
         logger.info("--------------------------------------------------------------------------------------------------");
         return searchresults;

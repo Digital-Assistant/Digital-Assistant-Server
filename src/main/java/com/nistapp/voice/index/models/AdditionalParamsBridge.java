@@ -18,7 +18,9 @@ public class AdditionalParamsBridge implements PropertyBridge<Map> {
     @Override
     public void write(DocumentElement target, Map bridgedElement, PropertyBridgeWriteContext context) {
         Map<String, Object> additionalParams = (Map<String, Object>) bridgedElement;
-        DocumentElement additionalParamsData = target.addObject(reference);
-        additionalParams.forEach((field, value) -> additionalParamsData.addValue(field, value.toString()));
+        if(additionalParams != null) {
+            DocumentElement additionalParamsData = target.addObject(reference);
+            additionalParams.forEach((field, value) -> additionalParamsData.addValue(field, value.toString()));
+        }
     }
 }

@@ -75,7 +75,7 @@ public class SequenceList {
     /***
      * Saving additional info
      */
-    @Column(name = "additionalParams", columnDefinition = "json")
+    @Column(name = "additionalParams", columnDefinition = "LONGTEXT")
     @Basic
     @Type(type = "json")
     @PropertyBinding(binder = @PropertyBinderRef(type = AdditionalParamsBinder.class))
