@@ -130,9 +130,15 @@ public class Clickevents {
 
         String jsonString = additionalParams.toString().replaceAll("\\[","").replaceAll("\\]","").replaceAll("Optional","").replaceAll("\\{","").replaceAll("\\}","").toString();
 
-        System.out.println(jsonString);
+        final ArrayList<Function<SearchPredicateFactory, PredicateFinalStep>> additionalParamsFilter = new ArrayList<>();
 
-        String elasticQuery = "deleted:0 AND isValid:1 AND isIgnored:0";
+        String[] params = jsonString.split(",");
+        if(params.length>0) {
+            for (int i = 0; i < params.length; i++) {
+                String[] param = params[i].toString().replaceAll("\"", "").split(":");
+                additionalParamsFilter.add(f -> f.bool().should(f1->f1.match().field("additionalParams."+param[0]).matching(param[1])).should(f2 -> f2.match().field("additionalParams."+param[0]).matching("0")));
+            }
+        }
 
         final Function<SearchPredicateFactory, PredicateFinalStep> deletedFilter;
         deletedFilter = f -> f.match().field("deleted").matching(0);
@@ -147,48 +153,31 @@ public class Clickevents {
         final Function<SearchPredicateFactory, PredicateFinalStep> queryFunction;
         if (domain != null && !domain.isEmpty()) {
             domainFilter = f -> f.match().field("domain").matching(domain);
-            elasticQuery += "AND domain:"+domain;
         } else {
             domainFilter = null;
+            throw new BadRequestException();
         }
         List<SequenceList> searchresults;
         SearchQueryOptionsStep<?, SequenceList, SearchLoadingOptionsStep, ?, ?> searchSession;
         logger.info("elastic search results start time:" + formatter.format(new Date()));
-        if (query == null || query.isEmpty()) {
-            queryFunction = domainFilter == null ?
-                    SearchPredicateFactory::matchAll :
-                    f -> f.bool().must(deletedFilter.apply(f)).must(validFilter.apply(f)).must(ignoreFilter.apply(f)).must(domainFilter.apply(f)).must(f.matchAll());
 
-        } else {
-            queryFunction = domainFilter == null ?
-                    f -> f.bool().must(deletedFilter.apply(f)).must(validFilter.apply(f)).must(ignoreFilter.apply(f)).must(f.simpleQueryString().fields("name", "userclicknodesSet.clickednodename")
-                            .matching(query)) :
-                    f -> f.bool().must(deletedFilter.apply(f)).must(validFilter.apply(f)).must(ignoreFilter.apply(f)).must(domainFilter.apply(f))
-                            .must(f.simpleQueryString()
-                                    .fields("name", "userclicknodesSet.clickednodename")
-                                    .matching(query));
-            elasticQuery += "AND (name:"+query+" OR userclicknodesSet.clickednodename:"+query+")";
-        }
-
-        final ArrayList<Function<SearchPredicateFactory, PredicateFinalStep>> additionalParamsFilter = new ArrayList<>();
-
-//        final Function<SearchPredicateFactory, PredicateFinalStep> additionalFilter;
-
-        String[] params = jsonString.split(",");
-        if(params.length>0) {
-            for (int i = 0; i < params.length; i++) {
-                String[] param = params[i].toString().replaceAll("\"", "").split(":");
-                System.out.println(param[0] + ":" + param[1]);
-                SearchPredicateFactory additionalFilter;
-                additionalFilter.bool().match().field("additionalParams." + param[0]).matching(param[1]);
-                queryFunction.apply(additionalFilter);
-//            additionalParamsFilter.add(f -> f.match().field("additionalParams."+param[0]).matching(param[1]));
-//            additionalParamsFilter.add(f -> f.match().field("additionalParams."+param[0]).matching(0));
+        queryFunction = f -> {
+            var search = f.bool().must(deletedFilter.apply(f)).must(validFilter.apply(f)).must(ignoreFilter.apply(f));
+            if(domainFilter != null) {
+                search.must(domainFilter.apply(f));
             }
-        }
+            for(Function<SearchPredicateFactory, PredicateFinalStep> additionalParam: additionalParamsFilter){
+                search.must(additionalParam.apply(f));
+            }
+            if(query == null || query.isEmpty()) {
+                search.must(f.matchAll());
+            } else {
+                search.must(f.simpleQueryString().fields("name", "userclicknodesSet.clickednodename").matching(query));
+            }
+            return search;
+        };
 
         searchSession = Search.session(em).search(SequenceList.class).where(queryFunction);
-//        searchSession = Search.session(em).search(SequenceList.class).where(elasticQuery);
         if (query == null || query.isEmpty()){
             searchSession = searchSession.sort(f -> f.field("createdat_sort").desc());
         }
@@ -198,8 +187,6 @@ public class Clickevents {
         logger.info("elastic search results end time:" + formatter.format(new Date()));
         logger.info("--------------------------------------------------------------------------------------------------");
         return searchresults;
-
-//        return Search.session(em).search(SequenceList.class).predicate(queryFunction).fetchAll().getHits();
     }
 
     @POST
