@@ -23,7 +23,6 @@ import java.util.Map;
 @TypeDefs({
         @TypeDef(name = "json", typeClass = JsonType.class)
 })
-@Indexed(index = "prod_sequencelist")
 @Indexed(index = "test_sequencelist")
 public class SequenceList {
 

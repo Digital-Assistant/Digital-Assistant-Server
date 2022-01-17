@@ -1,4 +1,4 @@
-CREATE TABLE `voice_plugin_prod`.`ClickTrack` (
+CREATE TABLE `voice_plugin`.`ClickTrack` (
 	                                         `id` BIGINT NOT NULL AUTO_INCREMENT,
 	                                         `usersessionid` VARCHAR(500) NOT NULL,
 	                                         `clicktype` VARCHAR(200) NOT NULL,
