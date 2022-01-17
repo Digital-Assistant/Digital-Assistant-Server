@@ -15,7 +15,7 @@ public class UserclicknodeConverter implements AttributeConverter<List<Userclick
 	private static final String SEPARATOR = ",";
 
 	@Inject
-	private UserclicknodesRepository userclicknodesRepository;
+	UserclicknodesRepository userclicknodesRepository;
 
 	@Override
 	public String convertToDatabaseColumn(List<Userclicknodes> userclicknodes) {

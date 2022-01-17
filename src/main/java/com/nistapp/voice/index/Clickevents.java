@@ -6,7 +6,9 @@ import io.quarkus.runtime.StartupEvent;
 import org.eclipse.microprofile.config.ConfigProvider;
 import org.hibernate.search.engine.search.predicate.dsl.PredicateFinalStep;
 import org.hibernate.search.engine.search.predicate.dsl.SearchPredicateFactory;
+import org.hibernate.search.engine.search.query.dsl.SearchQueryOptionsStep;
 import org.hibernate.search.mapper.orm.Search;
+import org.hibernate.search.mapper.orm.search.loading.dsl.SearchLoadingOptionsStep;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,15 +21,14 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Function;
-
-import java.text.SimpleDateFormat;
 
 @Path("/clickevents")
 public class Clickevents {
 
-    private static Logger logger = LoggerFactory.getLogger(Clickevents.class);
+    private static final Logger logger = LoggerFactory.getLogger(Clickevents.class);
 
     @Inject
     EntityManager em;
@@ -96,6 +97,7 @@ public class Clickevents {
         s2.setUserclicknodelist(sequenceList.getUserclicknodelist());
         s2.setIsValid(sequenceList.getIsValid());
         s2.setIsIgnored(sequenceList.getIsIgnored());
+        s2.setAdditionalParams(sequenceList.getAdditionalParams());
         em.persist(s2);
         List<Userclicknodes> list = new ArrayList<>();
         for (Userclicknodes userclicknodes : sequenceList.getUserclicknodesSet()) {
@@ -121,10 +123,26 @@ public class Clickevents {
     @Path("sequence/search")
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
-    public List<SequenceList> search(@QueryParam("query") String query, @QueryParam("domain") String domain, @QueryParam("size") Optional<Integer> size) {
+    public List<SequenceList> search(@QueryParam("query") String query, @QueryParam("domain") String domain, @QueryParam("size") Optional<Integer> size, @QueryParam("additionalParams") Optional<String> additionalParams) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss:SSS");
         logger.info("--------------------------------------------------------------------------------------------------");
         logger.info("Api invoked at:" + formatter.format(new Date()));
+
+        String jsonString = additionalParams.toString().replaceAll("\\[","").replaceAll("\\]","").replaceAll("Optional","").replaceAll("\\{","").replaceAll("\\}","").replaceAll(".empty","").toString();
+
+        final ArrayList<Function<SearchPredicateFactory, PredicateFinalStep>> additionalParamsFilter = new ArrayList<>();
+
+        String[] params = jsonString.split(",");
+
+        if(params.length>0) {
+            for (int i = 0; i < params.length; i++) {
+                if(!params[i].isEmpty() && params[i].toString() != ".empty") {
+                    String[] param = params[i].toString().replaceAll("\"", "").split(":");
+                    additionalParamsFilter.add(f -> f.bool().should(f1->f1.match().field("additionalParams."+param[0]).matching(param[1])).should(f2 -> f2.match().field("additionalParams."+param[0]).matching("0")));
+                }
+            }
+        }
+
         final Function<SearchPredicateFactory, PredicateFinalStep> deletedFilter;
         deletedFilter = f -> f.match().field("deleted").matching(0);
 
@@ -140,30 +158,40 @@ public class Clickevents {
             domainFilter = f -> f.match().field("domain").matching(domain);
         } else {
             domainFilter = null;
+            throw new BadRequestException();
         }
         List<SequenceList> searchresults;
+        SearchQueryOptionsStep<?, SequenceList, SearchLoadingOptionsStep, ?, ?> searchSession;
         logger.info("elastic search results start time:" + formatter.format(new Date()));
-        if (query == null || query.isEmpty()) {
-            queryFunction = domainFilter == null ?
-                    SearchPredicateFactory::matchAll :
-                    f -> f.bool().must(deletedFilter.apply(f)).must(validFilter.apply(f)).must(ignoreFilter.apply(f)).must(domainFilter.apply(f)).must(f.matchAll());
-            searchresults = Search.session(em).search(SequenceList.class).predicate(queryFunction).sort(f->f.field("createdat_sort").desc()).fetchHits(size.orElse(10));
 
-        } else {
-            queryFunction = domainFilter == null ?
-                    f -> f.bool().must(deletedFilter.apply(f)).must(validFilter.apply(f)).must(ignoreFilter.apply(f)).must(f.simpleQueryString().fields("name", "userclicknodesSet.clickednodename")
-                            .matching(query)) :
-                    f -> f.bool().must(deletedFilter.apply(f)).must(validFilter.apply(f)).must(ignoreFilter.apply(f)).must(domainFilter.apply(f))
-                            .must(f.simpleQueryString()
-                                    .fields("name", "userclicknodesSet.clickednodename")
-                                    .matching(query));
-            searchresults = Search.session(em).search(SequenceList.class).predicate(queryFunction).fetchHits(size.orElse(10));
+        queryFunction = f -> {
+            var search = f.bool().must(deletedFilter.apply(f)).must(validFilter.apply(f)).must(ignoreFilter.apply(f));
+            if(domainFilter != null) {
+                search.must(domainFilter.apply(f));
+            }
+            if(additionalParamsFilter.size() > 0) {
+                for (Function<SearchPredicateFactory, PredicateFinalStep> additionalParam : additionalParamsFilter) {
+                    search.must(additionalParam.apply(f));
+                }
+            }
+            if(query == null || query.isEmpty()) {
+                search.must(f.matchAll());
+            } else {
+                search.must(f.simpleQueryString().fields("name", "userclicknodesSet.clickednodename").matching(query));
+            }
+            return search;
+        };
+
+        searchSession = Search.session(em).search(SequenceList.class).where(queryFunction);
+        if (query == null || query.isEmpty()){
+            searchSession = searchSession.sort(f -> f.field("createdat_sort").desc());
         }
+
+        searchresults = searchSession.fetchHits(size.orElse(10));
+
         logger.info("elastic search results end time:" + formatter.format(new Date()));
         logger.info("--------------------------------------------------------------------------------------------------");
         return searchresults;
-
-//        return Search.session(em).search(SequenceList.class).predicate(queryFunction).fetchAll().getHits();
     }
 
     @POST
@@ -171,15 +199,15 @@ public class Clickevents {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public SequenceList deletesequence(SequenceList sequenceList){
+    public SequenceList deletesequence(SequenceList sequenceList) {
         TypedQuery<SequenceList> query = em.createQuery("select sq from SequenceList sq where sq.id=:id", SequenceList.class);
         query.setParameter("id", sequenceList.getId());
         SequenceList dbresult = query.getSingleResult();
-        if(dbresult == null)
+        if (dbresult == null)
             throw new WebApplicationException(Response.Status.NOT_FOUND);
-        String dbuserid=dbresult.getUsersessionid();
-        String sentuserid=sequenceList.getUsersessionid();
-        if(dbuserid.equals(sentuserid)){
+        String dbuserid = dbresult.getUsersessionid();
+        String sentuserid = sequenceList.getUsersessionid();
+        if (dbuserid.equals(sentuserid)) {
             dbresult.setDeleted(1);
             em.persist(dbresult);
             return dbresult;
@@ -193,7 +221,7 @@ public class Clickevents {
     @GET
     @Path("sequence/votes/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<SequenceVotes> getsequencevotes(@PathParam("id") long id){
+    public List<SequenceVotes> getsequencevotes(@PathParam("id") long id) {
         TypedQuery<SequenceVotes> query = em.createQuery("select sqv from SequenceVotes sqv where sqv.sequenceid=:id", SequenceVotes.class);
         query.setParameter("id", id);
         return query.getResultList();
@@ -204,11 +232,11 @@ public class Clickevents {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public SequenceVotes addsequencevote(SequenceVotes sequenceVotes){
+    public SequenceVotes addsequencevote(SequenceVotes sequenceVotes) {
 
         try {
-            SequenceVotes dbsequenceVotes = sequenceVotesDAO.findbysequenceidusersessionid(sequenceVotes.getSequenceid(),sequenceVotes.getUsersessionid());
-            if(dbsequenceVotes!=null){
+            SequenceVotes dbsequenceVotes = sequenceVotesDAO.findbysequenceidusersessionid(sequenceVotes.getSequenceid(), sequenceVotes.getUsersessionid());
+            if (dbsequenceVotes != null) {
                 dbsequenceVotes.setUpvote(sequenceVotes.getUpvote());
                 dbsequenceVotes.setDownvote(sequenceVotes.getDownvote());
                 sequenceVotes = dbsequenceVotes;
@@ -224,9 +252,9 @@ public class Clickevents {
     @DELETE
     @Path("sequence/deletevote/{id}/{usersessionid}")
     @Transactional
-    public void deletesequencevote(@PathParam("id") long id, @PathParam("usersessionid") String usersessionid){
+    public void deletesequencevote(@PathParam("id") long id, @PathParam("usersessionid") String usersessionid) {
         SequenceVotes dbsequenceVotes = sequenceVotesDAO.findbyusersessionid(usersessionid);
-        if(dbsequenceVotes!=null){
+        if (dbsequenceVotes != null) {
             dbsequenceVotes.delete();
         }
     }
@@ -235,14 +263,14 @@ public class Clickevents {
     @Path("userclick")
     @Consumes(MediaType.APPLICATION_JSON)
     @Transactional
-    public void adduserclick(ClickTrack clickTrack){
+    public void adduserclick(ClickTrack clickTrack) {
         clickTrack.persist();
     }
 
     @GET
     @Path("/suggested")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Userclicknodes> suggestSequenceList(@QueryParam("domain") String domain){
+    public List<Userclicknodes> suggestSequenceList(@QueryParam("domain") String domain) {
         List<Integer> nodeids = this.getrandomnumber();
         List<Userclicknodes> userclicknodes = new ArrayList<>();
 
@@ -254,15 +282,15 @@ public class Clickevents {
         return userclicknodes;
     }
 
-    public static List<Integer> getrandomnumber(){
+    public static List<Integer> getrandomnumber() {
 
         Random rand = new Random();
 
-        Integer generatelength=rand.nextInt((10-3)+1)+3;
+        Integer generatelength = rand.nextInt((10 - 3) + 1) + 3;
 
         List<Integer> intlist = new ArrayList<>();
 
-        for(int i=0;i<generatelength;i++){
+        for (int i = 0; i < generatelength; i++) {
             intlist.add(rand.nextInt(100));
         }
 

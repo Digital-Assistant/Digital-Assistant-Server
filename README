@@ -1,0 +1,10 @@
+# digital-assistant-server
+This is the server for Digital Assistant  
+
+Here is the tool in action: https://youtu.be/Iz2WgKY0fhc
+
+Telegram: https://t.me/UniDigitalAssistant
+Discord: https://discord.gg/92NqDEUbxV
+
+Note thate you will need both the server(this repo) and client(https://github.com/Digital-Assistant/Digital_Assistant_Client) to get the functionality in above video.
+Will try to release a docker version of server soon to ease deployment.

@@ -13,16 +13,16 @@ import java.util.List;
 
 public class LocalPropertiesConfigSourceProvider implements ConfigSourceProvider {
 
-    private static Logger logger = LoggerFactory.getLogger(LocalPropertiesConfigSourceProvider.class);
+    private static final Logger logger = LoggerFactory.getLogger(LocalPropertiesConfigSourceProvider.class);
 
-    private List<ConfigSource> configSources = new ArrayList<>();
+    private final List<ConfigSource> configSources = new ArrayList<>();
 
 
     public LocalPropertiesConfigSourceProvider() throws IOException {
         URL url = Thread.currentThread().getContextClassLoader().getResource("local.properties");
         if (url != null) {
             ConfigSource local = new PropertiesConfigSource(url);
-            logger.info("Adding properties file " + url.toString() + " with ordinal " + local.getOrdinal());
+            logger.info("Adding properties file " + url + " with ordinal " + local.getOrdinal());
             configSources.add(local);
 
         }

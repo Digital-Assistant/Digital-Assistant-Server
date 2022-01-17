@@ -1,14 +1,29 @@
 package com.nistapp.voice.index.models;
 
+import com.vladmihalcea.hibernate.type.json.JsonType;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
 import org.hibernate.search.engine.backend.types.Sortable;
+import org.hibernate.search.mapper.pojo.bridge.mapping.annotation.PropertyBinderRef;
+import org.hibernate.search.mapper.pojo.extractor.mapping.annotation.ContainerExtract;
+import org.hibernate.search.mapper.pojo.extractor.mapping.annotation.ContainerExtraction;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.*;
 
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 
+/**
+ * we are changing the index name due to the conflict issue with the two instances running on the same server.
+ */
 @Entity
 @Table(name = "SequenceList")
+@TypeDefs({
+        @TypeDef(name = "json", typeClass = JsonType.class)
+})
+@Indexed(index = "prod_sequencelist")
 @Indexed(index = "test_sequencelist")
 public class SequenceList {
 
@@ -16,7 +31,7 @@ public class SequenceList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true, length = 11)
     @GenericField
-    private long id;
+    private Integer id;
 
     @FullTextField(analyzer = "english")
     @Column(length = 5000)
@@ -58,17 +73,29 @@ public class SequenceList {
     @IndexedEmbedded
     private List<SequenceVotes> sequenceVotes;*/
 
+    /***
+     * Saving additional info
+     */
+    @Column(name = "additionalParams", columnDefinition = "LONGTEXT")
+    @Basic
+    @Type(type = "json")
+    @PropertyBinding(binder = @PropertyBinderRef(type = AdditionalParamsBinder.class))
+    @IndexingDependency(
+            //TODO create appropriate dependencies check this stackoverflow https://stackoverflow.com/questions/68532341/index-hashmap-using-keys-as-fields-names-hibernatesearch
+            derivedFrom = {}, extraction = @ContainerExtraction(extract = ContainerExtract.NO))
+    private Map<String, Object> additionalParams;
+
     @PrePersist
     public void preSave() {
 //        this.createdat = new Timestamp(System.currentTimeMillis());
         this.createdat = Instant.now().toEpochMilli();
     }
 
-    public long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -142,6 +169,14 @@ public class SequenceList {
 
     public void setIsIgnored(Integer isIgnored) {
         this.isIgnored = isIgnored;
+    }
+
+    public Map<String, Object> getAdditionalParams() {
+        return additionalParams;
+    }
+
+    public void setAdditionalParams(Map<String, Object> additionalParams) {
+        this.additionalParams = additionalParams;
     }
 
     /*public List<SequenceVotes> getSequenceVotes() {
