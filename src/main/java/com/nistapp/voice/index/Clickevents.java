@@ -128,15 +128,18 @@ public class Clickevents {
         logger.info("--------------------------------------------------------------------------------------------------");
         logger.info("Api invoked at:" + formatter.format(new Date()));
 
-        String jsonString = additionalParams.toString().replaceAll("\\[","").replaceAll("\\]","").replaceAll("Optional","").replaceAll("\\{","").replaceAll("\\}","").toString();
+        String jsonString = additionalParams.toString().replaceAll("\\[","").replaceAll("\\]","").replaceAll("Optional","").replaceAll("\\{","").replaceAll("\\}","").replaceAll(".empty","").toString();
 
         final ArrayList<Function<SearchPredicateFactory, PredicateFinalStep>> additionalParamsFilter = new ArrayList<>();
 
         String[] params = jsonString.split(",");
+
         if(params.length>0) {
             for (int i = 0; i < params.length; i++) {
-                String[] param = params[i].toString().replaceAll("\"", "").split(":");
-                additionalParamsFilter.add(f -> f.bool().should(f1->f1.match().field("additionalParams."+param[0]).matching(param[1])).should(f2 -> f2.match().field("additionalParams."+param[0]).matching("0")));
+                if(!params[i].isEmpty() && params[i].toString() != ".empty") {
+                    String[] param = params[i].toString().replaceAll("\"", "").split(":");
+                    additionalParamsFilter.add(f -> f.bool().should(f1->f1.match().field("additionalParams."+param[0]).matching(param[1])).should(f2 -> f2.match().field("additionalParams."+param[0]).matching("0")));
+                }
             }
         }
 
@@ -166,8 +169,10 @@ public class Clickevents {
             if(domainFilter != null) {
                 search.must(domainFilter.apply(f));
             }
-            for(Function<SearchPredicateFactory, PredicateFinalStep> additionalParam: additionalParamsFilter){
-                search.must(additionalParam.apply(f));
+            if(additionalParamsFilter.size() > 0) {
+                for (Function<SearchPredicateFactory, PredicateFinalStep> additionalParam : additionalParamsFilter) {
+                    search.must(additionalParam.apply(f));
+                }
             }
             if(query == null || query.isEmpty()) {
                 search.must(f.matchAll());
