@@ -123,25 +123,10 @@ public class Clickevents {
     @Path("sequence/search")
     @Transactional
     @Produces(MediaType.APPLICATION_JSON)
-    public List<SequenceList> search(@QueryParam("query") String query, @QueryParam("domain") String domain, @QueryParam("size") Optional<Integer> size, @QueryParam("additionalParams") Optional<String> additionalParams) {
+    public List<SequenceList> search(@QueryParam("query") String query, @QueryParam("domain") String domain, @QueryParam("size") Optional<Integer> size) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss:SSS");
         logger.info("--------------------------------------------------------------------------------------------------");
         logger.info("Api invoked at:" + formatter.format(new Date()));
-
-        String jsonString = additionalParams.toString().replaceAll("\\[","").replaceAll("\\]","").replaceAll("Optional","").replaceAll("\\{","").replaceAll("\\}","").replaceAll(".empty","").toString();
-
-        final ArrayList<Function<SearchPredicateFactory, PredicateFinalStep>> additionalParamsFilter = new ArrayList<>();
-
-        String[] params = jsonString.split(",");
-
-        if(params.length>0) {
-            for (int i = 0; i < params.length; i++) {
-                if(!params[i].isEmpty() && params[i].toString() != ".empty") {
-                    String[] param = params[i].toString().replaceAll("\"", "").split(":");
-                    additionalParamsFilter.add(f -> f.bool().should(f1->f1.match().field("additionalParams."+param[0]).matching(param[1])).should(f2 -> f2.match().field("additionalParams."+param[0]).matching("0")));
-                }
-            }
-        }
 
         final Function<SearchPredicateFactory, PredicateFinalStep> deletedFilter;
         deletedFilter = f -> f.match().field("deleted").matching(0);
@@ -168,11 +153,6 @@ public class Clickevents {
             var search = f.bool().must(deletedFilter.apply(f)).must(validFilter.apply(f)).must(ignoreFilter.apply(f));
             if(domainFilter != null) {
                 search.must(domainFilter.apply(f));
-            }
-            if(additionalParamsFilter.size() > 0) {
-                for (Function<SearchPredicateFactory, PredicateFinalStep> additionalParam : additionalParamsFilter) {
-                    search.must(additionalParam.apply(f));
-                }
             }
             if(query == null || query.isEmpty()) {
                 search.must(f.matchAll());
