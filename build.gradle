@@ -19,6 +19,8 @@ dependencies {
     implementation 'io.quarkus:quarkus-hibernate-search-orm-elasticsearch'
     implementation 'io.quarkus:quarkus-flyway'
     implementation 'io.quarkus:quarkus-hibernate-validator'
+    implementation 'io.quarkus:quarkus-oidc'
+    implementation 'io.quarkus:quarkus-keycloak-authorization'
 
     implementation 'com.vladmihalcea:hibernate-types-52:2.14.0'
 
