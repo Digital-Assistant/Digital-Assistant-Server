@@ -24,7 +24,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 @Path("/search")
-public class SearchWithPermissions {
+public class SearchWithID {
 	private static final Logger logger = LoggerFactory.getLogger(Clickevents.class);
 
 	@Inject
@@ -34,10 +34,10 @@ public class SearchWithPermissions {
 	SequenceVotesDAO sequenceVotesDAO;
 
 	@GET
-	@Path("withpermissions")
+	@Path("{id}")
 	@Transactional
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<SequenceList> SearchWithPermissions(@QueryParam("query") String query, @QueryParam("domain") String domain, @QueryParam("size") Optional<Integer> size, @QueryParam("additionalParams") Optional<String> additionalParams) {
+	public Optional<SequenceList> SearchWithID(@PathParam("id") int id, @QueryParam("domain") String domain, @QueryParam("additionalParams") Optional<String> additionalParams) {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss:SSS");
 		logger.info("--------------------------------------------------------------------------------------------------");
 		logger.info("Api invoked at:" + formatter.format(new Date()));
@@ -74,12 +74,16 @@ public class SearchWithPermissions {
 			domainFilter = null;
 			throw new BadRequestException();
 		}
-		List<SequenceList> searchresults;
+
+		final Function<SearchPredicateFactory, PredicateFinalStep> idFilter;
+		idFilter = f -> f.match().field("id").matching(id);
+
+		Optional<SequenceList> searchresults;
 		SearchQueryOptionsStep<?, SequenceList, SearchLoadingOptionsStep, ?, ?> searchSession;
 		logger.info("elastic search results start time:" + formatter.format(new Date()));
 
 		queryFunction = f -> {
-			var search = f.bool().must(deletedFilter.apply(f)).must(validFilter.apply(f)).must(ignoreFilter.apply(f));
+			var search = f.bool().must(idFilter.apply(f)).must(deletedFilter.apply(f)).must(validFilter.apply(f)).must(ignoreFilter.apply(f));
 			if(domainFilter != null) {
 				search.must(domainFilter.apply(f));
 			}
@@ -88,21 +92,15 @@ public class SearchWithPermissions {
 					search.must(additionalParam.apply(f));
 				}
 			}
-			if(query == null || query.isEmpty()) {
-				search.must(f.matchAll());
-			} else {
-				search.must(f.simpleQueryString().fields("name").matching(query));
-			}
+
+			search.must(f.matchAll());
+
 			return search;
 		};
 
 		searchSession = Search.session(em).search(SequenceList.class).where(queryFunction);
-
-		if (query == null || query.isEmpty()){
-			searchSession = searchSession.sort(f -> f.field("createdat_sort").desc());
-		}
-
-		searchresults = searchSession.fetchHits(size.orElse(10));
+		searchSession = searchSession.sort(f -> f.field("createdat_sort").desc());
+		searchresults = searchSession.fetchSingleHit();
 
 		logger.info("elastic search results end time:" + formatter.format(new Date()));
 		logger.info("--------------------------------------------------------------------------------------------------");

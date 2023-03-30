@@ -119,61 +119,6 @@ public class Clickevents {
         }
     }
 
-    @GET
-    @Path("sequence/search")
-    @Transactional
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<SequenceList> search(@QueryParam("query") String query, @QueryParam("domain") String domain, @QueryParam("size") Optional<Integer> size) {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss:SSS");
-        logger.info("--------------------------------------------------------------------------------------------------");
-        logger.info("Api invoked at:" + formatter.format(new Date()));
-
-        final Function<SearchPredicateFactory, PredicateFinalStep> deletedFilter;
-        deletedFilter = f -> f.match().field("deleted").matching(0);
-
-        final Function<SearchPredicateFactory, PredicateFinalStep> validFilter;
-        validFilter = f -> f.match().field("isValid").matching(1);
-
-        final Function<SearchPredicateFactory, PredicateFinalStep> ignoreFilter;
-        ignoreFilter = f -> f.match().field("isIgnored").matching(0);
-
-        final Function<SearchPredicateFactory, PredicateFinalStep> domainFilter;
-        final Function<SearchPredicateFactory, PredicateFinalStep> queryFunction;
-        if (domain != null && !domain.isEmpty()) {
-            domainFilter = f -> f.match().field("domain").matching(domain);
-        } else {
-            domainFilter = null;
-            throw new BadRequestException();
-        }
-        List<SequenceList> searchresults;
-        SearchQueryOptionsStep<?, SequenceList, SearchLoadingOptionsStep, ?, ?> searchSession;
-        logger.info("elastic search results start time:" + formatter.format(new Date()));
-
-        queryFunction = f -> {
-            var search = f.bool().must(deletedFilter.apply(f)).must(validFilter.apply(f)).must(ignoreFilter.apply(f));
-            if(domainFilter != null) {
-                search.must(domainFilter.apply(f));
-            }
-            if(query == null || query.isEmpty()) {
-                search.must(f.matchAll());
-            } else {
-                search.must(f.simpleQueryString().fields("name", "userclicknodesSet.clickednodename").matching(query));
-            }
-            return search;
-        };
-
-        searchSession = Search.session(em).search(SequenceList.class).where(queryFunction);
-        if (query == null || query.isEmpty()){
-            searchSession = searchSession.sort(f -> f.field("createdat_sort").desc());
-        }
-
-        searchresults = searchSession.fetchHits(size.orElse(10));
-
-        logger.info("elastic search results end time:" + formatter.format(new Date()));
-        logger.info("--------------------------------------------------------------------------------------------------");
-        return searchresults;
-    }
-
     @POST
     @Path("sequence/delete")
     @Consumes(MediaType.APPLICATION_JSON)
