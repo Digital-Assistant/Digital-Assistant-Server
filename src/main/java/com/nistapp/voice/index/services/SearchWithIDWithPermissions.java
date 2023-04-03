@@ -1,30 +1,24 @@
 package com.nistapp.voice.index.services;
 
-import com.nistapp.voice.index.Clickevents;
 import com.nistapp.voice.index.models.SequenceList;
 import com.nistapp.voice.index.repository.SequenceVotesDAO;
 import org.hibernate.search.engine.search.predicate.dsl.PredicateFinalStep;
 import org.hibernate.search.engine.search.predicate.dsl.SearchPredicateFactory;
 import org.hibernate.search.engine.search.query.dsl.SearchQueryOptionsStep;
+import org.hibernate.search.mapper.orm.Search;
 import org.hibernate.search.mapper.orm.search.loading.dsl.SearchLoadingOptionsStep;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.function.Function;
 
 @Path("/search")
-public class Search {
-
-	private static final Logger logger = LoggerFactory.getLogger(Clickevents.class);
+public class SearchWithIDWithPermissions {
 
 	@Inject
 	EntityManager em;
@@ -33,13 +27,25 @@ public class Search {
 	SequenceVotesDAO sequenceVotesDAO;
 
 	@GET
-	@Path("")
+	@Path("withPermissions/{id}")
 	@Transactional
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<SequenceList> search(@QueryParam("query") String query, @QueryParam("domain") String domain, @QueryParam("size") Optional<Integer> size) {
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss:SSS");
-		logger.info("--------------------------------------------------------------------------------------------------");
-		logger.info("Api invoked at:" + formatter.format(new Date()));
+	public Optional<SequenceList> SearchWithID(@PathParam("id") int id, @QueryParam("domain") String domain, @QueryParam("additionalParams") Optional<String> additionalParams) {
+
+		String jsonString = additionalParams.toString().replaceAll("\\[","").replaceAll("\\]","").replaceAll("Optional","").replaceAll("\\{","").replaceAll("\\}","").replaceAll(".empty","").toString();
+
+		final ArrayList<Function<SearchPredicateFactory, PredicateFinalStep>> additionalParamsFilter = new ArrayList<>();
+
+		String[] params = jsonString.split(",");
+
+		if(params.length>0) {
+			for (int i = 0; i < params.length; i++) {
+				if(!params[i].isEmpty() && params[i].toString() != ".empty") {
+					String[] param = params[i].toString().replaceAll("\"", "").split(":");
+					additionalParamsFilter.add(f -> f.bool().should(f1->f1.match().field("additionalParams."+param[0]).matching(param[1])).should(f2 -> f2.match().field("additionalParams."+param[0]).matching("0")));
+				}
+			}
+		}
 
 		final Function<SearchPredicateFactory, PredicateFinalStep> deletedFilter;
 		deletedFilter = f -> f.match().field("deleted").matching(0);
@@ -58,33 +64,33 @@ public class Search {
 			domainFilter = null;
 			throw new BadRequestException();
 		}
-		List<SequenceList> searchresults;
+
+		final Function<SearchPredicateFactory, PredicateFinalStep> idFilter;
+		idFilter = f -> f.match().field("id").matching(id);
+
+		Optional<SequenceList> searchresults;
 		SearchQueryOptionsStep<?, SequenceList, SearchLoadingOptionsStep, ?, ?> searchSession;
-		logger.info("elastic search results start time:" + formatter.format(new Date()));
 
 		queryFunction = f -> {
-			var search = f.bool().must(deletedFilter.apply(f)).must(validFilter.apply(f)).must(ignoreFilter.apply(f));
+			var search = f.bool().must(idFilter.apply(f)).must(deletedFilter.apply(f)).must(validFilter.apply(f)).must(ignoreFilter.apply(f));
 			if(domainFilter != null) {
 				search.must(domainFilter.apply(f));
 			}
-			if(query == null || query.isEmpty()) {
-				search.must(f.matchAll());
-			} else {
-				search.must(f.simpleQueryString().fields("name").matching(query));
+			if(additionalParamsFilter.size() > 0) {
+				for (Function<SearchPredicateFactory, PredicateFinalStep> additionalParam : additionalParamsFilter) {
+					search.must(additionalParam.apply(f));
+				}
 			}
+
+			search.must(f.matchAll());
 
 			return search;
 		};
 
-		searchSession = org.hibernate.search.mapper.orm.Search.session(em).search(SequenceList.class).where(queryFunction);
-		if (query == null || query.isEmpty()){
-			searchSession = searchSession.sort(f -> f.field("createdat_sort").desc());
-		}
+		searchSession = Search.session(em).search(SequenceList.class).where(queryFunction);
+		searchSession = searchSession.sort(f -> f.field("createdat_sort").desc());
+		searchresults = searchSession.fetchSingleHit();
 
-		searchresults = searchSession.fetchHits(size.orElse(10));
-
-		logger.info("elastic search results end time:" + formatter.format(new Date()));
-		logger.info("--------------------------------------------------------------------------------------------------");
 		return searchresults;
 	}
 }
