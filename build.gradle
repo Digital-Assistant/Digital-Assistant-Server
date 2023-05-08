@@ -12,6 +12,7 @@ version "0.0.1"
 dependencies {
     implementation enforcedPlatform("io.quarkus:quarkus-bom:${quarkusVersion}")
     implementation 'io.quarkus:quarkus-resteasy'
+    implementation 'io.quarkus:quarkus-resteasy-jackson'
     implementation 'io.quarkus:quarkus-resteasy-jsonb'
     implementation 'io.quarkus:quarkus-jdbc-mariadb'
     implementation 'io.quarkus:quarkus-jdbc-postgresql'
