@@ -4,6 +4,7 @@ package com.nistapp.uda.index.models;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
 
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import java.time.Instant;
 
@@ -22,7 +23,7 @@ public class SequenceVotes extends PanacheEntityBase {
 	private String usersessionid;
 
 	@GenericField
-	private long sequenceid;
+	private Integer sequenceid;
 
 	@GenericField
 	private Integer upvote;
@@ -32,11 +33,18 @@ public class SequenceVotes extends PanacheEntityBase {
 
 	@Column(name = "createdat", nullable = false)
 	@GenericField
+	@JsonbTransient
 	private long createdat;
 
 	@Column(name = "updatedat", nullable = false)
 	@GenericField
+	@JsonbTransient
 	private long updatedat;
+
+	@ManyToOne
+	@JoinColumn(name = "sequenceid", insertable = false, updatable = false, nullable = false)
+	@JsonbTransient
+	private SequenceList sequenceList;
 
 	@PrePersist
 	public void preSave() {
@@ -44,13 +52,9 @@ public class SequenceVotes extends PanacheEntityBase {
 	}
 
 	@PreUpdate
-	public void preUpdate(){
+	public void preUpdate() {
 		this.updatedat = Instant.now().toEpochMilli();
 	}
-
-	/*@ManyToOne
-	@JoinColumn(name = "sequenceid", insertable = false, updatable = false, nullable = true)
-	private SequenceList sequenceList;*/
 
 	public long getId() {
 		return id;
@@ -68,11 +72,11 @@ public class SequenceVotes extends PanacheEntityBase {
 		this.usersessionid = usersessionid;
 	}
 
-	public long getSequenceid() {
+	public Integer getSequenceid() {
 		return sequenceid;
 	}
 
-	public void setSequenceid(long sequenceid) {
+	public void setSequenceid(Integer sequenceid) {
 		this.sequenceid = sequenceid;
 	}
 
@@ -107,4 +111,12 @@ public class SequenceVotes extends PanacheEntityBase {
 	public void setUpdatedat(long updatedat) {
 		this.updatedat = updatedat;
 	}
+
+	/*public SequenceList getSequenceList() {
+		return sequenceList;
+	}
+
+	public void setSequenceList(SequenceList sequenceList) {
+		this.sequenceList = sequenceList;
+	}*/
 }

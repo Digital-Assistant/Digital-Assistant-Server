@@ -10,10 +10,12 @@ import org.hibernate.search.mapper.pojo.extractor.mapping.annotation.ContainerEx
 import org.hibernate.search.mapper.pojo.extractor.mapping.annotation.ContainerExtraction;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.*;
 
+import javax.inject.Inject;
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * we are changing the index name due to the conflict issue with the two instances running on the same server.
@@ -54,7 +56,14 @@ public class SequenceList {
 
     @OneToMany(mappedBy = "sequenceList", fetch = FetchType.EAGER)
     @IndexedEmbedded
-    private List<Userclicknodes> userclicknodesSet;
+    private Set<Userclicknodes> userclicknodesSet;
+
+    /**
+     * Declaring Sequence Votes variable
+     */
+    @OneToMany(mappedBy = "sequenceList", fetch = FetchType.EAGER)
+    @IndexedEmbedded
+    private Set<SequenceVotes> sequenceVotes;
 
     @GenericField
     @Column(name = "deleted", columnDefinition = "integer default 0")
@@ -68,9 +77,6 @@ public class SequenceList {
     @Column(name = "isIgnored")
     private Integer isIgnored;
 
-    /*@OneToMany(mappedBy = "sequenceList", fetch = FetchType.LAZY)
-    @IndexedEmbedded
-    private List<SequenceVotes> sequenceVotes;*/
 
     /***
      * Saving additional info
@@ -145,11 +151,11 @@ public class SequenceList {
         this.createdat = createdat;
     }
 
-    public List<Userclicknodes> getUserclicknodesSet() {
+    public Set<Userclicknodes> getUserclicknodesSet() {
         return userclicknodesSet;
     }
 
-    public void setUserclicknodesSet(List<Userclicknodes> userclicknodesSet) {
+    public void setUserclicknodesSet(Set<Userclicknodes> userclicknodesSet) {
         this.userclicknodesSet = userclicknodesSet;
     }
 
@@ -185,11 +191,51 @@ public class SequenceList {
         this.additionalParams = additionalParams;
     }
 
-    /*public List<SequenceVotes> getSequenceVotes() {
+    /**
+     * Getter for sequenceVote
+     * @return
+     */
+    public Set<SequenceVotes> getSequenceVotes() {
         return sequenceVotes;
     }
 
-    public void setSequenceVotes(List<SequenceVotes> sequenceVotes) {
+    /**
+     * Setter for sequenceVote
+     * @return
+     */
+    public void setSequenceVotes(Set<SequenceVotes> sequenceVotes) {
         this.sequenceVotes = sequenceVotes;
-    }*/
+    }
+
+    /**
+     * Declaration of upvote count and downvote count
+     */
+    @Transient
+    public Integer upVoteCount;
+
+    public Integer getUpVoteCount(){
+        Integer totalLikes = 0;
+        for(SequenceVotes sequenceVote:this.sequenceVotes){
+            if(sequenceVote.getUpvote() == 1) {
+                totalLikes++;
+            }
+        }
+
+        return totalLikes;
+    }
+
+    @Transient
+    public Integer downVoteCount;
+
+    public Integer getDownVoteCount(){
+        Integer totaDislLikes = 0;
+        for(SequenceVotes sequenceVote:this.sequenceVotes){
+            if((Integer) sequenceVote.getDownvote() == 1) {
+                totaDislLikes++;
+            }
+        }
+
+        return totaDislLikes;
+    }
+
 }

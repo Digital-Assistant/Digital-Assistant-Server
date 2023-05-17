@@ -1,7 +1,6 @@
 package com.nistapp.uda.index;
 
 import com.nistapp.uda.index.models.*;
-import com.nistapp.uda.index.repository.SequenceVotesDAO;
 import io.quarkus.runtime.StartupEvent;
 import org.eclipse.microprofile.config.ConfigProvider;
 import org.hibernate.search.mapper.orm.Search;
@@ -27,9 +26,6 @@ public class Clickevents {
     @Inject
     EntityManager em;
 
-    @Inject
-    SequenceVotesDAO sequenceVotesDAO;
-
     @GET
     @Path("/all")
     @Produces(MediaType.APPLICATION_JSON)
@@ -50,7 +46,6 @@ public class Clickevents {
 
     @GET
     @Path("/fetchbyurl")
-//	@Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
     public List<JavascriptEvents> listdatabyurl(@QueryParam("url") @DefaultValue("NA") String url) {
@@ -93,7 +88,7 @@ public class Clickevents {
         s2.setIsIgnored(sequenceList.getIsIgnored());
         s2.setAdditionalParams(sequenceList.getAdditionalParams());
         em.persist(s2);
-        List<Userclicknodes> list = new ArrayList<>();
+        Set<Userclicknodes> list = new HashSet<>();
         for (Userclicknodes userclicknodes : sequenceList.getUserclicknodesSet()) {
             Userclicknodes u2 = em.find(Userclicknodes.class, userclicknodes.getId());
             u2.setSequenceList(s2);
@@ -144,38 +139,6 @@ public class Clickevents {
         TypedQuery<SequenceVotes> query = em.createQuery("select sqv from SequenceVotes sqv where sqv.sequenceid=:id", SequenceVotes.class);
         query.setParameter("id", id);
         return query.getResultList();
-    }
-
-    @POST
-    @Path("sequence/addvote")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Transactional
-    public SequenceVotes addsequencevote(SequenceVotes sequenceVotes) {
-
-        try {
-            SequenceVotes dbsequenceVotes = sequenceVotesDAO.findbysequenceidusersessionid(sequenceVotes.getSequenceid(), sequenceVotes.getUsersessionid());
-            if (dbsequenceVotes != null) {
-                dbsequenceVotes.setUpvote(sequenceVotes.getUpvote());
-                dbsequenceVotes.setDownvote(sequenceVotes.getDownvote());
-                sequenceVotes = dbsequenceVotes;
-            }
-        } catch (Exception e) {
-
-        }
-
-        sequenceVotes.persist();
-        return sequenceVotes;
-    }
-
-    @DELETE
-    @Path("sequence/deletevote/{id}/{usersessionid}")
-    @Transactional
-    public void deletesequencevote(@PathParam("id") long id, @PathParam("usersessionid") String usersessionid) {
-        SequenceVotes dbsequenceVotes = sequenceVotesDAO.findbyusersessionid(usersessionid);
-        if (dbsequenceVotes != null) {
-            dbsequenceVotes.delete();
-        }
     }
 
     @PUT

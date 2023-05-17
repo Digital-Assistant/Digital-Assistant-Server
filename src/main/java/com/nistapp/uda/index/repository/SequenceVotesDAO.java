@@ -14,15 +14,15 @@ public class SequenceVotesDAO implements PanacheRepositoryBase<SequenceVotes, Lo
 		return find("usersessionid",usersessionid).singleResult();
 	}
 
-	public List<SequenceVotes> findbysequenceid(long sequenceid){
-		return find("sequenceid",sequenceid).list();
+	public List<SequenceVotes> findBySequenceId(Integer sequenceId){
+		return find("sequenceid",sequenceId).list();
 	}
 
-	public List<SequenceVotes> findallbysequenceidusersessionid(long sequenceid, String usersessionid){
-		return find("sequenceid=:sequenceid and usersessionid=:usersessionid", Parameters.with("sequenceid",sequenceid).and("usersessionid",usersessionid)).list();
+	public List<SequenceVotes> findAllBySequenceIdUserSessionId(Integer sequenceId, String userSessionId){
+		return find("sequenceid=:sequenceid and usersessionid=:usersessionid", Parameters.with("sequenceid",sequenceId).and("usersessionid",userSessionId)).list();
 	}
 
-	public SequenceVotes findbysequenceidusersessionid(long sequenceid, String usersessionid){
-		return find("sequenceid=:sequenceid and usersessionid=:usersessionid", Parameters.with("sequenceid",sequenceid).and("usersessionid",usersessionid)).singleResult();
+	public SequenceVotes findBySequenceIdUserSessionId(Integer sequenceId, String userSessionId){
+		return find("sequenceid=:sequenceid and usersessionid=:usersessionid", Parameters.with("sequenceid",sequenceId).and("usersessionid",userSessionId)).singleResult();
 	}
 }
