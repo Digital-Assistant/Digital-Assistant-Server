@@ -34,13 +34,13 @@ public class SearchList {
 	SequenceVotesDAO sequenceVotesDAO;
 
 	@GET
-	@Path("")
+	@Path("/all")
 	@Transactional
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<SequenceList> search(@QueryParam("query") String query, @QueryParam("domain") String domain, @QueryParam("size") Optional<Integer> size) {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss:SSS");
-		logger.info("--------------------------------------------------------------------------------------------------");
-		logger.info("Api invoked at:" + formatter.format(new Date()));
+//		logger.info("--------------------------------------------------------------------------------------------------");
+//		logger.info("Api invoked at:" + formatter.format(new Date()));
 
 		final Function<SearchPredicateFactory, PredicateFinalStep> deletedFilter;
 		deletedFilter = f -> f.match().field("deleted").matching(0);
@@ -61,7 +61,7 @@ public class SearchList {
 		}
 		List<SequenceList> searchresults;
 		SearchQueryOptionsStep<?, SequenceList, SearchLoadingOptionsStep, ?, ?> searchSession;
-		logger.info("elastic search results start time:" + formatter.format(new Date()));
+//		logger.info("elastic search results start time:" + formatter.format(new Date()));
 
 		queryFunction = f -> {
 			var search = f.bool().must(deletedFilter.apply(f)).must(validFilter.apply(f)).must(ignoreFilter.apply(f));
@@ -84,8 +84,8 @@ public class SearchList {
 
 		searchresults = searchSession.fetchHits(size.orElse(10));
 
-		logger.info("elastic search results end time:" + formatter.format(new Date()));
-		logger.info("--------------------------------------------------------------------------------------------------");
+//		logger.info("elastic search results end time:" + formatter.format(new Date()));
+//		logger.info("--------------------------------------------------------------------------------------------------");
 		return searchresults;
 	}
 }
