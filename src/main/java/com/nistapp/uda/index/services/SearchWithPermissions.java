@@ -76,12 +76,6 @@ public class SearchWithPermissions {
 					searchMust.must(additionalParam.apply(f));
 				}
 			}
-			if(query == null || query.isEmpty()) {
-				searchMust.must(f.matchAll());
-			} else {
-				searchMust.must(f.simpleQueryString().fields("name").matching(query));
-			}
-
 			return searchMust;
 		};
 
@@ -105,6 +99,11 @@ public class SearchWithPermissions {
 				search.must(domainFilter.apply(f));
 			}
 			search.must(mustShouldFunction.apply(f));
+			if(query == null || query.isEmpty()) {
+				search.must(f.matchAll());
+			} else {
+				search.must(f.simpleQueryString().fields("name").matching(query));
+			}
 			return search;
 		};
 
