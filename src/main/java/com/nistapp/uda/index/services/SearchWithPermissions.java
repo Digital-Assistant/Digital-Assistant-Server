@@ -31,7 +31,7 @@ public class SearchWithPermissions {
 	@Path("withPermissions")
 	@Transactional
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<SequenceList> SearchWithPermissions(@QueryParam("query") String query, @QueryParam("domain") String domain, @QueryParam("size") Optional<Integer> size, @QueryParam("additionalParams") Optional<String> additionalParams) {
+	public List<SequenceList> SearchWithPermissions(@QueryParam("query") String query, @QueryParam("domain") String domain, @QueryParam("size") Optional<Integer> size, @QueryParam("additionalParams") Optional<String> additionalParams, @QueryParam("userSessionId") String userSessionId) {
 
 		String jsonString = additionalParams.toString().replaceAll("\\[","").replaceAll("\\]","").replaceAll("Optional","").replaceAll("\\{","").replaceAll("\\}","").replaceAll(".empty","");
 
@@ -58,26 +58,47 @@ public class SearchWithPermissions {
 		ignoreFilter = f -> f.match().field("isIgnored").matching(0);
 
 		final Function<SearchPredicateFactory, PredicateFinalStep> domainFilter;
-		final Function<SearchPredicateFactory, PredicateFinalStep> queryFunction;
 		if (domain != null && !domain.isEmpty()) {
 			domainFilter = f -> f.match().field("domain").matching(domain);
 		} else {
 			domainFilter = null;
 			throw new BadRequestException();
 		}
-		List<SequenceList> searchresults;
-		SearchQueryOptionsStep<?, SequenceList, SearchLoadingOptionsStep, ?, ?> searchSession;
 
+		final Function<SearchPredicateFactory, PredicateFinalStep> userFilter;
+		userFilter = f -> f.match().field("usersessionid").matching(userSessionId);
+
+		final Function<SearchPredicateFactory, PredicateFinalStep> mustFunction;
+		mustFunction = f -> {
+			var searchMust = f.bool();
+			if(additionalParamsFilter.size() > 0) {
+				for (Function<SearchPredicateFactory, PredicateFinalStep> additionalParam : additionalParamsFilter) {
+					searchMust.must(additionalParam.apply(f));
+				}
+			}
+			return searchMust;
+		};
+
+		final Function<SearchPredicateFactory, PredicateFinalStep> shouldFunction;
+		shouldFunction = f -> {
+			var searchShould = f.bool();
+			searchShould.should(userFilter.apply(f));
+			return searchShould;
+		};
+
+		final Function<SearchPredicateFactory, PredicateFinalStep> mustShouldFunction;
+		mustShouldFunction = f -> {
+			var searchShouldMust = f.bool().should(mustFunction.apply(f)).should(shouldFunction.apply(f));
+			return searchShouldMust;
+		};
+
+		final Function<SearchPredicateFactory, PredicateFinalStep> queryFunction;
 		queryFunction = f -> {
 			var search = f.bool().must(deletedFilter.apply(f)).must(validFilter.apply(f)).must(ignoreFilter.apply(f));
 			if(domainFilter != null) {
 				search.must(domainFilter.apply(f));
 			}
-			if(additionalParamsFilter.size() > 0) {
-				for (Function<SearchPredicateFactory, PredicateFinalStep> additionalParam : additionalParamsFilter) {
-					search.must(additionalParam.apply(f));
-				}
-			}
+			search.must(mustShouldFunction.apply(f));
 			if(query == null || query.isEmpty()) {
 				search.must(f.matchAll());
 			} else {
@@ -86,14 +107,16 @@ public class SearchWithPermissions {
 			return search;
 		};
 
+		SearchQueryOptionsStep<?, SequenceList, SearchLoadingOptionsStep, ?, ?> searchSession;
 		searchSession = Search.session(em).search(SequenceList.class).where(queryFunction);
 
 		if (query == null || query.isEmpty()){
 			searchSession = searchSession.sort(f -> f.field("createdat_sort").desc());
 		}
 
-		searchresults = searchSession.fetchHits(size.orElse(10));
+		List<SequenceList> searchResults;
+		searchResults = searchSession.fetchHits(size.orElse(10));
 
-		return searchresults;
+		return searchResults;
 	}
 }
