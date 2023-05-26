@@ -1,6 +1,7 @@
 package com.nistapp.uda.index;
 
 import com.nistapp.uda.index.models.*;
+import com.nistapp.uda.index.services.Votes;
 import io.quarkus.runtime.StartupEvent;
 import org.eclipse.microprofile.config.ConfigProvider;
 import org.hibernate.search.mapper.orm.Search;
@@ -88,6 +89,7 @@ public class Clickevents {
         s2.setIsIgnored(sequenceList.getIsIgnored());
         s2.setAdditionalParams(sequenceList.getAdditionalParams());
         em.persist(s2);
+
         Set<Userclicknodes> list = new HashSet<>();
         for (Userclicknodes userclicknodes : sequenceList.getUserclicknodesSet()) {
             Userclicknodes u2 = em.find(Userclicknodes.class, userclicknodes.getId());
@@ -95,6 +97,18 @@ public class Clickevents {
             list.add(u2);
         }
         s2.setUserclicknodesSet(list);
+
+        Set<SequenceVotes> votes = new HashSet<>();
+        SequenceVotes sequenceVotes = new SequenceVotes();
+        sequenceVotes.setSequenceid(s2.getId());
+        sequenceVotes.setUsersessionid(s2.getUsersessionid());
+        sequenceVotes.setDownvote(0);
+        sequenceVotes.setUpvote(0);
+        sequenceVotes.persist();
+
+        votes.add(sequenceVotes);
+        s2.setSequenceVotes(votes);
+
         em.persist(s2);
         return s2;
     }
