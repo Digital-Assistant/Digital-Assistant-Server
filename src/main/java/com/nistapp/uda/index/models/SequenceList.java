@@ -108,7 +108,7 @@ public class SequenceList {
         String url = "";
         if(!userClickNodes.isEmpty()) {
             Userclicknodes userClickNode = userClickNodes.get(0);
-            url = userClickNode.getDomain()+((!userClickNode.getUrlpath().isEmpty())?userClickNode.getUrlpath():'/');
+            url = "https://"+userClickNode.getDomain()+((!userClickNode.getUrlpath().isEmpty())?userClickNode.getUrlpath():'/');
             if(url.indexOf('?') != -1){
                 url = url+"&UDA_Sequence_id="+this.id;
             } else {
