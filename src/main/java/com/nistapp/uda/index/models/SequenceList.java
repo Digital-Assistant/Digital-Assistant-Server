@@ -15,6 +15,7 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.*;
 import javax.inject.Inject;
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -103,7 +104,20 @@ public class SequenceList {
     public String SharableLink;
 
     public String getSharableLink() {
-      return "https://"+this.domain+"?UDA_Sequence_id="+this.id;
+        List<Userclicknodes> userClickNodes = new ArrayList<>(this.getUserclicknodesSet());
+        String url = "";
+        if(!userClickNodes.isEmpty()) {
+            Userclicknodes userClickNode = userClickNodes.get(0);
+            url = userClickNode.getDomain()+((!userClickNode.getUrlpath().isEmpty())?userClickNode.getUrlpath():'/');
+            if(url.indexOf('?') != -1){
+                url = url+"&UDA_Sequence_id="+this.id;
+            } else {
+                url = url+"?UDA_Sequence_id="+this.id;
+            }
+        } else {
+            url = "https://"+this.domain+"?UDA_Sequence_id="+this.id;
+        }
+        return url;
     }
 
     public Integer getId() {
