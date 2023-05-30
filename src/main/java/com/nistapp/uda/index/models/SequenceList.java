@@ -1,5 +1,7 @@
 package com.nistapp.uda.index.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vladmihalcea.hibernate.type.json.JsonType;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -13,6 +15,7 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.*;
 import javax.inject.Inject;
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -55,6 +58,7 @@ public class SequenceList {
     private long createdat;
 
     @OneToMany(mappedBy = "sequenceList", fetch = FetchType.EAGER)
+    @OrderBy("id ASC")
     @IndexedEmbedded
     private Set<Userclicknodes> userclicknodesSet;
 
@@ -100,7 +104,20 @@ public class SequenceList {
     public String SharableLink;
 
     public String getSharableLink() {
-      return "https://"+this.domain+"?UDA_Sequence_id="+this.id;
+        List<Userclicknodes> userClickNodes = new ArrayList<>(this.getUserclicknodesSet());
+        String url = "";
+        if(!userClickNodes.isEmpty()) {
+            Userclicknodes userClickNode = userClickNodes.get(0);
+            url = userClickNode.getDomain()+((!userClickNode.getUrlpath().isEmpty())?userClickNode.getUrlpath():'/');
+            if(url.indexOf('?') != -1){
+                url = url+"&UDA_Sequence_id="+this.id;
+            } else {
+                url = url+"?UDA_Sequence_id="+this.id;
+            }
+        } else {
+            url = "https://"+this.domain+"?UDA_Sequence_id="+this.id;
+        }
+        return url;
     }
 
     public Integer getId() {
@@ -211,7 +228,7 @@ public class SequenceList {
      * Declaration of upvote count and downvote count
      */
     @Transient
-    public Integer upVoteCount;
+    public Integer upVoteCount = 0;
 
     public Integer getUpVoteCount(){
         Integer totalLikes = 0;
@@ -228,14 +245,14 @@ public class SequenceList {
     public Integer downVoteCount;
 
     public Integer getDownVoteCount(){
-        Integer totaDislLikes = 0;
+        Integer totalDisLikes = 0;
         for(SequenceVotes sequenceVote:this.sequenceVotes){
-            if((Integer) sequenceVote.getDownvote() == 1) {
-                totaDislLikes++;
+            if(sequenceVote.getDownvote() == 1) {
+                totalDisLikes++;
             }
         }
 
-        return totaDislLikes;
+        return totalDisLikes;
     }
 
 }
