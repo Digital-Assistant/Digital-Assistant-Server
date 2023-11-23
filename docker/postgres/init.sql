@@ -1,0 +1,5 @@
+CREATE DATABASE keycloak;
+
+CREATE USER keycloak WITH PASSWORD '2023keycloak';
+
+GRANT ALL PRIVILEGES ON DATABASE keycloak TO keycloak;
