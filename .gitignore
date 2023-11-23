@@ -38,3 +38,4 @@ release.properties
 .gradle/
 build/
 local.properties
+docker/data/

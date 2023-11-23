@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  mariadb:
+    image: mariadb:10.3.38
+    container_name: mariadb-udan
+    restart: always
+    hostname: mariadb
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: udan
+      MYSQL_PASSWORD: udan
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d
+      - ./data:/var/lib/mysql
+    networks:
+      - uda-network
+networks:
+  uda-network:
+      name: uda-network
