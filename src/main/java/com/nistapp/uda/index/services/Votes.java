@@ -5,6 +5,7 @@ import com.nistapp.uda.index.models.SequenceList;
 import com.nistapp.uda.index.models.SequenceVotes;
 import com.nistapp.uda.index.repository.SequenceListDAO;
 import com.nistapp.uda.index.repository.SequenceVotesDAO;
+import io.quarkus.security.Authenticated;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +21,7 @@ import java.util.*;
 import java.util.List;
 
 @Path("/votes")
+@Authenticated
 public class Votes {
 
 	private static final Logger logger = LoggerFactory.getLogger(Clickevents.class);

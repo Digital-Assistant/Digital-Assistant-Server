@@ -1,4 +1,4 @@
-package com.nistapp.voice.index.users;
+package com.nistapp.uda.index.users;
 
 import io.quarkus.security.identity.SecurityIdentity;
 import org.jboss.resteasy.annotations.cache.NoCache;

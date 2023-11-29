@@ -1,6 +1,7 @@
 package com.nistapp.uda.index;
 
 import com.nistapp.uda.index.models.DomainPatterns;
+import io.quarkus.security.Authenticated;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -10,6 +11,7 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 @Path("/domain")
+@Authenticated
 public class Domain {
 	@Inject
 	EntityManager em;

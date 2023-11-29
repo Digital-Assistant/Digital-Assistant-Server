@@ -1,4 +1,4 @@
-package com.nistapp.voice.index.users;
+package com.nistapp.uda.index.users;
 
 import io.quarkus.security.Authenticated;
 
@@ -11,6 +11,11 @@ import javax.ws.rs.core.MediaType;
 @Authenticated
 public class Admin {
 
+	/**
+	 * A description of the entire Java function.
+	 *
+	 * @return allowed or not description of return value
+	 */
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String admin() {

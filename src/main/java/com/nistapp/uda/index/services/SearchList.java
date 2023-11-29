@@ -3,6 +3,9 @@ package com.nistapp.uda.index.services;
 import com.nistapp.uda.index.Clickevents;
 import com.nistapp.uda.index.models.SequenceList;
 import com.nistapp.uda.index.repository.SequenceVotesDAO;
+import io.quarkus.runtime.StartupEvent;
+import io.quarkus.security.Authenticated;
+import org.eclipse.microprofile.config.ConfigProvider;
 import org.hibernate.search.engine.search.predicate.dsl.PredicateFinalStep;
 import org.hibernate.search.engine.search.predicate.dsl.SearchPredicateFactory;
 import org.hibernate.search.engine.search.query.dsl.SearchQueryOptionsStep;
@@ -11,6 +14,7 @@ import org.hibernate.search.mapper.orm.search.loading.dsl.SearchLoadingOptionsSt
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
@@ -33,9 +37,21 @@ public class SearchList {
 	@Inject
 	SequenceVotesDAO sequenceVotesDAO;
 
+
+
+	@Transactional
+	void onStart(@Observes StartupEvent event) throws InterruptedException {
+		logger.info(ConfigProvider.getConfig().getConfigSources().toString());
+		Long value = em.createQuery("SELECT COUNT(s.id) FROM SequenceList s where s.deleted=0 and s.isValid=1 and s.isIgnored=0", Long.class).getSingleResult();
+		if (value != null && value != 0) {
+			Search.session(em).massIndexer(SequenceList.class).startAndWait();
+		}
+	}
+
 	@GET
 	@Path("/all")
 	@Transactional
+	@Authenticated
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<SequenceList> search(@QueryParam("query") String query, @QueryParam("domain") String domain, @QueryParam("size") Optional<Integer> size) {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss:SSS");

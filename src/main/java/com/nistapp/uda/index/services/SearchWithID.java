@@ -2,6 +2,7 @@ package com.nistapp.uda.index.services;
 
 import com.nistapp.uda.index.models.SequenceList;
 import com.nistapp.uda.index.repository.SequenceVotesDAO;
+import io.quarkus.security.Authenticated;
 import org.hibernate.search.engine.search.predicate.dsl.PredicateFinalStep;
 import org.hibernate.search.engine.search.predicate.dsl.SearchPredicateFactory;
 import org.hibernate.search.engine.search.query.dsl.SearchQueryOptionsStep;
@@ -17,6 +18,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 @Path("/search")
+@Authenticated
 public class SearchWithID {
 
 	@Inject
