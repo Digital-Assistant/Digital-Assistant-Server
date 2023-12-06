@@ -1,6 +1,5 @@
 package com.nistapp.uda.index.services;
 
-import com.nistapp.uda.index.Clickevents;
 import com.nistapp.uda.index.models.SequenceList;
 import com.nistapp.uda.index.models.SequenceVotes;
 import com.nistapp.uda.index.repository.SequenceListDAO;
@@ -14,8 +13,6 @@ import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.util.*;
 
 import java.util.List;
 

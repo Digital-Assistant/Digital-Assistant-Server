@@ -1,7 +1,8 @@
-package com.nistapp.uda.index;
+package com.nistapp.uda.index.services;
 
 import com.nistapp.uda.index.models.*;
-import com.nistapp.uda.index.services.Votes;
+import com.nistapp.uda.index.repository.SequenceListDAO;
+import com.nistapp.uda.index.repository.UserclicknodesRepository;
 import io.quarkus.runtime.StartupEvent;
 import org.eclipse.microprofile.config.ConfigProvider;
 import org.hibernate.search.mapper.orm.Search;
@@ -26,6 +27,12 @@ public class Clickevents {
 
     @Inject
     EntityManager em;
+
+    @Inject
+    SequenceListDAO sequenceListDAO;
+
+    @Inject
+    UserclicknodesRepository userclicknodesRepository;
 
     @GET
     @Path("/all")
@@ -74,6 +81,49 @@ public class Clickevents {
         return time;
     }
 
+    /**
+     * Saves the clicked node data for a user.
+     *
+     * @param  userClickNodes  the clicked node data to be saved
+     * @return                 the saved clicked node data
+     */
+    @POST
+    @Path("/clickednode")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
+    public Userclicknodes Userclickednode(Userclicknodes userClickNodes) {
+        em.persist(userClickNodes);
+        em.flush();
+        return userClickNodes;
+    }
+
+    /**
+     * Updates the clicked node for a user in the database.
+     *
+     * @param  userClickNodes  the Userclicknodes object containing the updated information
+     * @return                 the updated Userclicknodes object
+     */
+    @POST
+    @Path("/updateclickednode")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
+    public Userclicknodes UpdateUserclickedNode(Userclicknodes userClickNodes) {
+        try {
+            Userclicknodes clicknode = userclicknodesRepository.findbynodeid(userClickNodes.getSessionid(), userClickNodes.getId());
+            if(clicknode != null) {
+                clicknode.setClickednodename(userClickNodes.getClickednodename());
+                clicknode.setObjectdata(userClickNodes.getObjectdata());
+                em.persist(clicknode);
+                userClickNodes = clicknode;
+            }
+        } catch (Exception e) {
+            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        }
+        return userClickNodes;
+    }
+
     @POST
     @Path("/recordsequencedata")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -112,6 +162,36 @@ public class Clickevents {
         em.persist(s2);
         return s2;
     }
+
+
+    /**
+     * A description of the entire Java function.
+     *
+     * @param  sequenceList		The sequence list object to be updated
+     * @return         			The updated sequence list object
+     */
+    @POST
+    @Path("/updatesequencedata")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
+    public SequenceList updateSequenceData(SequenceList sequenceList) {
+
+        try {
+            logger.info(sequenceList.getId().toString());
+            SequenceList updateSequenceList = sequenceListDAO.findById(sequenceList.getUsersessionid(), sequenceList.getId());
+            if(updateSequenceList != null) {
+                updateSequenceList.setAdditionalParams(sequenceList.getAdditionalParams());
+                em.persist(updateSequenceList);
+                sequenceList = updateSequenceList;
+            }
+        } catch (Exception e) {
+            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        }
+
+        return sequenceList;
+    }
+
 
     @Transactional
     void onStart(@Observes StartupEvent event) throws InterruptedException {

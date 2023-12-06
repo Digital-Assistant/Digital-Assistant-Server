@@ -78,41 +78,6 @@ public class User {
     }
 
     @POST
-    @Path("/clickednode")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Transactional
-    public Userclicknodes Userclickednode(Userclicknodes userclicknodes) {
-        em.persist(userclicknodes);
-        em.flush();
-        return userclicknodes;
-    }
-
-    @POST
-    @Path("/updateclickednode")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Transactional
-    public Userclicknodes UpdateUserclickedNode(Userclicknodes userclicknodes) {
-//        em.persist(userclicknodes);
-//        em.flush();
-        try {
-            Userclicknodes clicknode = userclicknodesRepository.findbynodeid(userclicknodes.getSessionid(), userclicknodes.getId());
-            if(clicknode != null) {
-                clicknode.setClickednodename(userclicknodes.getClickednodename());
-                clicknode.setObjectdata(userclicknodes.getObjectdata());
-                em.persist(clicknode);
-                userclicknodes = clicknode;
-            }
-        } catch (Exception e) {
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
-        }
-//        userclicknodes.persist();
-//        em.persist(userclicknodes);
-        return userclicknodes;
-    }
-
-    @POST
     @Path("/checkauthid")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
