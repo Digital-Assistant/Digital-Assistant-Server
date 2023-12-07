@@ -1,6 +1,5 @@
 package com.nistapp.uda.index.services;
 
-import com.nistapp.uda.index.Clickevents;
 import com.nistapp.uda.index.models.SequenceList;
 import com.nistapp.uda.index.repository.SequenceVotesDAO;
 import io.quarkus.runtime.StartupEvent;
@@ -21,7 +20,6 @@ import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
