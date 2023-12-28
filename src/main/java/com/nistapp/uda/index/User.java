@@ -20,7 +20,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 @Path("/user")
-@Authenticated
 public class User {
 
     @Inject

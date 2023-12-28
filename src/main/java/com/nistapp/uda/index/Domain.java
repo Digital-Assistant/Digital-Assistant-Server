@@ -11,7 +11,6 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 @Path("/domain")
-@Authenticated
 public class Domain {
 	@Inject
 	EntityManager em;

@@ -18,7 +18,6 @@ import java.util.Optional;
 import java.util.function.Function;
 
 @Path("/search")
-@Authenticated
 public class SearchWithID {
 
 	@Inject
@@ -30,6 +29,7 @@ public class SearchWithID {
 	@GET
 	@Path("{id}")
 	@Transactional
+	@Authenticated
 	@Produces(MediaType.APPLICATION_JSON)
 	public Optional<SequenceList> SearchWithID(@PathParam("id") int id, @QueryParam("domain") String domain) {
 

@@ -195,14 +195,14 @@ public class Clickevents {
     }
 
 
-    @Transactional
+    /*@Transactional
     void onStart(@Observes StartupEvent event) throws InterruptedException {
         logger.info(ConfigProvider.getConfig().getConfigSources().toString());
         Long value = em.createQuery("SELECT COUNT(s.id) FROM SequenceList s where s.deleted=0 and s.isValid=1 and s.isIgnored=0", Long.class).getSingleResult();
         if (value != null && value != 0) {
             Search.session(em).massIndexer(SequenceList.class).startAndWait();
         }
-    }
+    }*/
 
     @POST
     @Path("sequence/delete")
