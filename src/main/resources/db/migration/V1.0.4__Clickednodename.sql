@@ -1,1 +1,1 @@
-Alter table `voice_plugin`.`Userclicknodes` modify clickednodename TEXT;
+Alter table `Userclicknodes` modify clickednodename TEXT;
