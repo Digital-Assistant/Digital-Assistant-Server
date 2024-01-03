@@ -35,10 +35,13 @@ public class SearchList {
 	@Path("/all")
 	@Transactional
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<SequenceList> search(@QueryParam("query") String query, @QueryParam("domain") String domain, @QueryParam("size") Optional<Integer> size) {
+	public List<SequenceList> search(@QueryParam("query") String query, @QueryParam("domain") String domain, @QueryParam("size") Optional<Integer> size, @QueryParam("page") Optional<Integer> page ) {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss:SSS");
 //		logger.info("--------------------------------------------------------------------------------------------------");
 //		logger.info("Api invoked at:" + formatter.format(new Date()));
+
+		Integer offset = 0;
+		offset = page.orElse(0) * 10;
 
 		final Function<SearchPredicateFactory, PredicateFinalStep> deletedFilter;
 		deletedFilter = f -> f.match().field("deleted").matching(0);
@@ -80,7 +83,7 @@ public class SearchList {
 			searchSession = searchSession.sort(f -> f.field("createdat_sort").desc());
 		}
 
-		searchresults = searchSession.fetchHits(size.orElse(10));
+		searchresults = searchSession.fetchHits(offset, size.orElse(10));
 
 //		logger.info("elastic search results end time:" + formatter.format(new Date()));
 //		logger.info("--------------------------------------------------------------------------------------------------");

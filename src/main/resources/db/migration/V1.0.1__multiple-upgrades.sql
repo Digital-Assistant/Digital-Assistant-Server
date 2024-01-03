@@ -1,8 +1,8 @@
-ALTER TABLE `voice_plugin_prod`.`SequenceList`
+ALTER TABLE `SequenceList`
 	ADD COLUMN `deleted` TINYINT NOT NULL DEFAULT 0 AFTER `usersessionid`;
 
 
-CREATE TABLE `voice_plugin_prod`.`sequence-votes` (
+CREATE TABLE `sequence-votes` (
 	                                             `id` BIGINT NOT NULL AUTO_INCREMENT,
 	                                             `usersessionid` VARCHAR(500) NOT NULL,
 	                                             `sequenceid` BIGINT NOT NULL,
@@ -12,10 +12,10 @@ CREATE TABLE `voice_plugin_prod`.`sequence-votes` (
 	                                             `updatedat` BIGINT NOT NULL,
 	                                             PRIMARY KEY (`id`));
 
-ALTER TABLE `voice_plugin_prod`.`sequence-votes`
-	RENAME TO  `voice_plugin_prod`.`sequencevotes` ;
+ALTER TABLE `sequence-votes`
+	RENAME TO  `sequencevotes` ;
 
-CREATE TABLE `voice_plugin_prod`.`user_auth_data` (
+CREATE TABLE `user_auth_data` (
 	                                             `id` BIGINT NOT NULL AUTO_INCREMENT,
 	                                             `authid` VARCHAR(2000) NOT NULL,
 	                                             `emailid` VARCHAR(2000) NULL,
@@ -23,7 +23,7 @@ CREATE TABLE `voice_plugin_prod`.`user_auth_data` (
 	                                             `createdat` BIGINT NOT NULL,
 	                                             PRIMARY KEY (`id`));
 
-CREATE TABLE `voice_plugin_prod`.`user_session_data` (
+CREATE TABLE `user_session_data` (
 	                                                `id` BIGINT NOT NULL AUTO_INCREMENT,
 	                                                `userauthid` BIGINT NOT NULL,
 	                                                `usersessionid` VARCHAR(500) NOT NULL,
