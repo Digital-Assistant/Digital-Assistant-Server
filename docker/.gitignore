@@ -1,5 +1,0 @@
-*.log
-data/
-mariadb/data/
-keycloak/data/
-postgres/pgdata/
