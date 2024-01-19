@@ -33,7 +33,11 @@ public class SearchWithPermissions {
 	@Transactional
 	@Authenticated
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<SequenceList> SearchWithPermissions(@QueryParam("query") String query, @QueryParam("domain") String domain, @QueryParam("size") Optional<Integer> size, @QueryParam("additionalParams") Optional<String> additionalParams, @QueryParam("userSessionId") String userSessionId) {
+	public List<SequenceList> SearchWithPermissions(@QueryParam("query") String query, @QueryParam("domain") String domain, @QueryParam("size") Optional<Integer> size, @QueryParam("additionalParams") Optional<String> additionalParams, @QueryParam("userSessionId") String userSessionId, @QueryParam("page") Optional<Integer> page) {
+
+
+		Integer offset = 0;
+		offset = page.orElse(0) * 10;
 
 		String jsonString = additionalParams.toString().replaceAll("\\[","").replaceAll("\\]","").replaceAll("Optional","").replaceAll("\\{","").replaceAll("\\}","").replaceAll(".empty","");
 
@@ -117,7 +121,7 @@ public class SearchWithPermissions {
 		}
 
 		List<SequenceList> searchResults;
-		searchResults = searchSession.fetchHits(size.orElse(10));
+		searchResults = searchSession.fetchHits(offset, size.orElse(10));
 
 		return searchResults;
 	}

@@ -1,4 +1,4 @@
-CREATE TABLE `udan`.`ClickTrack` (
+CREATE TABLE `ClickTrack` (
 	                                         `id` BIGINT NOT NULL AUTO_INCREMENT,
 	                                         `usersessionid` VARCHAR(500) NOT NULL,
 	                                         `clicktype` VARCHAR(200) NOT NULL,

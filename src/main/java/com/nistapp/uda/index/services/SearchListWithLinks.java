@@ -32,7 +32,10 @@ public class SearchListWithLinks {
 	@Path("links")
 	@Transactional
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<SequenceList> SearchWithPermissions(@QueryParam("query") String query, @QueryParam("domain") String domain, @QueryParam("size") Optional<Integer> size, @QueryParam("additionalParams") Optional<String> additionalParams) {
+	public List<SequenceList> SearchWithPermissions(@QueryParam("query") String query, @QueryParam("domain") String domain, @QueryParam("size") Optional<Integer> size, @QueryParam("additionalParams") Optional<String> additionalParams, @QueryParam("page") Optional<Integer> page) {
+
+		Integer offset = 0;
+		offset = page.orElse(0) * 10;
 
 		String jsonString = additionalParams.toString().replaceAll("\\[","").replaceAll("\\]","").replaceAll("Optional","").replaceAll("\\{","").replaceAll("\\}","").replaceAll(".empty","");
 
@@ -93,7 +96,7 @@ public class SearchListWithLinks {
 			searchSession = searchSession.sort(f -> f.field("createdat_sort").desc());
 		}
 
-		searchresults = searchSession.fetchHits(size.orElse(10));
+		searchresults = searchSession.fetchHits(offset, size.orElse(10));
 
 
 		/*SimpleBeanPropertyFilter simpleBeanPropertyFilter =

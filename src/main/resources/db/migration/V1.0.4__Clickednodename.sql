@@ -1,1 +1,1 @@
-Alter table `udan`.`Userclicknodes` modify clickednodename TEXT;
+Alter table `Userclicknodes` modify clickednodename TEXT;
