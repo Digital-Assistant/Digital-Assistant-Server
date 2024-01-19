@@ -2,6 +2,7 @@ package com.nistapp.uda.index.services;
 
 import com.nistapp.uda.index.models.SequenceList;
 import com.nistapp.uda.index.repository.SequenceVotesDAO;
+import io.quarkus.security.Authenticated;
 import org.hibernate.search.engine.search.predicate.dsl.PredicateFinalStep;
 import org.hibernate.search.engine.search.predicate.dsl.SearchPredicateFactory;
 import org.hibernate.search.engine.search.query.dsl.SearchQueryOptionsStep;
@@ -28,6 +29,7 @@ public class SearchWithID {
 	@GET
 	@Path("{id}")
 	@Transactional
+	@Authenticated
 	@Produces(MediaType.APPLICATION_JSON)
 	public Optional<SequenceList> SearchWithID(@PathParam("id") int id, @QueryParam("domain") String domain) {
 

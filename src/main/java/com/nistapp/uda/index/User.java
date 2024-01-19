@@ -6,6 +6,7 @@ import com.nistapp.uda.index.models.Userclicknodes;
 import com.nistapp.uda.index.repository.UserAuthDataDAO;
 import com.nistapp.uda.index.repository.UserSessionDataDAO;
 import com.nistapp.uda.index.repository.UserclicknodesRepository;
+import io.quarkus.security.Authenticated;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;

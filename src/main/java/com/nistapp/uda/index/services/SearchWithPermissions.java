@@ -2,6 +2,7 @@ package com.nistapp.uda.index.services;
 
 import com.nistapp.uda.index.models.SequenceList;
 import com.nistapp.uda.index.repository.SequenceVotesDAO;
+import io.quarkus.security.Authenticated;
 import org.hibernate.search.engine.search.predicate.dsl.PredicateFinalStep;
 import org.hibernate.search.engine.search.predicate.dsl.SearchPredicateFactory;
 import org.hibernate.search.engine.search.query.dsl.SearchQueryOptionsStep;
@@ -30,6 +31,7 @@ public class SearchWithPermissions {
 	@GET
 	@Path("withPermissions")
 	@Transactional
+	@Authenticated
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<SequenceList> SearchWithPermissions(@QueryParam("query") String query, @QueryParam("domain") String domain, @QueryParam("size") Optional<Integer> size, @QueryParam("additionalParams") Optional<String> additionalParams, @QueryParam("userSessionId") String userSessionId, @QueryParam("page") Optional<Integer> page) {
 

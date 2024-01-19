@@ -4,6 +4,7 @@ import com.nistapp.uda.index.models.*;
 import com.nistapp.uda.index.repository.SequenceListDAO;
 import com.nistapp.uda.index.repository.UserclicknodesRepository;
 import io.quarkus.runtime.StartupEvent;
+import io.quarkus.security.Authenticated;
 import org.eclipse.microprofile.config.ConfigProvider;
 import org.hibernate.search.mapper.orm.Search;
 import org.slf4j.Logger;
@@ -21,6 +22,7 @@ import java.sql.Timestamp;
 import java.util.*;
 
 @Path("/clickevents")
+@Authenticated
 public class Clickevents {
 
     private static final Logger logger = LoggerFactory.getLogger(Clickevents.class);
@@ -193,14 +195,14 @@ public class Clickevents {
     }
 
 
-    @Transactional
+    /*@Transactional
     void onStart(@Observes StartupEvent event) throws InterruptedException {
         logger.info(ConfigProvider.getConfig().getConfigSources().toString());
         Long value = em.createQuery("SELECT COUNT(s.id) FROM SequenceList s where s.deleted=0 and s.isValid=1 and s.isIgnored=0", Long.class).getSingleResult();
         if (value != null && value != 0) {
             Search.session(em).massIndexer(SequenceList.class).startAndWait();
         }
-    }
+    }*/
 
     @POST
     @Path("sequence/delete")
@@ -243,11 +245,17 @@ public class Clickevents {
         clickTrack.persist();
     }
 
+    /**
+     * Retrieves a list of suggested Userclicknodes based on the specified domain.
+     *
+     * @param  domain  the domain to filter the Userclicknodes by
+     * @return         a list of suggested Userclicknodes
+     */
     @GET
     @Path("/suggested")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Userclicknodes> suggestSequenceList(@QueryParam("domain") String domain) {
-        List<Integer> nodeids = getrandomnumber();
+        List<Integer> nodeids = getRandomNumberList();
         List<Userclicknodes> userclicknodes = new ArrayList<>();
 
         TypedQuery<Userclicknodes> query = em.createQuery("select u from Userclicknodes u where u.id in :id and u.domain=:domain", Userclicknodes.class);
@@ -258,18 +266,23 @@ public class Clickevents {
         return userclicknodes;
     }
 
-    public static List<Integer> getrandomnumber() {
+    /**
+     * Generates a random list of integers.
+     *
+     * @return intList A list of randomly generated integers.
+     */
+    public static List<Integer> getRandomNumberList() {
 
         Random rand = new Random();
 
-        Integer generatelength = rand.nextInt((10 - 3) + 1) + 3;
+        Integer generateLength = rand.nextInt((10 - 3) + 1) + 3;
 
-        List<Integer> intlist = new ArrayList<>();
+        List<Integer> intList = new ArrayList<>();
 
-        for (int i = 0; i < generatelength; i++) {
-            intlist.add(rand.nextInt(100));
+        for (int i = 0; i < generateLength; i++) {
+            intList.add(rand.nextInt(100));
         }
 
-        return intlist;
+        return intList;
     }
 }
