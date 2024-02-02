@@ -19,12 +19,17 @@ public class LocalPropertiesConfigSourceProvider implements ConfigSourceProvider
 
 
     public LocalPropertiesConfigSourceProvider() throws IOException {
-        URL url = Thread.currentThread().getContextClassLoader().getResource("local.properties");
-        if (url != null) {
-            ConfigSource local = new PropertiesConfigSource(url);
-            logger.info("Adding properties file " + url + " with ordinal " + local.getOrdinal());
+        URL additionalProperties = Thread.currentThread().getContextClassLoader().getResource("additional.properties");
+        if (additionalProperties != null) {
+            ConfigSource additional = new PropertiesConfigSource(additionalProperties);
+            logger.info("Adding properties file " + additionalProperties + " with ordinal " + additional.getOrdinal());
+            configSources.add(additional);
+        }
+        URL localProperties = Thread.currentThread().getContextClassLoader().getResource("local.properties");
+        if (localProperties != null) {
+            ConfigSource local = new PropertiesConfigSource(localProperties);
+            logger.info("Adding properties file " + localProperties + " with ordinal " + local.getOrdinal());
             configSources.add(local);
-
         }
     }
 
