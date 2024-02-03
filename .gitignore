@@ -38,4 +38,5 @@ release.properties
 .gradle/
 build/
 local.properties
+additional.properties
 docker/data/
