@@ -9,6 +9,20 @@ CREATE TABLE `SequenceList` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+DROP TABLE IF EXISTS `Userclicknodes`;
+CREATE TABLE `Userclicknodes` (
+                                  `id` int(11) NOT NULL AUTO_INCREMENT,
+                                  `clickednodename` varchar(2000) DEFAULT NULL,
+                                  `clickedpath` varchar(3000) DEFAULT NULL,
+                                  `createdat` bigint(20) NOT NULL,
+                                  `domain` varchar(500) DEFAULT NULL,
+                                  `html5` int(11) DEFAULT NULL,
+                                  `objectdata` longtext DEFAULT NULL,
+                                  `sessionid` varchar(500) DEFAULT NULL,
+                                  `urlpath` longtext DEFAULT NULL,
+                                  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 DROP TABLE IF EXISTS `Sequenceuserclicknodemap`;
 CREATE TABLE `Sequenceuserclicknodemap` (
   `sequencelistid` int(11) DEFAULT NULL,
@@ -17,20 +31,6 @@ CREATE TABLE `Sequenceuserclicknodemap` (
   KEY `FKkv6wq7iiai0g0hpc1o8kt9w5i` (`sequencelistid`),
   CONSTRAINT `FKkv6wq7iiai0g0hpc1o8kt9w5i` FOREIGN KEY (`sequencelistid`) REFERENCES `SequenceList` (`id`),
   CONSTRAINT `FKrwx7xamcd2je15f5c3cigtiv8` FOREIGN KEY (`userclicknodeid`) REFERENCES `Userclicknodes` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-DROP TABLE IF EXISTS `Userclicknodes`;
-CREATE TABLE `Userclicknodes` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `clickednodename` varchar(2000) DEFAULT NULL,
-  `clickedpath` varchar(3000) DEFAULT NULL,
-  `createdat` bigint(20) NOT NULL,
-  `domain` varchar(500) DEFAULT NULL,
-  `html5` int(11) DEFAULT NULL,
-  `objectdata` longtext DEFAULT NULL,
-  `sessionid` varchar(500) DEFAULT NULL,
-  `urlpath` longtext DEFAULT NULL,
-  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 DROP TABLE IF EXISTS `domainpatterns`;
