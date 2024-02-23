@@ -16,6 +16,13 @@ public class Domain {
 	EntityManager em;
 
 	@GET
+	@Path("/")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String defaultResponse(){
+		return "Site is up";
+	}
+
+	@GET
 	@Path("/patterns")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<DomainPatterns> listdatabyurl(@QueryParam("domain") @DefaultValue("NA") String domain) {
