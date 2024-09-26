@@ -1,5 +1,6 @@
 package com.nistapp.uda.index.services;
 
+import com.nistapp.uda.index.models.ClickTrack;
 import com.nistapp.uda.index.models.SequenceList;
 import com.nistapp.uda.index.repository.SequenceVotesDAO;
 import io.quarkus.runtime.StartupEvent;
@@ -43,6 +44,10 @@ public class SearchList {
 		Long value = em.createQuery("SELECT COUNT(s.id) FROM SequenceList s where s.deleted=0 and s.isValid=1 and s.isIgnored=0", Long.class).getSingleResult();
 		if (value != null && value != 0) {
 			Search.session(em).massIndexer(SequenceList.class).startAndWait();
+		}
+		Long value1 = em.createQuery("SELECT COUNT(ct.id) FROM ClickTrack ct", Long.class).getSingleResult();
+		if (value1 != null && value1 != 0) {
+			Search.session(em).massIndexer(ClickTrack.class).startAndWait();
 		}
 	}
 

@@ -3,14 +3,10 @@ package com.nistapp.uda.index.services;
 import com.nistapp.uda.index.models.*;
 import com.nistapp.uda.index.repository.SequenceListDAO;
 import com.nistapp.uda.index.repository.UserclicknodesRepository;
-import io.quarkus.runtime.StartupEvent;
 import io.quarkus.security.Authenticated;
-import org.eclipse.microprofile.config.ConfigProvider;
-import org.hibernate.search.mapper.orm.Search;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -241,7 +237,7 @@ public class Clickevents {
     @Path("userclick")
     @Consumes(MediaType.APPLICATION_JSON)
     @Transactional
-    public void adduserclick(ClickTrack clickTrack) {
+    public void addUserClick(ClickTrack clickTrack) {
         clickTrack.persist();
     }
 
