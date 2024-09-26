@@ -15,7 +15,7 @@ import java.time.Instant;
  */
 @Entity
 @Table(name = "ClickTrack")
-@Indexed(index = "prod_clickTrack")
+@Indexed(index = "test_clickTrack")
 public class ClickTrack extends PanacheEntityBase {
 	/**
 	 * Unique identifier for the click track entity.
