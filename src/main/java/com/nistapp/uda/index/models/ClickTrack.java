@@ -1,8 +1,11 @@
 package com.nistapp.uda.index.models;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import org.hibernate.search.engine.backend.types.Sortable;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -35,8 +38,10 @@ public class ClickTrack extends PanacheEntityBase {
 	@Column(length = 500) // Define the column length
 	private String usersessionid; // Store the user session ID value
 
-	@GenericField
+//	@GenericField
 	@Column(length = 200, name="event_name")
+//	@FullTextField(analyzer = "english")
+	@KeywordField
 	private String clicktype; // store the event name
 
 	@GenericField
@@ -47,12 +52,12 @@ public class ClickTrack extends PanacheEntityBase {
 	@Column(name="sequence_id")
 	private long recordid; // store the recording sequence id
 
-	@GenericField
+	@KeywordField
 	@Column(length = 5000, name="domain")
 	private String domain; // store the domain from where the event occured
 
 	@Column(name = "createdat", nullable = false)
-	@GenericField
+	@GenericField(name = "createdat_sort", sortable = Sortable.YES)
 	private long createdat; // store the created timestamp
 
 	/**
