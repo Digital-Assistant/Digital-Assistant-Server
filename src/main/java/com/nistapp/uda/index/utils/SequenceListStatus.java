@@ -22,4 +22,13 @@ public class SequenceListStatus {
                 .setParameter("category", "sequenceList")
                 .getSingleResult());
     }
+
+    public Integer getDraftStatusId() {
+        return statusCache.computeIfAbsent("draftStatus", key -> em.createQuery(
+                        "SELECT s.id FROM Status s WHERE s.name = :name AND s.category = :category",
+                        Integer.class)
+                .setParameter("name", "Draft")
+                .setParameter("category", "sequenceList")
+                .getSingleResult());
+    }
 }

@@ -3,7 +3,9 @@ package com.nistapp.uda.index.services;
 import com.nistapp.uda.index.models.*;
 import com.nistapp.uda.index.repository.SequenceListDAO;
 import com.nistapp.uda.index.repository.UserclicknodesRepository;
+import com.nistapp.uda.index.utils.SequenceListStatus;
 import io.quarkus.security.Authenticated;
+import org.jose4j.json.internal.json_simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +33,9 @@ public class Clickevents {
 
     @Inject
     UserclicknodesRepository userclicknodesRepository;
+
+    @Inject
+    SequenceListStatus sequenceListStatus;
 
     @GET
     @Path("/all")
@@ -136,6 +141,20 @@ public class Clickevents {
         s2.setIsValid(sequenceList.getIsValid());
         s2.setIsIgnored(sequenceList.getIsIgnored());
         s2.setAdditionalParams(sequenceList.getAdditionalParams());
+
+        Integer draftStatusId = sequenceListStatus.getDraftStatusId();
+        Integer publishedStatusId = sequenceListStatus.getPublishedStatusId();
+
+        Map<String, Object> additionalParams = sequenceList.getAdditionalParams();
+        if (additionalParams != null) {
+            JSONObject jsonObject = new JSONObject(additionalParams);
+            if (jsonObject.containsKey("enableStatus") && jsonObject.get("enableStatus").toString().equals("1") && !jsonObject.containsKey("status")) {
+                // Convert JSONObject back to Map before setting
+                additionalParams.put("status", draftStatusId.toString());
+                s2.setAdditionalParams(additionalParams);
+            }
+        }
+
         em.persist(s2);
 
         Set<Userclicknodes> list = new HashSet<>();
