@@ -1,8 +1,8 @@
 package com.nistapp.uda.index.services;
 
-import com.nistapp.uda.index.models.ClickTrack;
 import com.nistapp.uda.index.models.SequenceList;
 import com.nistapp.uda.index.repository.SequenceVotesDAO;
+import com.nistapp.uda.index.utils.SequenceListStatus;
 import io.quarkus.runtime.StartupEvent;
 import io.quarkus.security.Authenticated;
 import org.eclipse.microprofile.config.ConfigProvider;
@@ -21,9 +21,11 @@ import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+
 
 @Path("/search")
 public class SearchList {
@@ -35,6 +37,9 @@ public class SearchList {
 
 	@Inject
 	SequenceVotesDAO sequenceVotesDAO;
+
+	@Inject
+	SequenceListStatus sequenceListStatus;
 
 
 
@@ -52,13 +57,22 @@ public class SearchList {
 	@Transactional
 	@Authenticated
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<SequenceList> search(@QueryParam("query") String query, @QueryParam("domain") String domain, @QueryParam("size") Optional<Integer> size, @QueryParam("page") Optional<Integer> page ) {
+	public List<SequenceList> search(@QueryParam("query") String query, @QueryParam("domain") String domain, @QueryParam("size") Optional<Integer> size, @QueryParam("page") Optional<Integer> page, @QueryParam("userSessionId") String userSessionId) {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss:SSS");
 //		logger.info("--------------------------------------------------------------------------------------------------");
 //		logger.info("Api invoked at:" + formatter.format(new Date()));
 
 		Integer offset = 0;
 		offset = page.orElse(0) * 10;
+
+		Integer publishedStatusId = sequenceListStatus.getPublishedStatusId();
+
+		final ArrayList<Function<SearchPredicateFactory, PredicateFinalStep>> additionalParamsFilter = new ArrayList<>();
+		additionalParamsFilter.add(f -> f.bool()
+				.should(f1 -> f1.match().field("additionalParams.status").matching(publishedStatusId.toString()))
+				.should(f3 -> f3.bool().mustNot(m -> m.exists().field("additionalParams.status")))
+		);
+//		additionalParamsFilter.add(f -> f.bool().should(f1->f1.match().field("additionalParams.published").matching("true")).should(f3 -> f3.bool().mustNot(m -> m.exists().field("additionalParams.published"))));
 
 		final Function<SearchPredicateFactory, PredicateFinalStep> deletedFilter;
 		deletedFilter = f -> f.match().field("deleted").matching(0);
@@ -81,11 +95,39 @@ public class SearchList {
 		SearchQueryOptionsStep<?, SequenceList, SearchLoadingOptionsStep, ?, ?> searchSession;
 //		logger.info("elastic search results start time:" + formatter.format(new Date()));
 
+		final Function<SearchPredicateFactory, PredicateFinalStep> userFilter;
+		userFilter = f -> f.match().field("usersessionid").matching(userSessionId);
+
+		final Function<SearchPredicateFactory, PredicateFinalStep> mustFunction;
+		mustFunction = f -> {
+			var searchMust = f.bool();
+			if(additionalParamsFilter.size() > 0) {
+				for (Function<SearchPredicateFactory, PredicateFinalStep> additionalParam : additionalParamsFilter) {
+					searchMust.must(additionalParam.apply(f));
+				}
+			}
+			return searchMust;
+		};
+
+		final Function<SearchPredicateFactory, PredicateFinalStep> shouldFunction;
+		shouldFunction = f -> {
+			var searchShould = f.bool();
+			searchShould.should(userFilter.apply(f));
+			return searchShould;
+		};
+
+		final Function<SearchPredicateFactory, PredicateFinalStep> mustShouldFunction;
+		mustShouldFunction = f -> {
+			var searchShouldMust = f.bool().should(mustFunction.apply(f)).should(shouldFunction.apply(f));
+			return searchShouldMust;
+		};
+
 		queryFunction = f -> {
 			var search = f.bool().must(deletedFilter.apply(f)).must(validFilter.apply(f)).must(ignoreFilter.apply(f));
 			if(domainFilter != null) {
 				search.must(domainFilter.apply(f));
 			}
+			search.must(mustShouldFunction.apply(f));
 			if(query == null || query.isEmpty()) {
 				search.must(f.matchAll());
 			} else {

@@ -2,6 +2,7 @@ package com.nistapp.uda.index.services;
 
 import com.nistapp.uda.index.models.SequenceList;
 import com.nistapp.uda.index.repository.SequenceVotesDAO;
+import com.nistapp.uda.index.utils.SequenceListStatus;
 import io.quarkus.security.Authenticated;
 import org.hibernate.search.engine.search.predicate.dsl.PredicateFinalStep;
 import org.hibernate.search.engine.search.predicate.dsl.SearchPredicateFactory;
@@ -28,6 +29,9 @@ public class SearchWithIDWithPermissions {
 	@Inject
 	SequenceVotesDAO sequenceVotesDAO;
 
+	@Inject
+	SequenceListStatus sequenceListStatus;
+
 	@GET
 	@Path("withPermissions/{id}")
 	@Transactional
@@ -40,7 +44,13 @@ public class SearchWithIDWithPermissions {
 
 		String jsonString = additionalParams.toString().replaceAll("\\[","").replaceAll("\\]","").replaceAll("Optional","").replaceAll("\\{","").replaceAll("\\}","").replaceAll(".empty","");
 
+		Integer publishedStatusId = sequenceListStatus.getPublishedStatusId();
+
 		final ArrayList<Function<SearchPredicateFactory, PredicateFinalStep>> additionalParamsFilter = new ArrayList<>();
+		additionalParamsFilter.add(f -> f.bool()
+				.should(f1 -> f1.match().field("additionalParams.status").matching(publishedStatusId.toString()))
+				.should(f3 -> f3.bool().mustNot(m -> m.exists().field("additionalParams.status")))
+		);
 
 		String[] params = jsonString.split(",");
 
