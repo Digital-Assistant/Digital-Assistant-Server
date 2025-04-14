@@ -25,7 +25,11 @@ dependencies {
 
     implementation 'com.vladmihalcea:hibernate-types-52:2.14.0'
 
-//    implementation 'io.quarkus:quarkus-hibernate-orm'
-//    implementation 'org.jboss.jandex:jandex-maven-plugin'
+    //implementation 'io.quarkus:quarkus-hibernate-orm'
+    //implementation 'org.jboss.jandex:jandex-maven-plugin'
+
+    // For Logging
+    implementation 'io.quarkus:quarkus-logging-json' // For JSON formatted logs
+    implementation 'io.quarkus:quarkus-logging-gelf' // For GELF logging (optional)
 }
 
