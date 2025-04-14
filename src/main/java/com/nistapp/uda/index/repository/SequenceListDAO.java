@@ -14,4 +14,8 @@ public class SequenceListDAO implements PanacheRepositoryBase<SequenceList, Inte
         return find("usersessionid=:sessionId and id=:nodeId", Parameters.with("sessionId",sessionid).and("nodeId",nodeId)).singleResult();
     }
 
+    public SequenceList findById(Integer nodeId){
+        return find("id=:nodeId", Parameters.with("nodeId",nodeId)).singleResult();
+    }
+
 }
