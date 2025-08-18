@@ -1,87 +1,111 @@
-# Coding Conventions
+# Repository Conventions
 
-This document outlines the coding conventions for the Digital Assistant Server project. Adhering to these conventions is crucial for maintaining code quality, readability, and consistency, especially when working with AI coding assistants.
+This document outlines the conventions for directory structure, naming, code style, and API design to ensure consistency and maintainability across the project.
 
-## 1. Code Formatting
+## 1. Directory Structure
 
-- **Indentation:** Use tabs for indentation.
-- **Line Endings:** Use Unix-style line endings (LF).
-- **Maximum Line Length:** 120 characters.
-- **Braces:** Opening braces go on the same line as the class or method declaration.
-- **Whitespace:** Use whitespace for readability (e.g., around operators, after commas).
+The repository follows a standard Quarkus project structure.
+
+```
+.
+├── config/                  # Configuration files (e.g., Keycloak)
+├── gradle/                  # Gradle wrapper files
+├── src/
+│   ├── main/
+│   │   ├── java/            # Java source code
+│   │   ├── docker/          # Dockerfiles for different environments
+│   │   └── resources/       # Application resources (e.g., properties, database migrations)
+│   └── test/
+│       └── java/            # Java test source code
+├── .gitignore               # Git ignore rules
+├── build.gradle             # Project build script
+├── gradlew                  # Gradle wrapper script (Linux/macOS)
+├── gradlew.bat              # Gradle wrapper script (Windows)
+└── README.md                # Project overview
+```
+
+- **`quarkus-app/`**: Main application source code. (Note: This directory does not exist yet, but is planned).
+- **`embedding-service/`**: Source code for the embedding service. (Note: This directory does not exist yet, but is planned).
+- **`scripts/`**: Utility and automation scripts. (Note: This directory does not exist yet, but is planned).
+
 
 ## 2. Naming Conventions
 
-- **Packages:** `lowercase` (e.g., `com.nistapp.uda.index.services`).
-- **Classes & Interfaces:** `PascalCase` (e.g., `SearchList`, `UserclicknodesRepository`).
-- **Methods:** `camelCase` (e.g., `search`, `findbynodeid`).
-- **Variables:** `camelCase` (e.g., `searchresults`, `queryFunction`).
-- **Constants:** `UPPER_SNAKE_CASE` (e.g., `MAX_RESULTS`).
-- **REST Endpoints:** `lowercase` and `kebab-case` (e.g., `/search/all`).
-- **Database Tables:** `PascalCase` (e.g., `Userclicknodes`).
-- **Database Columns:** `lowercase` (e.g., `sessionid`).
+### Git Branches
 
-## 3. Java Best Practices
+Branch names should be descriptive and follow this pattern:
 
-- **Immutability:** Prefer immutable objects where possible.
-- **Interfaces:** Code to interfaces, not implementations.
-- **Null Handling:** Use `Optional` for return types where a value may be absent. Avoid returning `null` from methods.
-- **Exception Handling:**
-    - Don't swallow exceptions.
-    - Use specific exceptions where possible.
-    - Document exceptions thrown by methods using `@throws` in Javadoc.
-- **Streams:** Use the Java Stream API for processing collections.
-- **Comments:**
-    - Write Javadoc for all public classes and methods.
-    - Avoid commented-out code. Remove it instead.
-    - Use comments to explain *why*, not *what*.
+- **`feature/<short-description>`**: For new features (e.g., `feature/user-authentication`).
+- **`bugfix/<short-description>`**: For bug fixes (e.g., `bugfix/login-form-validation`).
+- **`chore/<short-description>`**: For maintenance tasks (e.g., `chore/update-dependencies`).
+- **`docs/<short-description>`**: For documentation changes (e.g., `docs/add-api-conventions`).
 
-## 4. Logging
+### Commit Messages
 
-- **Framework:** Use SLF4J for logging.
-- **Instantiation:** Create a `private static final Logger` in each class.
-- **Parameterized Logging:** Use parameterized logging messages (e.g., `logger.info("User {} not found", userId);`) instead of string concatenation.
-- **Log Levels:**
-    - `ERROR`: For serious errors that prevent the application from functioning correctly.
-    - `WARN`: For potential problems that don't immediately cause an error.
-    - `INFO`: For important application lifecycle events.
-    - `DEBUG`: For development and debugging.
-    - `TRACE`: For very fine-grained debugging.
+We follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification. Each commit message should consist of a **type**, a **scope** (optional), and a **description**.
 
-## 5. API Design (JAX-RS)
+**Format:** `type(scope): description`
 
-- **Base Path:** `/api`.
-- **Resources:** Resources should be in the `services` package.
-- **Resource Paths:** Use plural nouns for resource paths (e.g., `/users`, `/orders`).
-- **HTTP Methods:** Use standard HTTP methods: `GET`, `POST`, `PUT`, `DELETE`.
-- **Status Codes:** Use appropriate HTTP status codes.
-- **Data Format:** Use JSON for request and response bodies.
-- **DTOs:** Use Data Transfer Objects (DTOs) to decouple the API from the persistence layer.
+- **Types**: `feat`, `fix`, `build`, `chore`, `ci`, `docs`, `style`, `refactor`, `perf`, `test`.
+- **Example**: `feat(auth): add JWT-based authentication`
 
-## 6. Persistence (JPA/Hibernate/Panache)
+### Java Files and Variables
 
-- **Entities:** Entities should be in the `models` package.
-- **Repositories:** Repositories should be in the `repository` package.
-- **Panache:** Use Panache repositories for standard CRUD operations.
-- **Database Migrations:** Database migrations are managed by Flyway. SQL migration scripts go in `src/main/resources/db/migration`.
-- **Migration Script Naming:** `V<VERSION>__<DESCRIPTION>.sql` (e.g., `V1.0.6__Add_user_preferences.sql`).
+- **Classes and Interfaces**: `PascalCase` (e.g., `UserService`, `UserRepository`).
+- **Methods and Variables**: `camelCase` (e.g., `getUserById`, `userName`).
+- **Constants**: `UPPER_SNAKE_CASE` (e.g., `MAX_RETRIES`).
+- **Packages**: `lowercase` (e.g., `com.nistapp.voice.service`).
 
-## 7. Testing
+## 3. Code Style Guidelines
 
-- **Framework:** Use JUnit 5 for unit tests.
-- **Mocking:** Use Mockito for mocking dependencies.
-- **Location:** Tests should be in the `src/test/java` directory.
-- **Test Classes:** Test classes should be named `<ClassName>Test` (e.g., `SearchListTest`).
-- **Coverage:** Aim for high test coverage.
+### Java
 
-## 8. Build & Dependencies
+We adhere to the [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html).
+- An IDE formatter configuration file (e.g., for IntelliJ or Eclipse) will be added to the repository to automate compliance.
+- Future work will involve integrating a static analysis tool like Checkstyle into the build process.
 
-- **Build Tool:** The project is built with Gradle.
-- **Dependencies:** Dependencies are managed in `build.gradle`.
-- **BOM:** Use the Quarkus BOM (Bill of Materials) to ensure compatible dependency versions.
+### Python
 
-## 9. Git & Version Control
+(If Python scripts are added under `scripts/`)
+- We will use the [Black](https://github.com/psf/black) code style.
+- A `pyproject.toml` file will be added to configure Black.
 
-- **Branching Model:** TBD (e.g., GitFlow).
-- **Commit Messages:** Follow the [Conventional Commits](https.conventionalcommits.org/) specification (e.g., `feat: add user profile endpoint`).
-- **Pull Requests:** Require at least one approval before merging.
+## 4. API Endpoint Design
+
+We follow RESTful principles for API design.
+
+### URI Naming
+
+- **Use nouns, not verbs**: Endpoints should represent resources.
+  - **Good**: `/users`, `/users/{userId}/posts`
+  - **Bad**: `/getUsers`, `/createUserPost`
+- **Use kebab-case**: For multi-word resource names.
+  - **Good**: `/shopping-carts`
+  - **Bad**: `/shoppingCarts`, `/shopping_carts`
+- **Be consistent**: Use plural nouns for collections (e.g., `/users`).
+
+### HTTP Verbs
+
+Use the appropriate HTTP method for the action:
+
+- **`GET`**: Retrieve a resource or a collection of resources.
+- **`POST`**: Create a new resource.
+- **`PUT`**: Update an existing resource completely.
+- **`PATCH`**: Partially update an existing resource.
+- **`DELETE`**: Delete a resource.
+
+### Status Codes
+
+Use standard HTTP status codes to indicate the outcome of a request:
+
+- **`2xx` (Success)**:
+  - `200 OK`: Request succeeded.
+  - `201 Created`: Resource was successfully created.
+  - `204 No Content`: Request succeeded, but there is no content to return.
+- **`4xx` (Client Errors)**:
+  - `400 Bad Request`: The server cannot process the request due to a client error.
+  - `401 Unauthorized`: Authentication is required.
+  - `403 Forbidden`: The client does not have permission.
+  - `404 Not Found`: The requested resource could not be found.
+- **`5xx` (Server Errors)**:
+  - `500 Internal Server Error`: A generic error message for an unexpected condition.
