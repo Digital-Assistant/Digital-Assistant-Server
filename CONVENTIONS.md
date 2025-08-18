@@ -1,6 +1,49 @@
 # Coding Conventions
 
-This document outlines the coding conventions for the Digital Assistant Server project. Adhering to these conventions is crucial for maintaining code quality, readability, and consistency, especially when working with AI coding assistants.
+---
+
+## 0. Directory Structure
+
+```
+/ (repo root)
+├── build.gradle
+├── gradle.properties
+├── gradlew*
+├── settings.gradle
+├── CONVENTIONS.md
+├── LICENSE
+├── README
+├── config/
+│   └── keycloak-keystore.jks
+├── gradle/
+│   └── wrapper/
+│       ├── gradle-wrapper.jar
+│       └── gradle-wrapper.properties
+├── src/
+│   ├── main/
+│   │   ├── docker/
+│   │   │   ├── Dockerfile.jvm
+│   │   │   └── Dockerfile.native
+│   │   ├── java/
+│   │   │   └── com/nistapp/uda/index/
+│   │   │       ├── config/
+│   │   │       ├── converters/
+│   │   │       ├── migration/
+│   │   │       ├── models/
+│   │   │       ├── repository/
+│   │   │       ├── search/
+│   │   │       ├── services/
+│   │   │       ├── users/
+│   │   │       ├── utils/
+│   │   │       └── views/
+│   │   └── resources/
+│   │       ├── application.properties
+│   │       ├── db/migration/
+│   │       ├── META-INF/
+│   │       └── pg/migration/
+```
+
+---
 
 ## 1. Code Formatting
 
@@ -20,6 +63,26 @@ This document outlines the coding conventions for the Digital Assistant Server p
 - **REST Endpoints:** `lowercase` and `kebab-case` (e.g., `/search/all`).
 - **Database Tables:** `PascalCase` (e.g., `Userclicknodes`).
 - **Database Columns:** `lowercase` (e.g., `sessionid`).
+
+### Git Branches
+- Use `feature/<short-description>` for new features (e.g., `feature/user-auth`)
+- Use `bugfix/<short-description>` for bug fixes
+- Use `hotfix/<short-description>` for urgent production fixes
+- Use `chore/<short-description>` for maintenance
+
+### Commit Messages
+- Use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/):
+  - `feat: add user login endpoint`
+  - `fix: correct null pointer in UserService`
+  - `docs: update README`
+  - `refactor: simplify domain model`
+
+### File Naming
+- Java classes: `PascalCase` (e.g., `UserAuthData.java`)
+- Configuration files: `lowercase-with-hyphens` (e.g., `application.properties`)
+- SQL migrations: `V<version>__<description>.sql` (e.g., `V1.0.1__multiple-upgrades.sql`)
+
+---
 
 ## 3. Java Best Practices
 
@@ -58,6 +121,24 @@ This document outlines the coding conventions for the Digital Assistant Server p
 - **Data Format:** Use JSON for request and response bodies.
 - **DTOs:** Use Data Transfer Objects (DTOs) to decouple the API from the persistence layer.
 
+---
+
+## 5a. API Endpoint Design (House Style)
+
+- Use RESTful resource naming: `/users`, `/sessions`, `/domains`
+- Use plural nouns for resources
+- Use lowercase and hyphens for paths: `/user-sessions`
+- Use HTTP verbs for actions:
+  - `GET /users` (list)
+  - `POST /users` (create)
+  - `GET /users/{id}` (retrieve)
+  - `PUT /users/{id}` (update)
+  - `DELETE /users/{id}` (delete)
+- Use camelCase for JSON keys
+- Return standard HTTP status codes
+
+---
+
 ## 6. Persistence (JPA/Hibernate/Panache)
 
 - **Entities:** Entities should be in the `models` package.
@@ -85,3 +166,7 @@ This document outlines the coding conventions for the Digital Assistant Server p
 - **Branching Model:** TBD (e.g., GitFlow).
 - **Commit Messages:** Follow the [Conventional Commits](https.conventionalcommits.org/) specification (e.g., `feat: add user profile endpoint`).
 - **Pull Requests:** Require at least one approval before merging.
+
+---
+
+> This document is the single source of truth for repository structure and conventions. All contributors must follow these guidelines.
