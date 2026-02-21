@@ -37,6 +37,6 @@ release.properties
 # Gradle
 .gradle/
 build/
-local.properties
+#local.properties
 additional.properties
 docker/data/
