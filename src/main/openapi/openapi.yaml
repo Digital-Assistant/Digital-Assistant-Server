@@ -1,0 +1,982 @@
+---
+openapi: 3.0.3
+info:
+  title: UDA-Prod-backend API
+  version: "1.7"
+paths:
+  /api/admin:
+    get:
+      tags:
+      - Admin
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+  /api/clickevents:
+    post:
+      tags:
+      - Clickevents
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JavascriptEvents'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JavascriptEvents'
+  /api/clickevents/all:
+    get:
+      tags:
+      - Clickevents
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/JavascriptEvents'
+  /api/clickevents/clickednode:
+    post:
+      tags:
+      - Clickevents
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Userclicknodes'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Userclicknodes'
+  /api/clickevents/fetchbyurl:
+    get:
+      tags:
+      - Clickevents
+      parameters:
+      - name: url
+        in: query
+        schema:
+          default: NA
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/JavascriptEvents'
+  /api/clickevents/fetchrecorddata:
+    get:
+      tags:
+      - Clickevents
+      parameters:
+      - name: domain
+        in: query
+        schema:
+          type: string
+      - name: end
+        in: query
+        schema:
+          format: int64
+          type: integer
+      - name: sessionid
+        in: query
+        schema:
+          type: string
+      - name: start
+        in: query
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Userclicknodes'
+  /api/clickevents/fetchtimestamp:
+    get:
+      tags:
+      - Clickevents
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                format: int64
+                type: integer
+  /api/clickevents/recordsequencedata:
+    post:
+      tags:
+      - Clickevents
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SequenceList'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SequenceList'
+  /api/clickevents/sequence/delete:
+    post:
+      tags:
+      - Clickevents
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SequenceList'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SequenceList'
+  /api/clickevents/sequence/votes/{id}:
+    get:
+      tags:
+      - Clickevents
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SequenceVotes'
+  /api/clickevents/suggested:
+    get:
+      tags:
+      - Clickevents
+      parameters:
+      - name: domain
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Userclicknodes'
+  /api/clickevents/updateclickednode:
+    post:
+      tags:
+      - Clickevents
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Userclicknodes'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Userclicknodes'
+  /api/clickevents/updatesequencedata:
+    post:
+      tags:
+      - Clickevents
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SequenceList'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SequenceList'
+  /api/clickevents/userclick:
+    put:
+      tags:
+      - Clickevents
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClickTrack'
+      responses:
+        "204":
+          description: No Content
+  /api/domain:
+    get:
+      tags:
+      - Domain
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+  /api/domain/patterns:
+    get:
+      tags:
+      - Domain
+      parameters:
+      - name: domain
+        in: query
+        schema:
+          default: NA
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DomainPatterns'
+  /api/search/all:
+    get:
+      tags:
+      - Search List
+      parameters:
+      - name: domain
+        in: query
+        schema:
+          type: string
+      - name: page
+        in: query
+        required: false
+        schema:
+          format: int32
+          type: integer
+      - name: query
+        in: query
+        schema:
+          type: string
+      - name: size
+        in: query
+        required: false
+        schema:
+          format: int32
+          type: integer
+      - name: userSessionId
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SequenceList'
+  /api/search/links:
+    get:
+      tags:
+      - Search List With Links
+      parameters:
+      - name: additionalParams
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: domain
+        in: query
+        schema:
+          type: string
+      - name: page
+        in: query
+        required: false
+        schema:
+          format: int32
+          type: integer
+      - name: query
+        in: query
+        schema:
+          type: string
+      - name: size
+        in: query
+        required: false
+        schema:
+          format: int32
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SequenceList'
+  /api/search/withPermissions:
+    get:
+      tags:
+      - Search With Permissions
+      parameters:
+      - name: additionalParams
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: domain
+        in: query
+        schema:
+          type: string
+      - name: page
+        in: query
+        required: false
+        schema:
+          format: int32
+          type: integer
+      - name: query
+        in: query
+        schema:
+          type: string
+      - name: size
+        in: query
+        required: false
+        schema:
+          format: int32
+          type: integer
+      - name: userSessionId
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SequenceList'
+  /api/search/withPermissions/{id}:
+    get:
+      tags:
+      - Search With ID With Permissions
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int32
+          type: integer
+      - name: additionalParams
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: domain
+        in: query
+        schema:
+          type: string
+      - name: userSessionId
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SequenceList'
+  /api/search/{id}:
+    get:
+      tags:
+      - Search With ID
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int32
+          type: integer
+      - name: domain
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SequenceList'
+  /api/searchTerms/all:
+    get:
+      tags:
+      - Search Terms
+      parameters:
+      - name: domain
+        in: query
+        schema:
+          type: string
+      - name: page
+        in: query
+        required: false
+        schema:
+          format: int32
+          type: integer
+      - name: query
+        in: query
+        schema:
+          type: string
+      - name: size
+        in: query
+        required: false
+        schema:
+          format: int32
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+  /api/sequence/reindex/{id}:
+    post:
+      tags:
+      - Sequence List Service
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int32
+          type: integer
+      responses:
+        "200":
+          description: OK
+  /api/sequence/update:
+    post:
+      tags:
+      - Sequence List Service
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SequenceList'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SequenceList'
+  /api/status:
+    post:
+      tags:
+      - Status Service
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Status'
+      responses:
+        "200":
+          description: OK
+  /api/status/all:
+    get:
+      tags:
+      - Status Service
+      parameters:
+      - name: isActive
+        in: query
+        required: false
+        schema:
+          type: boolean
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Status'
+  /api/status/category/{category}:
+    get:
+      tags:
+      - Status Service
+      parameters:
+      - name: category
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: isActive
+        in: query
+        required: false
+        schema:
+          type: boolean
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Status'
+  /api/status/{id}:
+    get:
+      tags:
+      - Status Service
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int32
+          type: integer
+      responses:
+        "200":
+          description: OK
+    put:
+      tags:
+      - Status Service
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int32
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Status'
+      responses:
+        "200":
+          description: OK
+    delete:
+      tags:
+      - Status Service
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int32
+          type: integer
+      responses:
+        "200":
+          description: OK
+  /api/status/{id}/toggle-active:
+    patch:
+      tags:
+      - Status Service
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int32
+          type: integer
+      responses:
+        "200":
+          description: OK
+  /api/user/checkauthid:
+    post:
+      tags:
+      - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserAuthData'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserAuthData'
+  /api/user/checkusersession:
+    post:
+      tags:
+      - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserSessionData'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSessionData'
+  /api/user/getsessionkey:
+    get:
+      tags:
+      - User
+      parameters:
+      - name: nist-voice-usersessionid
+        in: cookie
+        schema:
+          $ref: '#/components/schemas/Cookie'
+      responses:
+        "200":
+          description: OK
+  /api/users/me:
+    get:
+      tags:
+      - Users
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "401":
+          description: Not Authorized
+        "403":
+          description: Not Allowed
+      security:
+      - SecurityScheme:
+        - user
+      - SecurityScheme:
+        - user
+  /api/votes/addVote:
+    post:
+      tags:
+      - Votes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SequenceVotes'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SequenceList'
+  /api/votes/deleteVote/{id}/{userSessionId}:
+    delete:
+      tags:
+      - Votes
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      - name: userSessionId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: No Content
+  /api/votes/{id}:
+    get:
+      tags:
+      - Votes
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SequenceVotes'
+  /api/votes/{id}/{userSessionId}:
+    get:
+      tags:
+      - Votes
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          format: int32
+          type: integer
+      - name: userSessionId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SequenceVotes'
+components:
+  schemas:
+    ClickTrack:
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+        usersessionid:
+          type: string
+        clicktype:
+          type: string
+        clickedname:
+          type: string
+        recordid:
+          format: int64
+          type: integer
+        domain:
+          type: string
+        createdat:
+          format: int64
+          type: integer
+    Cookie:
+      type: object
+      properties:
+        name:
+          type: string
+        value:
+          type: string
+        version:
+          format: int32
+          type: integer
+        path:
+          type: string
+        domain:
+          type: string
+    DomainPatterns:
+      type: object
+      properties:
+        id:
+          format: int32
+          type: integer
+        domain:
+          type: string
+        patterntype:
+          type: string
+        patternvalue:
+          type: string
+        otherpatterntype:
+          type: string
+        createdat:
+          format: int64
+          type: integer
+    JavascriptEvents:
+      type: object
+      properties:
+        id:
+          format: int32
+          type: integer
+        sessionid:
+          type: string
+        clickednodename:
+          type: string
+        domain:
+          type: string
+        urlpath:
+          type: string
+        data:
+          type: string
+        created_at:
+          format: int64
+          type: integer
+    SequenceList:
+      type: object
+      properties:
+        id:
+          format: int32
+          type: integer
+        name:
+          type: string
+        usersessionid:
+          type: string
+        userclicknodelist:
+          type: string
+        domain:
+          type: string
+        createdat:
+          format: int64
+          type: integer
+        userclicknodesSet:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/Userclicknodes'
+        sequenceVotes:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/SequenceVotes'
+        deleted:
+          format: int32
+          type: integer
+        isValid:
+          format: int32
+          type: integer
+        isIgnored:
+          format: int32
+          type: integer
+        additionalParams:
+          type: object
+          additionalProperties:
+            type: object
+        SharableLink:
+          type: string
+        upVoteCount:
+          format: int32
+          type: integer
+        downVoteCount:
+          format: int32
+          type: integer
+        sharableLink:
+          type: string
+    SequenceVotes:
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+        usersessionid:
+          type: string
+        sequenceid:
+          format: int32
+          type: integer
+        upvote:
+          format: int32
+          type: integer
+        downvote:
+          format: int32
+          type: integer
+    Status:
+      type: object
+      properties:
+        id:
+          format: int32
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        order:
+          format: int32
+          type: integer
+        isActive:
+          type: boolean
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+    User:
+      type: object
+      properties:
+        userName:
+          type: string
+    UserAuthData:
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+        authid:
+          type: string
+        emailid:
+          type: string
+        authsource:
+          type: string
+        createdat:
+          format: int64
+          type: integer
+    UserSessionData:
+      type: object
+      properties:
+        id:
+          format: int64
+          type: integer
+        userauthid:
+          format: int64
+          type: integer
+        usersessionid:
+          type: string
+        createdat:
+          format: int64
+          type: integer
+    Userclicknodes:
+      type: object
+      properties:
+        id:
+          format: int32
+          type: integer
+        sessionid:
+          type: string
+        clickednodename:
+          type: string
+        objectdata:
+          type: string
+        html5:
+          format: int32
+          type: integer
+        clickedpath:
+          type: string
+        urlpath:
+          type: string
+        domain:
+          type: string
+        createdat:
+          format: int64
+          type: integer
