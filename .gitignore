@@ -40,3 +40,61 @@ build/
 #local.properties
 additional.properties
 docker/data/
+
+# Other - kc- 22-Feb26
+logs/
+*.log
+*.resolved
+
+# Compiled class files
+*.class
+
+# Package Files
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# EXCEPT the Gradle wrapper jar!
+!gradle/wrapper/gradle-wrapper.jar
+
+# Secrets and environments
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.pem
+*.key
+*.p12
+*.jks
+
+# Quarkus dev mode
+.quarkus/
+
+# Windows
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS (Extra)
+._*
+.Spotlight-V100
+.Trashes
+
+# Linux
+*~
+.directory
+
+# VS Code local history
+.history/
+
+# SonarQube / Code Coverage
+.scannerwork/
+jacoco.exec
+
+# Local embedded databases
+*.h2.db
+*.sqlite3
