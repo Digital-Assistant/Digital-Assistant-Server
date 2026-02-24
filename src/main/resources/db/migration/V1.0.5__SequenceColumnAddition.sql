@@ -1,4 +1,4 @@
-ALTER TABLE `SequenceList` ADD COLUMN `additionalParams` JSON DEFAULT NULL after `isIgnored`;
+ALTER TABLE `SequenceList` ADD COLUMN IF NOT EXISTS `additionalParams` JSON DEFAULT NULL after `isIgnored`;
 ALTER TABLE `SequenceList`
 	CHANGE COLUMN `deleted` `deleted` INT(1) NOT NULL DEFAULT 0 ,
 	CHANGE COLUMN `isValid` `isValid` INT(1) NOT NULL DEFAULT 1 ,

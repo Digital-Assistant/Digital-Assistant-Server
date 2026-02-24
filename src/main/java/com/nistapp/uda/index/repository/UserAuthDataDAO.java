@@ -4,7 +4,7 @@ import com.nistapp.uda.index.models.UserAuthData;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import io.quarkus.panache.common.Parameters;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class UserAuthDataDAO  implements PanacheRepositoryBase<UserAuthData, Long> {

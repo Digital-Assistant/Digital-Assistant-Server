@@ -1,6 +1,7 @@
 package com.nistapp.uda.index.models;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import java.time.Instant;
 
 @Entity
@@ -12,14 +13,16 @@ public class JavascriptEvents {
 	@Column(name = "id", nullable = false, unique = true, length = 11)
 	private Integer id;
 
-	@Column(length=500)
+	@Column(length = 500)
+	@Size(max = 500, message = "Session ID must not exceed 500 characters")
 	private String sessionid;
 
 	@Basic
 	@Column(length = 5000)
 	private String clickednodename;
 
-	@Column(length=500)
+	@Column(length = 500)
+	@Size(max = 500, message = "Domain must not exceed 500 characters")
 	private String domain;
 
 	@Lob
@@ -28,7 +31,7 @@ public class JavascriptEvents {
 	@Lob
 	private String data;
 
-	//@JsonIgnore
+	// @JsonIgnore
 	@Column(name = "created_at", nullable = false)
 	private long created_at;
 
@@ -66,7 +69,7 @@ public class JavascriptEvents {
 
 	@PrePersist
 	public void preSave() {
-//		this.created_at = new Date();
+		// this.created_at = new Date();
 		this.created_at = Instant.now().toEpochMilli();
 	}
 
@@ -93,7 +96,5 @@ public class JavascriptEvents {
 	public void setDomain(String domain) {
 		this.domain = domain;
 	}
-
-
 
 }

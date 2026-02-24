@@ -8,12 +8,13 @@ import io.quarkus.security.Authenticated;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class Votes {
 
 	/**
 	 * Get sequence votes by sequence ID
+	 * 
 	 * @param id
 	 * @return
 	 */
@@ -41,20 +43,23 @@ public class Votes {
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<SequenceVotes> getSequenceVotes(@PathParam("id") long id) {
-		TypedQuery<SequenceVotes> query = em.createQuery("select sqv from SequenceVotes sqv where sqv.sequenceid=:id", SequenceVotes.class);
+		TypedQuery<SequenceVotes> query = em.createQuery("select sqv from SequenceVotes sqv where sqv.sequenceid=:id",
+				SequenceVotes.class);
 		query.setParameter("id", id);
 		return query.getResultList();
 	}
 
 	/**
 	 * Get sequence vote record by sequence ID and User Session ID
+	 * 
 	 * @param id
 	 * @return
 	 */
 	@GET
 	@Path("/{id}/{userSessionId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public SequenceVotes getSequenceVotes(@PathParam("id") Integer id, @PathParam("userSessionId") String userSessionId) {
+	public SequenceVotes getSequenceVotes(@PathParam("id") Integer id,
+			@PathParam("userSessionId") String userSessionId) {
 		try {
 			SequenceVotes dbSequenceVotes = sequenceVotesDAO.findBySequenceIdUserSessionId(id, userSessionId);
 			return dbSequenceVotes;
@@ -65,6 +70,7 @@ public class Votes {
 
 	/**
 	 * Add/Update user vote
+	 * 
 	 * @param sequenceVotes
 	 * @return
 	 */
@@ -73,10 +79,11 @@ public class Votes {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Transactional
-	public SequenceList addSequenceVote(SequenceVotes sequenceVotes) {
+	public SequenceList addSequenceVote(@Valid SequenceVotes sequenceVotes) {
 
 		try {
-			SequenceVotes dbSequenceVotes = sequenceVotesDAO.findBySequenceIdUserSessionId((Integer) sequenceVotes.getSequenceid(), sequenceVotes.getUsersessionid());
+			SequenceVotes dbSequenceVotes = sequenceVotesDAO.findBySequenceIdUserSessionId(
+					(Integer) sequenceVotes.getSequenceid(), sequenceVotes.getUsersessionid());
 			if (dbSequenceVotes != null) {
 				dbSequenceVotes.setUpvote((Integer) sequenceVotes.getUpvote());
 				dbSequenceVotes.setDownvote((Integer) sequenceVotes.getDownvote());

@@ -3,9 +3,9 @@ package com.nistapp.uda.index.converters;
 import com.nistapp.uda.index.models.Userclicknodes;
 import com.nistapp.uda.index.repository.UserclicknodesRepository;
 
-import javax.inject.Inject;
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
+import jakarta.inject.Inject;
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 import java.util.ArrayList;
 import java.util.List;
 

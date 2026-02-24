@@ -3,7 +3,9 @@ package com.nistapp.uda.index.models;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import java.time.Instant;
 
 @Entity
@@ -16,7 +18,9 @@ public class UserAuthData extends PanacheEntityBase {
 	private long id;
 
 	@GenericField
-	@Column(length = 2000,nullable = false)
+	@Column(length = 2000, nullable = false)
+	@NotBlank(message = "Auth ID must not be blank")
+	@Size(max = 2000, message = "Auth ID must not exceed 2000 characters")
 	private String authid;
 
 	@GenericField

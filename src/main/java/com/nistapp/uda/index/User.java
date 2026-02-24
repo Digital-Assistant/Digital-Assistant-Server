@@ -8,14 +8,15 @@ import com.nistapp.uda.index.repository.UserSessionDataDAO;
 import com.nistapp.uda.index.repository.UserclicknodesRepository;
 import io.quarkus.security.Authenticated;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Cookie;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.NewCookie;
-import javax.ws.rs.core.Response;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Cookie;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.NewCookie;
+import jakarta.ws.rs.core.Response;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -48,8 +49,7 @@ public class User {
 
             // generate a random number between
             // 0 to AlphaNumericString variable length
-            int index
-                    = (int) (AlphaNumericString.length()
+            int index = (int) (AlphaNumericString.length()
                     * Math.random());
 
             // add Character one by one in end of sb
@@ -71,7 +71,8 @@ public class User {
             c.setTime(dt);
             c.add(Calendar.DATE, 365);
             dt = c.getTime();
-            NewCookie newCookie1 = new NewCookie("nist-voice-usersessionid", sessionkey, "/", "", "Nistapp voice user session", 365 * 24 * 60 * 60, false);
+            NewCookie newCookie1 = new NewCookie("nist-voice-usersessionid", sessionkey, "/", "",
+                    "Nistapp voice user session", 365 * 24 * 60 * 60, false);
             return Response.ok(sessionkey).cookie(newCookie1).build();
         } else {
             return Response.ok(sessioncookie.getValue()).build();
@@ -83,14 +84,15 @@ public class User {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public UserAuthData checkauthdata(UserAuthData postauthdata) {
-//        return postauthdata;
-        try{
-            UserAuthData userAuthData = userAuthDataDAO.findbyauthid(postauthdata.getAuthid(),postauthdata.getAuthsource());
-            if(userAuthData != null){
-                postauthdata=userAuthData;
+    public UserAuthData checkauthdata(@Valid UserAuthData postauthdata) {
+        // return postauthdata;
+        try {
+            UserAuthData userAuthData = userAuthDataDAO.findbyauthid(postauthdata.getAuthid(),
+                    postauthdata.getAuthsource());
+            if (userAuthData != null) {
+                postauthdata = userAuthData;
             }
-        } catch (Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -104,13 +106,14 @@ public class User {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public UserSessionData checkusersession(UserSessionData postusersessiondata) {
+    public UserSessionData checkusersession(@Valid UserSessionData postusersessiondata) {
         try {
-            UserSessionData userSessionData = userSessionDataDAO.findbyusersessionid(postusersessiondata.getUsersessionid());
+            UserSessionData userSessionData = userSessionDataDAO
+                    .findbyusersessionid(postusersessiondata.getUsersessionid());
             if (userSessionData != null) {
                 postusersessiondata = userSessionData;
             }
-        } catch (Exception e){
+        } catch (Exception e) {
 
         }
 

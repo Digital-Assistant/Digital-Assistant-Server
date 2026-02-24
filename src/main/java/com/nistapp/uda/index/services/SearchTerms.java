@@ -15,12 +15,12 @@ import org.hibernate.search.mapper.orm.search.loading.dsl.SearchLoadingOptionsSt
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.enterprise.event.Observes;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import jakarta.enterprise.event.Observes;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -44,9 +44,15 @@ public class SearchTerms {
 	@Transactional
 	void onStart(@Observes StartupEvent event) throws InterruptedException {
 		logger.info(ConfigProvider.getConfig().getConfigSources().toString());
-		Long value1 = em.createQuery("SELECT COUNT(ct.id) FROM ClickTrack ct where ct.clicktype='search'", Long.class).getSingleResult();
-		if (value1 != null && value1 != 0) {
-			Search.session(em).massIndexer(ClickTrack.class).startAndWait();
+		try {
+			Long value1 = em.createQuery("SELECT COUNT(ct.id) FROM ClickTrack ct where ct.clicktype='search'", Long.class).getSingleResult();
+			if (value1 != null && value1 != 0) {
+				Search.session(em).massIndexer(ClickTrack.class).startAndWait();
+				logger.info("Successfully re-indexed ClickTrack data on startup.");
+			}
+		} catch (Exception e) {
+			logger.warn("Skipping ClickTrack re-indexing: Could not connect to Database or Elasticsearch.");
+			logger.debug("Re-indexing failure detail: {}", e.getMessage());
 		}
 	}
 

@@ -4,8 +4,8 @@ import io.quarkus.oidc.TenantResolver;
 import io.vertx.ext.web.RoutingContext;
 import org.slf4j.LoggerFactory;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.ws.rs.core.Context;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ws.rs.core.Context;
 import java.net.http.HttpHeaders;
 
 @ApplicationScoped

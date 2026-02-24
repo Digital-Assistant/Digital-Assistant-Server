@@ -3,7 +3,7 @@ package com.nistapp.uda.index.models;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.Instant;
 
 @Entity

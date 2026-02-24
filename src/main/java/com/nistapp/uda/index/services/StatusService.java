@@ -4,12 +4,13 @@ import com.nistapp.uda.index.models.Status;
 import io.quarkus.security.Authenticated;
 import org.hibernate.search.mapper.orm.Search;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +18,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * REST service for managing Status entities.
- * This service provides CRUD operations and specialized queries for Status management.
+ * This service provides CRUD operations and specialized queries for Status
+ * management.
  * All endpoints require authentication.
  *
  * @author Your Organization
@@ -39,13 +41,12 @@ public class StatusService {
     @Inject
     EntityManager em;
 
-
     private static final ConcurrentHashMap<String, List<Status>> categoryStatusCache = new ConcurrentHashMap<>();
 
     private List<Status> getActiveSequenceListStatuses() {
         return categoryStatusCache.computeIfAbsent("sequenceListStatuses", key -> em.createQuery(
-                        "SELECT s FROM Status s WHERE s.category = :category AND s.isActive = :isActive",
-                        Status.class)
+                "SELECT s FROM Status s WHERE s.category = :category AND s.isActive = :isActive",
+                Status.class)
                 .setParameter("category", "sequenceList")
                 .setParameter("isActive", true)
                 .getResultList());
@@ -54,7 +55,8 @@ public class StatusService {
     /**
      * Retrieves all statuses with optional active status filtering.
      *
-     * @param isActive Optional parameter to filter active/inactive statuses. Defaults to true if not provided.
+     * @param isActive Optional parameter to filter active/inactive statuses.
+     *                 Defaults to true if not provided.
      * @return List<Status> List of statuses matching the filter criteria
      * @throws WebApplicationException if database access fails
      */
@@ -69,11 +71,14 @@ public class StatusService {
     }
 
     /**
-     * Retrieves statuses filtered by category with optional active status filtering.
+     * Retrieves statuses filtered by category with optional active status
+     * filtering.
      *
      * @param category The category to filter by
-     * @param isActive Optional parameter to filter active/inactive statuses. Defaults to true if not provided.
-     * @return List<Status> List of statuses matching the category and filter criteria
+     * @param isActive Optional parameter to filter active/inactive statuses.
+     *                 Defaults to true if not provided.
+     * @return List<Status> List of statuses matching the category and filter
+     *         criteria
      * @throws WebApplicationException if database access fails
      */
     @GET
@@ -85,14 +90,12 @@ public class StatusService {
         Boolean activeFilter = isActive.orElse(true);
         String cacheKey = category + "-" + activeFilter;
 
-        return categoryStatusCache.computeIfAbsent(cacheKey, key ->
-                em.createQuery(
-                                "SELECT s FROM Status s WHERE s.category = :category AND s.isActive = :isActive ORDER BY s.order",
-                                Status.class)
-                        .setParameter("category", category)
-                        .setParameter("isActive", activeFilter)
-                        .getResultList()
-        );
+        return categoryStatusCache.computeIfAbsent(cacheKey, key -> em.createQuery(
+                "SELECT s FROM Status s WHERE s.category = :category AND s.isActive = :isActive ORDER BY s.order",
+                Status.class)
+                .setParameter("category", category)
+                .setParameter("isActive", activeFilter)
+                .getResultList());
     }
 
     /**
@@ -122,7 +125,7 @@ public class StatusService {
      */
     @POST
     @Transactional
-    public Response createStatus(Status status) {
+    public Response createStatus(@Valid Status status) {
         if (status.getId() != null) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("New status should not have an ID").build();
@@ -134,7 +137,7 @@ public class StatusService {
     /**
      * Updates an existing status.
      *
-     * @param id The unique identifier of the status to update
+     * @param id     The unique identifier of the status to update
      * @param status The updated Status data
      * @return Response with updated Status entity
      * @throws WebApplicationException with 404 status if status not found
@@ -142,7 +145,7 @@ public class StatusService {
     @PUT
     @Path("/{id}")
     @Transactional
-    public Response updateStatus(@PathParam("id") Integer id, Status status) {
+    public Response updateStatus(@PathParam("id") Integer id, @Valid Status status) {
         Status existingStatus = em.find(Status.class, id);
         if (existingStatus == null) {
             return Response.status(Response.Status.NOT_FOUND).build();

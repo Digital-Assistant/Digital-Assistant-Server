@@ -9,13 +9,14 @@ import org.jose4j.json.internal.json_simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -50,7 +51,7 @@ public class Clickevents {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public JavascriptEvents indexeddata(JavascriptEvents javascriptevents) {
+    public JavascriptEvents indexeddata(@Valid JavascriptEvents javascriptevents) {
         em.persist(javascriptevents);
         return javascriptevents;
     }
@@ -60,7 +61,9 @@ public class Clickevents {
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
     public List<JavascriptEvents> listdatabyurl(@QueryParam("url") @DefaultValue("NA") String url) {
-        TypedQuery<JavascriptEvents> query = em.createQuery("select  e from JavascriptEvents e where e.urlpath=:url", JavascriptEvents.class).setParameter("url", url);
+        TypedQuery<JavascriptEvents> query = em
+                .createQuery("select  e from JavascriptEvents e where e.urlpath=:url", JavascriptEvents.class)
+                .setParameter("url", url);
         return query.getResultList();
     }
 
@@ -68,9 +71,14 @@ public class Clickevents {
     @Path("/fetchrecorddata")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public List<Userclicknodes> getuserrecordeddata(@QueryParam("start") long starttimestamp, @QueryParam("end") long endtimestamp, @QueryParam("sessionid") String sessionid, @QueryParam("domain") String domain) {
-        TypedQuery<Userclicknodes> query = em.createQuery("select u from Userclicknodes u where u.sessionid=:sessionid and u.domain=:domain and u.createdat between :startdate and :enddate", Userclicknodes.class);
-        query.setParameter("sessionid", sessionid).setParameter("domain", domain).setParameter("startdate", starttimestamp).setParameter("enddate", endtimestamp);
+    public List<Userclicknodes> getuserrecordeddata(@QueryParam("start") long starttimestamp,
+            @QueryParam("end") long endtimestamp, @QueryParam("sessionid") String sessionid,
+            @QueryParam("domain") String domain) {
+        TypedQuery<Userclicknodes> query = em.createQuery(
+                "select u from Userclicknodes u where u.sessionid=:sessionid and u.domain=:domain and u.createdat between :startdate and :enddate",
+                Userclicknodes.class);
+        query.setParameter("sessionid", sessionid).setParameter("domain", domain)
+                .setParameter("startdate", starttimestamp).setParameter("enddate", endtimestamp);
         return query.getResultList();
     }
 
@@ -87,15 +95,15 @@ public class Clickevents {
     /**
      * Saves the clicked node data for a user.
      *
-     * @param  userClickNodes  the clicked node data to be saved
-     * @return                 the saved clicked node data
+     * @param userClickNodes the clicked node data to be saved
+     * @return the saved clicked node data
      */
     @POST
     @Path("/clickednode")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public Userclicknodes Userclickednode(Userclicknodes userClickNodes) {
+    public Userclicknodes Userclickednode(@Valid Userclicknodes userClickNodes) {
         em.persist(userClickNodes);
         em.flush();
         return userClickNodes;
@@ -104,8 +112,9 @@ public class Clickevents {
     /**
      * Updates the clicked node for a user in the database.
      *
-     * @param  userClickNodes  the Userclicknodes object containing the updated information
-     * @return                 the updated Userclicknodes object
+     * @param userClickNodes the Userclicknodes object containing the updated
+     *                       information
+     * @return the updated Userclicknodes object
      */
     @POST
     @Path("/updateclickednode")
@@ -114,8 +123,9 @@ public class Clickevents {
     @Transactional
     public Userclicknodes UpdateUserclickedNode(Userclicknodes userClickNodes) {
         try {
-            Userclicknodes clicknode = userclicknodesRepository.findbynodeid(userClickNodes.getSessionid(), userClickNodes.getId());
-            if(clicknode != null) {
+            Userclicknodes clicknode = userclicknodesRepository.findbynodeid(userClickNodes.getSessionid(),
+                    userClickNodes.getId());
+            if (clicknode != null) {
                 clicknode.setClickednodename(userClickNodes.getClickednodename());
                 clicknode.setObjectdata(userClickNodes.getObjectdata());
                 em.persist(clicknode);
@@ -132,7 +142,7 @@ public class Clickevents {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public SequenceList indexeddata(SequenceList sequenceList) {
+    public SequenceList indexeddata(@Valid SequenceList sequenceList) {
         SequenceList s2 = new SequenceList();
         s2.setDomain(sequenceList.getDomain());
         s2.setUsersessionid(sequenceList.getUsersessionid());
@@ -148,7 +158,8 @@ public class Clickevents {
         Map<String, Object> additionalParams = sequenceList.getAdditionalParams();
         if (additionalParams != null) {
             JSONObject jsonObject = new JSONObject(additionalParams);
-            if (jsonObject.containsKey("enableStatus") && jsonObject.get("enableStatus").toString().equals("1") && !jsonObject.containsKey("status")) {
+            if (jsonObject.containsKey("enableStatus") && jsonObject.get("enableStatus").toString().equals("1")
+                    && !jsonObject.containsKey("status")) {
                 // Convert JSONObject back to Map before setting
                 additionalParams.put("status", draftStatusId.toString());
                 s2.setAdditionalParams(additionalParams);
@@ -180,12 +191,11 @@ public class Clickevents {
         return s2;
     }
 
-
     /**
      * A description of the entire Java function.
      *
-     * @param  sequenceList		The sequence list object to be updated
-     * @return         			The updated sequence list object
+     * @param sequenceList The sequence list object to be updated
+     * @return The updated sequence list object
      */
     @POST
     @Path("/updatesequencedata")
@@ -196,8 +206,9 @@ public class Clickevents {
 
         try {
             logger.info(sequenceList.getId().toString());
-            SequenceList updateSequenceList = sequenceListDAO.findById(sequenceList.getUsersessionid(), sequenceList.getId());
-            if(updateSequenceList != null) {
+            SequenceList updateSequenceList = sequenceListDAO.findById(sequenceList.getUsersessionid(),
+                    sequenceList.getId());
+            if (updateSequenceList != null) {
                 updateSequenceList.setAdditionalParams(sequenceList.getAdditionalParams());
                 em.persist(updateSequenceList);
                 sequenceList = updateSequenceList;
@@ -209,15 +220,18 @@ public class Clickevents {
         return sequenceList;
     }
 
-
-    /*@Transactional
-    void onStart(@Observes StartupEvent event) throws InterruptedException {
-        logger.info(ConfigProvider.getConfig().getConfigSources().toString());
-        Long value = em.createQuery("SELECT COUNT(s.id) FROM SequenceList s where s.deleted=0 and s.isValid=1 and s.isIgnored=0", Long.class).getSingleResult();
-        if (value != null && value != 0) {
-            Search.session(em).massIndexer(SequenceList.class).startAndWait();
-        }
-    }*/
+    /*
+     * @Transactional
+     * void onStart(@Observes StartupEvent event) throws InterruptedException {
+     * logger.info(ConfigProvider.getConfig().getConfigSources().toString());
+     * Long value = em.
+     * createQuery("SELECT COUNT(s.id) FROM SequenceList s where s.deleted=0 and s.isValid=1 and s.isIgnored=0"
+     * , Long.class).getSingleResult();
+     * if (value != null && value != 0) {
+     * Search.session(em).massIndexer(SequenceList.class).startAndWait();
+     * }
+     * }
+     */
 
     @POST
     @Path("sequence/delete")
@@ -225,7 +239,8 @@ public class Clickevents {
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
     public SequenceList deletesequence(SequenceList sequenceList) {
-        TypedQuery<SequenceList> query = em.createQuery("select sq from SequenceList sq where sq.id=:id", SequenceList.class);
+        TypedQuery<SequenceList> query = em.createQuery("select sq from SequenceList sq where sq.id=:id",
+                SequenceList.class);
         query.setParameter("id", sequenceList.getId());
         SequenceList dbresult = query.getSingleResult();
         if (dbresult == null)
@@ -242,12 +257,12 @@ public class Clickevents {
         }
     }
 
-
     @GET
     @Path("sequence/votes/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public List<SequenceVotes> getsequencevotes(@PathParam("id") long id) {
-        TypedQuery<SequenceVotes> query = em.createQuery("select sqv from SequenceVotes sqv where sqv.sequenceid=:id", SequenceVotes.class);
+        TypedQuery<SequenceVotes> query = em.createQuery("select sqv from SequenceVotes sqv where sqv.sequenceid=:id",
+                SequenceVotes.class);
         query.setParameter("id", id);
         return query.getResultList();
     }
@@ -256,15 +271,15 @@ public class Clickevents {
     @Path("userclick")
     @Consumes(MediaType.APPLICATION_JSON)
     @Transactional
-    public void addUserClick(ClickTrack clickTrack) {
+    public void addUserClick(@Valid ClickTrack clickTrack) {
         clickTrack.persist();
     }
 
     /**
      * Retrieves a list of suggested Userclicknodes based on the specified domain.
      *
-     * @param  domain  the domain to filter the Userclicknodes by
-     * @return         a list of suggested Userclicknodes
+     * @param domain the domain to filter the Userclicknodes by
+     * @return a list of suggested Userclicknodes
      */
     @GET
     @Path("/suggested")
@@ -273,7 +288,8 @@ public class Clickevents {
         List<Integer> nodeids = getRandomNumberList();
         List<Userclicknodes> userclicknodes = new ArrayList<>();
 
-        TypedQuery<Userclicknodes> query = em.createQuery("select u from Userclicknodes u where u.id in :id and u.domain=:domain", Userclicknodes.class);
+        TypedQuery<Userclicknodes> query = em.createQuery(
+                "select u from Userclicknodes u where u.id in :id and u.domain=:domain", Userclicknodes.class);
         query.setParameter("domain", domain);
         query.setParameter("id", nodeids);
         userclicknodes = query.getResultList();

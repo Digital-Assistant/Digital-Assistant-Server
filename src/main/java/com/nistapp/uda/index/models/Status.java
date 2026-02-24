@@ -1,6 +1,8 @@
 package com.nistapp.uda.index.models;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import java.time.Instant;
 
 /**
@@ -18,6 +20,8 @@ public class Status {
 
     // Human-readable name of the status
     @Column(name = "name", length = 100, nullable = false)
+    @NotBlank(message = "Status name must not be blank")
+    @Size(max = 100, message = "Status name must not exceed 100 characters")
     private String name;
 
     // Detailed description of the status stored as TEXT
@@ -26,10 +30,11 @@ public class Status {
 
     // Category classification for the status
     @Column(name = "category", length = 50)
+    @Size(max = 50, message = "Category must not exceed 50 characters")
     private String category;
 
     // Ordering position within the category
-    @Column(name = "order")
+    @Column(name = "`order`")
     private Integer order;
 
     // Flag indicating if the status is currently active
@@ -66,6 +71,7 @@ public class Status {
 
     /**
      * Gets the unique identifier of the status
+     * 
      * @return Integer id of the status
      */
     public Integer getId() {
@@ -74,6 +80,7 @@ public class Status {
 
     /**
      * Sets the unique identifier of the status
+     * 
      * @param id Integer value to set as id
      */
     public void setId(Integer id) {
@@ -82,6 +89,7 @@ public class Status {
 
     /**
      * Gets the name of the status
+     * 
      * @return String name of the status
      */
     public String getName() {
@@ -90,6 +98,7 @@ public class Status {
 
     /**
      * Sets the name of the status
+     * 
      * @param name String value to set as name
      */
     public void setName(String name) {
@@ -98,6 +107,7 @@ public class Status {
 
     /**
      * Gets the description of the status
+     * 
      * @return String description of the status
      */
     public String getDescription() {
@@ -106,6 +116,7 @@ public class Status {
 
     /**
      * Sets the description of the status
+     * 
      * @param description String value to set as description
      */
     public void setDescription(String description) {
@@ -114,6 +125,7 @@ public class Status {
 
     /**
      * Gets the category of the status
+     * 
      * @return String category of the status
      */
     public String getCategory() {
@@ -122,6 +134,7 @@ public class Status {
 
     /**
      * Sets the category of the status
+     * 
      * @param category String value to set as category
      */
     public void setCategory(String category) {
@@ -130,6 +143,7 @@ public class Status {
 
     /**
      * Gets the order value of the status
+     * 
      * @return Integer order value
      */
     public Integer getOrder() {
@@ -138,6 +152,7 @@ public class Status {
 
     /**
      * Sets the order value of the status
+     * 
      * @param order Integer value to set as order
      */
     public void setOrder(Integer order) {
@@ -146,6 +161,7 @@ public class Status {
 
     /**
      * Gets the active status
+     * 
      * @return Boolean indicating if status is active
      */
     public Boolean getIsActive() {
@@ -154,6 +170,7 @@ public class Status {
 
     /**
      * Sets the active status
+     * 
      * @param active Boolean value to set active status
      */
     public void setIsActive(Boolean active) {
@@ -162,6 +179,7 @@ public class Status {
 
     /**
      * Gets the creation timestamp
+     * 
      * @return Instant representing creation time
      */
     public Instant getCreatedAt() {
@@ -170,6 +188,7 @@ public class Status {
 
     /**
      * Sets the creation timestamp
+     * 
      * @param createdAt Instant value to set as creation time
      */
     public void setCreatedAt(Instant createdAt) {
@@ -178,6 +197,7 @@ public class Status {
 
     /**
      * Gets the last update timestamp
+     * 
      * @return Instant representing last update time
      */
     public Instant getUpdatedAt() {
@@ -186,6 +206,7 @@ public class Status {
 
     /**
      * Sets the last update timestamp
+     * 
      * @param updatedAt Instant value to set as update time
      */
     public void setUpdatedAt(Instant updatedAt) {

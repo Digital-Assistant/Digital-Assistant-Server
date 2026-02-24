@@ -7,11 +7,14 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericFie
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import java.time.Instant;
 
 /**
- * Represents a click track entity, which stores information about user interactions.
+ * Represents a click track entity, which stores information about user
+ * interactions.
  *
  * @author [Your Name]
  * @since [Version]
@@ -36,24 +39,27 @@ public class ClickTrack extends PanacheEntityBase {
 	 */
 	@GenericField // Mark the field as searchable
 	@Column(length = 500) // Define the column length
+	@NotBlank(message = "User session ID must not be blank")
+	@Size(max = 500, message = "User session ID must not exceed 500 characters")
 	private String usersessionid; // Store the user session ID value
 
-//	@GenericField
-	@Column(length = 200, name="event_name")
-//	@FullTextField(analyzer = "english")
+	// @GenericField
+	@Column(length = 200, name = "event_name")
+	// @FullTextField(analyzer = "english")
 	@KeywordField
 	private String clicktype; // store the event name
 
 	@GenericField
-	@Column(length = 2000, name="event_value")
+	@Column(length = 2000, name = "event_value")
 	private String clickedname; // store the event value
 
 	@GenericField
-	@Column(name="sequence_id")
+	@Column(name = "sequence_id")
 	private long recordid; // store the recording sequence id
 
 	@KeywordField
-	@Column(length = 5000, name="domain")
+	@Column(length = 5000, name = "domain")
+	@Size(max = 5000, message = "Domain must not exceed 5000 characters")
 	private String domain; // store the domain from where the event occured
 
 	@Column(name = "createdat", nullable = false)
@@ -177,21 +183,21 @@ public class ClickTrack extends PanacheEntityBase {
 		this.createdat = createdat;
 	}
 
-    /**
-     * Returns the domain associated with the click track.
-     *
-     * @return The domain name.
-     */
-    public String getDomain() {
-        return domain;
-    }
+	/**
+	 * Returns the domain associated with the click track.
+	 *
+	 * @return The domain name.
+	 */
+	public String getDomain() {
+		return domain;
+	}
 
-    /**
-     * Sets the domain associated with the click track.
-     *
-     * @param domain The domain name.
-     */
-    public void setDomain(String domain) {
-        this.domain = domain;
-    }
+	/**
+	 * Sets the domain associated with the click track.
+	 *
+	 * @param domain The domain name.
+	 */
+	public void setDomain(String domain) {
+		this.domain = domain;
+	}
 }
