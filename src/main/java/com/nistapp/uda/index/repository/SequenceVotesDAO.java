@@ -14,15 +14,15 @@ public class SequenceVotesDAO implements PanacheRepositoryBase<SequenceVotes, Lo
 		return find("usersessionid",usersessionid).singleResult();
 	}
 
-	public List<SequenceVotes> findBySequenceId(Integer sequenceId){
+	public List<SequenceVotes> findBySequenceId(Long sequenceId){
 		return find("sequenceid",sequenceId).list();
 	}
 
-	public List<SequenceVotes> findAllBySequenceIdUserSessionId(Integer sequenceId, String userSessionId){
+	public List<SequenceVotes> findAllBySequenceIdUserSessionId(Long sequenceId, String userSessionId){
 		return find("sequenceid=:sequenceid and usersessionid=:usersessionid", Parameters.with("sequenceid",sequenceId).and("usersessionid",userSessionId)).list();
 	}
 
-	public SequenceVotes findBySequenceIdUserSessionId(Integer sequenceId, String userSessionId){
+	public SequenceVotes findBySequenceIdUserSessionId(Long sequenceId, String userSessionId){
 		return find("sequenceid=:sequenceid and usersessionid=:usersessionid", Parameters.with("sequenceid",sequenceId).and("usersessionid",userSessionId)).singleResult();
 	}
 }

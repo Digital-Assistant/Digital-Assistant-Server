@@ -26,9 +26,11 @@ public class JavascriptEvents {
 	private String domain;
 
 	@Lob
+	@Column(columnDefinition = "LONGTEXT")
 	private String urlpath;
 
 	@Lob
+	@Column(columnDefinition = "LONGTEXT")
 	private String data;
 
 	// @JsonIgnore

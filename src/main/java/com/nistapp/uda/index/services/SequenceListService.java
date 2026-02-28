@@ -113,7 +113,7 @@ public class SequenceListService {
     @Path("/reindex/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public Response reindexSequence(@PathParam("id") Integer id) {
+    public Response reindexSequence(@PathParam("id") Long id) {
         try {
             logger.info("Reindexing sequence data for ID: " + id);
 

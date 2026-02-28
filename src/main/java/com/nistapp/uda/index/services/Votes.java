@@ -58,7 +58,7 @@ public class Votes {
 	@GET
 	@Path("/{id}/{userSessionId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public SequenceVotes getSequenceVotes(@PathParam("id") Integer id,
+	public SequenceVotes getSequenceVotes(@PathParam("id") Long id,
 			@PathParam("userSessionId") String userSessionId) {
 		try {
 			SequenceVotes dbSequenceVotes = sequenceVotesDAO.findBySequenceIdUserSessionId(id, userSessionId);
@@ -83,10 +83,10 @@ public class Votes {
 
 		try {
 			SequenceVotes dbSequenceVotes = sequenceVotesDAO.findBySequenceIdUserSessionId(
-					(Integer) sequenceVotes.getSequenceid(), sequenceVotes.getUsersessionid());
+					sequenceVotes.getSequenceid(), sequenceVotes.getUsersessionid());
 			if (dbSequenceVotes != null) {
-				dbSequenceVotes.setUpvote((Integer) sequenceVotes.getUpvote());
-				dbSequenceVotes.setDownvote((Integer) sequenceVotes.getDownvote());
+				dbSequenceVotes.setUpvote(sequenceVotes.getUpvote());
+				dbSequenceVotes.setDownvote(sequenceVotes.getDownvote());
 				sequenceVotes = dbSequenceVotes;
 			} else {
 				System.out.println("sequence vote not found");

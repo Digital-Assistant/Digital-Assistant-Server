@@ -8,14 +8,14 @@ import io.quarkus.panache.common.Parameters;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class SequenceListDAO implements PanacheRepositoryBase<SequenceList, Integer> {
+public class SequenceListDAO implements PanacheRepositoryBase<SequenceList, Long> {
 
-    public SequenceList findById(String sessionid, Integer nodeId) {
+    public SequenceList findById(String sessionid, Long nodeId) {
         return find("usersessionid=:sessionId and id=:nodeId",
                 Parameters.with("sessionId", sessionid).and("nodeId", nodeId)).firstResult();
     }
 
-    public SequenceList findById(Integer nodeId) {
+    public SequenceList findById(Long nodeId) {
         return find("id=:nodeId", Parameters.with("nodeId", nodeId)).firstResult();
     }
 

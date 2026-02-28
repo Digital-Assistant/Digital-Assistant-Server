@@ -23,7 +23,7 @@ public class SequenceVotes extends PanacheEntityBase {
 	private String usersessionid;
 
 	@GenericField
-	private Integer sequenceid;
+	private Long sequenceid;
 
 	@GenericField
 	private Integer upvote;
@@ -72,11 +72,11 @@ public class SequenceVotes extends PanacheEntityBase {
 		this.usersessionid = usersessionid;
 	}
 
-	public Integer getSequenceid() {
+	public Long getSequenceid() {
 		return sequenceid;
 	}
 
-	public void setSequenceid(Integer sequenceid) {
+	public void setSequenceid(Long sequenceid) {
 		this.sequenceid = sequenceid;
 	}
 

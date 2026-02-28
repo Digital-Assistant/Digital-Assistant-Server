@@ -31,6 +31,7 @@ public class Userclicknodes {
 
 	@GenericField(searchable = Searchable.NO)
 	@Lob
+	@Column(columnDefinition = "LONGTEXT")
 	private String objectdata;
 
 	@GenericField
@@ -43,6 +44,7 @@ public class Userclicknodes {
 	@KeywordField
 //	@Column(length=5000)
 	@Lob
+	@Column(columnDefinition = "LONGTEXT")
 	private String urlpath;
 
 	@KeywordField

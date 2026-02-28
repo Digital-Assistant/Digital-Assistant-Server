@@ -1,6 +1,7 @@
 package com.nistapp.uda.index.services;
 
 import com.nistapp.uda.index.models.Status;
+import org.jboss.logging.Logger;
 import io.quarkus.security.Authenticated;
 import org.hibernate.search.mapper.orm.Search;
 
@@ -35,6 +36,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @Authenticated
 public class StatusService {
 
+    private static final Logger log = Logger.getLogger(StatusService.class);
+
     /**
      * Injected EntityManager for database operations
      */
@@ -65,6 +68,7 @@ public class StatusService {
     @Transactional
     public List<Status> getAllStatuses(@QueryParam("isActive") Optional<Boolean> isActive) {
         Boolean activeFilter = isActive.orElse(true);
+        log.infof("Fetching all statuses with activeFilter: %s", activeFilter);
         return em.createQuery("SELECT s FROM Status s WHERE s.isActive = :isActive", Status.class)
                 .setParameter("isActive", activeFilter)
                 .getResultList();

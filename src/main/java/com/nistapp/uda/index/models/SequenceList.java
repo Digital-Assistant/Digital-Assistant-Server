@@ -31,7 +31,7 @@ public class SequenceList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true, length = 11)
     @GenericField
-    private Integer id;
+    private Long id;
 
     @FullTextField(analyzer = "english")
     @Column(length = 5000)
@@ -117,11 +117,11 @@ public class SequenceList {
         return url;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
