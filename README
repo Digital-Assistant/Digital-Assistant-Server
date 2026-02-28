@@ -7,5 +7,25 @@ Here is the tool in action: https://youtu.be/Iz2WgKY0fhc
 Telegram: https://t.me/UniDigitalAssistant
 Discord: https://discord.gg/92NqDEUbxV
 
-Note thate you will need both the server(this repo) and client(https://github.com/Digital-Assistant/Digital_Assistant_Client) to get the functionality in above video.
+## 🚀 Getting Started (Local Development)
+
+Before starting the Quarkus server, ensure that all background microservices and databases are running in the `Digital_Assistant_microServices` project.
+
+### Pre-flight Check
+To ensure proper connectivity and configuration (DB credentials, Keycloak OIDC, etc.), use the provided pre-flight script. This script verifies infrastructure health and starts the application only if all checks pass.
+
+```bash
+# From the Digital-Assistant-Server directory
+./pre-flight-check.sh
+```
+
+The script will:
+1. Check if all required Docker containers are running.
+2. Verify MariaDB & Postgres connectivity using credentials from `DOCKER_MAP.md`.
+3. Validate Keycloak OIDC configuration (Discovery & Token Grant).
+4. Check Elasticsearch and NestJS API health.
+5. Start the Quarkus application in dev mode (`./gradlew quarkusDev`).
+
+---
+Note that you will need both the server (this repo) and client (https://github.com/Digital-Assistant/Digital_Assistant_Client) to get the functionality in above video.
 Will try to release a docker version of server soon to ease deployment.
