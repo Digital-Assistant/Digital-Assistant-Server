@@ -87,6 +87,7 @@ else
 fi
 
 echo -e "\n📡 ${YELLOW}Testing Connectivity & Credentials...${NC}"
+FAILED_CHECKS=0
 
 # 2. MariaDB Connectivity
 echo -n "MariaDB ($DB_USER)... "
@@ -95,21 +96,21 @@ if command -v mariadb &> /dev/null; then
         echo -e "${GREEN}CONNECTED${NC}"
     else
         echo -e "${RED}AUTH FAILED${NC}"
-        exit 1
+        FAILED_CHECKS=$((FAILED_CHECKS+1))
     fi
 elif command -v mysql &> /dev/null; then
     if mysql -h 127.0.0.1 -u "$DB_USER" -p"$DB_PASS" -e "SELECT 1;" &>/dev/null; then
         echo -e "${GREEN}CONNECTED${NC}"
     else
         echo -e "${RED}AUTH FAILED${NC}"
-        exit 1
+        FAILED_CHECKS=$((FAILED_CHECKS+1))
     fi
 else
     if timeout 1 bash -c "</dev/tcp/127.0.0.1/3306" 2>/dev/null; then
         echo -e "${YELLOW}PORT OPEN (Client not installed)${NC}"
     else
         echo -e "${RED}UNREACHABLE${NC}"
-        exit 1
+        FAILED_CHECKS=$((FAILED_CHECKS+1))
     fi
 fi
 
@@ -120,14 +121,14 @@ if command -v psql &> /dev/null; then
         echo -e "${GREEN}CONNECTED${NC}"
     else
         echo -e "${RED}AUTH FAILED${NC}"
-        exit 1
+        FAILED_CHECKS=$((FAILED_CHECKS+1))
     fi
 else
     if timeout 1 bash -c "</dev/tcp/127.0.0.1/5432" 2>/dev/null; then
         echo -e "${YELLOW}PORT OPEN (Client not installed)${NC}"
     else
         echo -e "${RED}UNREACHABLE${NC}"
-        exit 1
+        FAILED_CHECKS=$((FAILED_CHECKS+1))
     fi
 fi
 
@@ -138,30 +139,36 @@ if [ "$ES_STATUS" == "200" ]; then
     echo -e "${GREEN}HEALTHY${NC}"
 else
     echo -e "${RED}FAILED (Status: $ES_STATUS)${NC}"
-    exit 1
+    FAILED_CHECKS=$((FAILED_CHECKS+1))
 fi
 
 # 5. Keycloak Access (Matching Quarkus OIDC flow)
 echo -n "Keycloak OIDC ($KC_CLIENT_ID)... "
+KC_FAILED=0
 # 1. First check if the OIDC discovery endpoint is accessible
 DISCOVERY_STATUS=$(curl -s -k -o /dev/null -w "%{http_code}" "$KC_URL_TEST/.well-known/openid-configuration")
 if [ "$DISCOVERY_STATUS" != "200" ]; then
     echo -e "${RED}DISCOVERY FAILED (Status: $DISCOVERY_STATUS)${NC}"
-    exit 1
+    KC_FAILED=1
+else
+    # 2. Try to get a token using client_credentials (this verifies client_id and secret)
+    KC_TOKEN=$(curl -s -k -X POST "$KC_URL_TEST/protocol/openid-connect/token" \
+        -H "Content-Type: application/x-www-form-urlencoded" \
+        -d "grant_type=client_credentials" \
+        -d "client_id=$KC_CLIENT_ID" \
+        -d "client_secret=$KC_CLIENT_SECRET" 2>/dev/null | grep -o '"access_token":"[^"]*' | grep -o '[^"]*$')
+
+    if [ -n "$KC_TOKEN" ]; then
+        echo -e "${GREEN}AUTHENTICATED${NC}"
+    else
+        echo -e "${RED}AUTH FAILED (Check client-id/secret)${NC}"
+        KC_FAILED=1
+    fi
 fi
 
-# 2. Try to get a token using client_credentials (this verifies client_id and secret)
-KC_TOKEN=$(curl -s -k -X POST "$KC_URL_TEST/protocol/openid-connect/token" \
-    -H "Content-Type: application/x-www-form-urlencoded" \
-    -d "grant_type=client_credentials" \
-    -d "client_id=$KC_CLIENT_ID" \
-    -d "client_secret=$KC_CLIENT_SECRET" 2>/dev/null | grep -o '"access_token":"[^"]*' | grep -o '[^"]*$')
-
-if [ -n "$KC_TOKEN" ]; then
-    echo -e "${GREEN}AUTHENTICATED${NC}"
-else
-    echo -e "${RED}AUTH FAILED (Check client-id/secret)${NC}"
-    exit 1
+if [ $KC_FAILED -eq 1 ]; then
+    echo -e "${YELLOW}   ℹ️  Keycloak is running but not serving tokens yet! \n Note: Keycloak often takes 3-4 minutes to fully initialize. If you just started the services, please wait a moment and try again.${NC}"
+    FAILED_CHECKS=$((FAILED_CHECKS+1))
 fi
 
 # 6. NestJS API (Token Service)
@@ -173,7 +180,7 @@ if [ "$NEST_STATUS" != "000" ]; then
     echo -e "${GREEN}UP (Status: $NEST_STATUS)${NC}"
 else
     echo -e "${RED}DOWN${NC}"
-    exit 1
+    FAILED_CHECKS=$((FAILED_CHECKS+1))
 fi
 
 # 7. Nginx Gateway
@@ -183,6 +190,11 @@ if [ "$NGINX_STATUS" != "000" ]; then
     echo -e "${GREEN}UP (Status: $NGINX_STATUS)${NC}"
 else
     echo -e "${RED}DOWN${NC}"
+    FAILED_CHECKS=$((FAILED_CHECKS+1))
+fi
+
+if [ $FAILED_CHECKS -gt 0 ]; then
+    echo -e "\n${RED}❌ $FAILED_CHECKS pre-flight check(s) failed. Please resolve the issues above before starting.${NC}"
     exit 1
 fi
 
