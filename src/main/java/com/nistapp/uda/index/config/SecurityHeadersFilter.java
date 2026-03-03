@@ -1,5 +1,6 @@
 package com.nistapp.uda.index.config;
 
+import io.quarkus.arc.profile.IfBuildProfile;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerResponseContext;
 import jakarta.ws.rs.container.ContainerResponseFilter;
@@ -31,6 +32,7 @@ import java.io.IOException;
  *      Headers Project</a>
  */
 @Provider
+@IfBuildProfile("!dev")
 public class SecurityHeadersFilter implements ContainerResponseFilter {
 
     @Override

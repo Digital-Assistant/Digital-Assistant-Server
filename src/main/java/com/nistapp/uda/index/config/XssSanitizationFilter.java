@@ -1,5 +1,6 @@
 package com.nistapp.uda.index.config;
 
+import io.quarkus.arc.profile.IfBuildProfile;
 import com.nistapp.uda.index.utils.InputSanitizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,7 @@ import java.nio.charset.StandardCharsets;
  */
 @Provider
 @PreMatching
+@IfBuildProfile("!dev")
 public class XssSanitizationFilter implements ContainerRequestFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(XssSanitizationFilter.class);
