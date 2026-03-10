@@ -99,5 +99,7 @@ jacoco.exec
 *.h2.db
 *.sqlite3
 
+
+# ignoring the below files as they are not required
 src/main/resources/prod.additional.properties
 src/main/resources/additional.properties.test
