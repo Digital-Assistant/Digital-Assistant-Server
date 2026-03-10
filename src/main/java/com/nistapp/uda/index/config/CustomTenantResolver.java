@@ -15,11 +15,11 @@ public class CustomTenantResolver implements TenantResolver {
 
     @Context
     HttpHeaders httpHeaders;
+
     @Override
     public String resolve(RoutingContext context) {
         String path = context.request().getHeader("UDAN-Realm");
-
-        if(path == null) {
+        if (path == null || path.isEmpty()) {
             return "UDAN";
         } else {
             return path.toString();
