@@ -98,3 +98,6 @@ jacoco.exec
 # Local embedded databases
 *.h2.db
 *.sqlite3
+
+src/main/resources/prod.additional.properties
+src/main/resources/additional.properties.test
