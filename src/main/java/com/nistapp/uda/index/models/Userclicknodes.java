@@ -19,7 +19,7 @@ public class Userclicknodes {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false, unique = true, length = 11)
 	@GenericField
-	private Integer id;
+	private Long id;
 
 	@GenericField
 	@Column(length=500)
@@ -68,11 +68,11 @@ public class Userclicknodes {
 		this.createdat = Instant.now().toEpochMilli();
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

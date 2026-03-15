@@ -285,7 +285,7 @@ public class Clickevents {
     @Path("/suggested")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Userclicknodes> suggestSequenceList(@QueryParam("domain") String domain) {
-        List<Integer> nodeids = getRandomNumberList();
+        List<Long> nodeids = getRandomNumberList();
         List<Userclicknodes> userclicknodes = new ArrayList<>();
 
         TypedQuery<Userclicknodes> query = em.createQuery(
@@ -302,16 +302,16 @@ public class Clickevents {
      *
      * @return intList A list of randomly generated integers.
      */
-    public static List<Integer> getRandomNumberList() {
+    public static List<Long> getRandomNumberList() {
 
         Random rand = new Random();
 
         Integer generateLength = rand.nextInt((10 - 3) + 1) + 3;
 
-        List<Integer> intList = new ArrayList<>();
+        List<Long> intList = new ArrayList<>();
 
         for (int i = 0; i < generateLength; i++) {
-            intList.add(rand.nextInt(100));
+            intList.add((long) rand.nextInt(100));
         }
 
         return intList;

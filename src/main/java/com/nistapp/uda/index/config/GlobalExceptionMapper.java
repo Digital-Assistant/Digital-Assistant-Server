@@ -7,6 +7,8 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.util.LinkedHashMap;
@@ -31,6 +33,8 @@ import java.util.stream.Collectors;
  */
 @Provider
 public class GlobalExceptionMapper implements ExceptionMapper<Exception> {
+
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionMapper.class);
 
     @Override
     public Response toResponse(Exception exception) {
@@ -68,6 +72,7 @@ public class GlobalExceptionMapper implements ExceptionMapper<Exception> {
      * @return a 500 Internal Server Error response
      */
     private Response handleGenericException(Exception exception) {
+        logger.error("Unhandled exception: {}", exception.getMessage(), exception);
         Map<String, Object> problem = buildProblemDetails(
                 "https://tools.ietf.org/html/rfc7807",
                 "Internal Server Error",

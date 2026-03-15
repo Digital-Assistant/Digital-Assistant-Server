@@ -8,7 +8,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class UserclicknodesRepository implements PanacheRepository<Userclicknodes> {
-	public Userclicknodes findbynodeid(String sessionid, Integer nodeId){
+	public Userclicknodes findbynodeid(String sessionid, Long nodeId){
 		return find("sessionid=:sessionId and id=:nodeId", Parameters.with("sessionId",sessionid).and("nodeId",nodeId)).singleResult();
 	}
 }
