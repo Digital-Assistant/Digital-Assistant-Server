@@ -101,5 +101,7 @@ jacoco.exec
 
 
 # ignoring the below files as they are not required
-src/main/resources/prod.additional.properties
-src/main/resources/additional.properties.test
+src/main/resources/prod.properties
+src/main/resources/test.properties
+udan-prod.sh
+udan-test.sh
