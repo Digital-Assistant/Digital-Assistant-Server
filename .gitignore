@@ -40,3 +40,4 @@ build/
 local.properties
 additional.properties
 docker/data/
+src/main/resources/local.properties
