@@ -44,9 +44,16 @@ public class SearchTerms {
 	@Transactional
 	void onStart(@Observes StartupEvent event) throws InterruptedException {
 		logger.info(ConfigProvider.getConfig().getConfigSources().toString());
-		Long value1 = em.createQuery("SELECT COUNT(ct.id) FROM ClickTrack ct where ct.clicktype='search'", Long.class).getSingleResult();
-		if (value1 != null && value1 != 0) {
-			Search.session(em).massIndexer(ClickTrack.class).startAndWait();
+		boolean runIndexing = ConfigProvider.getConfig().getOptionalValue("app.indexing.on-startup", Boolean.class).orElse(false);
+		if (runIndexing) {
+			Long value1 = em.createQuery("SELECT COUNT(ct.id) FROM ClickTrack ct where ct.clicktype='search'", Long.class).getSingleResult();
+			if (value1 != null && value1 != 0) {
+				logger.info("Starting programmatic mass indexing for ClickTrack...");
+				Search.session(em).massIndexer(ClickTrack.class).startAndWait();
+				logger.info("Programmatic mass indexing for ClickTrack completed.");
+			}
+		} else {
+			logger.info("Programmatic mass indexing for ClickTrack on startup is disabled (app.indexing.on-startup = false).");
 		}
 	}
 
