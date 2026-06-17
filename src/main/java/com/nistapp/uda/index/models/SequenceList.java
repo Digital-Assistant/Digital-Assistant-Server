@@ -21,7 +21,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * we are changing the index name due to the conflict issue with the two instances running on the same server.
+ * we are changing the index name due to the conflict issue with the two
+ * instances running on the same server.
  */
 @Entity
 @Table(name = "SequenceList")
@@ -48,7 +49,7 @@ public class SequenceList {
     @Column(length = 5000)
     private String userclicknodelist;
 
-//    @FullTextField(analyzer = "english")
+    // @FullTextField(analyzer = "english")
     @KeywordField
     @Column(length = 500)
     private String domain;
@@ -71,7 +72,7 @@ public class SequenceList {
 
     @GenericField
     @Column(name = "deleted", columnDefinition = "integer default 0")
-    private Integer deleted=0;
+    private Integer deleted = 0;
 
     @GenericField
     @Column(name = "isValid")
@@ -81,7 +82,6 @@ public class SequenceList {
     @Column(name = "isIgnored")
     private Integer isIgnored;
 
-
     /***
      * Saving additional info
      */
@@ -90,13 +90,14 @@ public class SequenceList {
     @Type(type = "json")
     @PropertyBinding(binder = @PropertyBinderRef(type = AdditionalParamsBinder.class))
     @IndexingDependency(
-            //TODO create appropriate dependencies check this stackoverflow https://stackoverflow.com/questions/68532341/index-hashmap-using-keys-as-fields-names-hibernatesearch
+            // TODO create appropriate dependencies check this stackoverflow
+            // https://stackoverflow.com/questions/68532341/index-hashmap-using-keys-as-fields-names-hibernatesearch
             derivedFrom = {}, extraction = @ContainerExtraction(extract = ContainerExtract.NO))
     private Map<String, Object> additionalParams;
 
     @PrePersist
     public void preSave() {
-//        this.createdat = new Timestamp(System.currentTimeMillis());
+        // this.createdat = new Timestamp(System.currentTimeMillis());
         this.createdat = Instant.now().toEpochMilli();
     }
 
@@ -106,16 +107,17 @@ public class SequenceList {
     public String getSharableLink() {
         List<Userclicknodes> userClickNodes = new ArrayList<>(this.getUserclicknodesSet());
         String url = "";
-        if(!userClickNodes.isEmpty()) {
+        if (!userClickNodes.isEmpty()) {
             Userclicknodes userClickNode = userClickNodes.get(0);
-            url = "https://"+userClickNode.getDomain()+((!userClickNode.getUrlpath().isEmpty())?userClickNode.getUrlpath():'/');
-            if(url.indexOf('?') != -1){
-                url = url+"&UDA_Sequence_id="+this.id;
+            url = "https://" + userClickNode.getDomain()
+                    + ((!userClickNode.getUrlpath().isEmpty()) ? userClickNode.getUrlpath() : '/');
+            if (url.indexOf('?') != -1) {
+                url = url + "&UDA_Sequence_id=" + this.id;
             } else {
-                url = url+"?UDA_Sequence_id="+this.id;
+                url = url + "?UDA_Sequence_id=" + this.id;
             }
         } else {
-            url = "https://"+this.domain+"?UDA_Sequence_id="+this.id;
+            url = "https://" + this.domain + "?UDA_Sequence_id=" + this.id;
         }
         return url;
     }
@@ -210,6 +212,7 @@ public class SequenceList {
 
     /**
      * Getter for sequenceVote
+     * 
      * @return
      */
     public Set<SequenceVotes> getSequenceVotes() {
@@ -218,6 +221,7 @@ public class SequenceList {
 
     /**
      * Setter for sequenceVote
+     * 
      * @return
      */
     public void setSequenceVotes(Set<SequenceVotes> sequenceVotes) {
@@ -230,10 +234,10 @@ public class SequenceList {
     @Transient
     public Integer upVoteCount = 0;
 
-    public Integer getUpVoteCount(){
+    public Integer getUpVoteCount() {
         Integer totalLikes = 0;
-        for(SequenceVotes sequenceVote:this.sequenceVotes){
-            if(sequenceVote.getUpvote() == 1) {
+        for (SequenceVotes sequenceVote : this.sequenceVotes) {
+            if (sequenceVote.getUpvote() == 1) {
                 totalLikes++;
             }
         }
@@ -244,10 +248,10 @@ public class SequenceList {
     @Transient
     public Integer downVoteCount;
 
-    public Integer getDownVoteCount(){
+    public Integer getDownVoteCount() {
         Integer totalDisLikes = 0;
-        for(SequenceVotes sequenceVote:this.sequenceVotes){
-            if(sequenceVote.getDownvote() == 1) {
+        for (SequenceVotes sequenceVote : this.sequenceVotes) {
+            if (sequenceVote.getDownvote() == 1) {
                 totalDisLikes++;
             }
         }

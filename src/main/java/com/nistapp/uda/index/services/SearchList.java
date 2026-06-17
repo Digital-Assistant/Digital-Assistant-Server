@@ -46,9 +46,16 @@ public class SearchList {
 	@Transactional
 	void onStart(@Observes StartupEvent event) throws InterruptedException {
 		logger.info(ConfigProvider.getConfig().getConfigSources().toString());
-		Long value = em.createQuery("SELECT COUNT(s.id) FROM SequenceList s where s.deleted=0 and s.isValid=1 and s.isIgnored=0", Long.class).getSingleResult();
-		if (value != null && value != 0) {
-			Search.session(em).massIndexer(SequenceList.class).startAndWait();
+		boolean runIndexing = ConfigProvider.getConfig().getOptionalValue("app.indexing.on-startup", Boolean.class).orElse(false);
+		if (runIndexing) {
+			Long value = em.createQuery("SELECT COUNT(s.id) FROM SequenceList s where s.deleted=0 and s.isValid=1 and s.isIgnored=0", Long.class).getSingleResult();
+			if (value != null && value != 0) {
+				logger.info("Starting programmatic mass indexing...");
+				Search.session(em).massIndexer(SequenceList.class).startAndWait();
+				logger.info("Programmatic mass indexing completed.");
+			}
+		} else {
+			logger.info("Programmatic mass indexing on startup is disabled (app.indexing.on-startup = false).");
 		}
 	}
 
