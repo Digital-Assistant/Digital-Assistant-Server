@@ -37,7 +37,8 @@ release.properties
 # Gradle
 .gradle/
 build/
-local.properties
+# Environment property files
+src/main/resources/test.properties
+src/main/resources/prod.properties
 additional.properties
 docker/data/
-src/main/resources/local.properties

@@ -1,22 +1,39 @@
 ####
-# This Dockerfile is used in order to build a container that runs the Quarkus application in JVM mode
+# This Dockerfile is used to build a container that runs the Quarkus application in JVM mode.
+# It uses a multi-stage build, meaning you do not need to install Gradle or Java on the host.
 #
-# Before building the docker image run:
+# Build the image with:
 #
-# mvn package
+# docker build -f src/main/docker/Dockerfile.jvm -t udan-backend .
 #
-# Then, build the image with:
+# Run the container with:
 #
-# docker build -f src/main/docker/Dockerfile.jvm -t quarkus/voice-plugin-indexed-data-jvm .
-#
-# Then run the container using:
-#
-# docker run -i --rm -p 8080:8080 quarkus/voice-plugin-indexed-data-jvm
+# docker run -i --rm -p 11081:11081 udan-backend
 #
 ###
-FROM fabric8/java-alpine-openjdk8-jre
-ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
-ENV AB_ENABLED=jmx_exporter
-COPY target/lib/* /deployments/lib/
-COPY target/*-runner.jar /deployments/app.jar
-ENTRYPOINT [ "/deployments/run-java.sh" ]
+
+# Stage 1: Build the application using Gradle
+FROM gradle:7.3.1-jdk11 AS build
+COPY --chown=gradle:gradle . /home/gradle/src
+WORKDIR /home/gradle/src
+RUN gradle build -x test --no-daemon
+
+# Stage 2: Create the runtime JRE image
+FROM eclipse-temurin:11-jre
+ENV LANGUAGE='en_US:en'
+
+WORKDIR /deployments
+
+# Copy the Quarkus fast-jar artifacts from the build stage
+COPY --from=build /home/gradle/src/build/quarkus-app/lib/ /deployments/lib/
+COPY --from=build /home/gradle/src/build/quarkus-app/quarkus/ /deployments/quarkus/
+COPY --from=build /home/gradle/src/build/quarkus-app/app/ /deployments/app/
+COPY --from=build /home/gradle/src/build/quarkus-app/quarkus-run.jar /deployments/
+COPY --from=build /home/gradle/src/build/quarkus-app/quarkus-app-dependencies.txt /deployments/
+
+EXPOSE 11081
+
+# Configure environment options
+ENV JAVA_OPTS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
+
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar quarkus-run.jar"]

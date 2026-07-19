@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  uda-backend-local:
+    build:
+      context: .
+      dockerfile: src/main/docker/Dockerfile.jvm
+    image: udan-backend:latest
+    container_name: uda-backend-local
+    restart: unless-stopped
+    ports:
+      - "11081:11081"
+    volumes:
+      - ./src/main/resources/local.properties:/deployments/config/additional.properties:ro
+    networks:
+      - uda-network
+
+networks:
+  uda-network:
+    external: true
