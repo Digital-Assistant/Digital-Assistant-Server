@@ -33,6 +33,7 @@ dependencies {
     implementation 'org.flywaydb:flyway-mysql:9.22.3'
     implementation 'io.quarkus:quarkus-hibernate-validator'
     implementation 'io.quarkus:quarkus-oidc'
+    implementation 'io.quarkus:quarkus-smallrye-health' // /q/health, used by CI and the Docker HEALTHCHECK
 //    implementation 'io.quarkus:quarkus-keycloak-authorization'
 
     implementation 'com.vladmihalcea:hibernate-types-60:2.21.1'

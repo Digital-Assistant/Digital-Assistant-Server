@@ -1,22 +1,71 @@
 ####
-# This Dockerfile is used in order to build a container that runs the Quarkus application in JVM mode
+# Multi-stage image for the Quarkus server in JVM mode (fast-jar layout).
 #
-# Before building the docker image run:
+# Build from the repository root (the build context must be the repo root):
 #
-# mvn package
+#   docker build -f src/main/docker/Dockerfile.jvm -t digital-assistant-server .
 #
-# Then, build the image with:
+# Run:
 #
-# docker build -f src/main/docker/Dockerfile.jvm -t quarkus/voice-plugin-indexed-data-jvm .
+#   docker run --rm -p 11081:11081 digital-assistant-server
 #
-# Then run the container using:
+# Configuration is NOT baked into the image. It reaches the container in one of two ways:
 #
-# docker run -i --rm -p 8080:8080 quarkus/voice-plugin-indexed-data-jvm
+#   1. Mount a properties file (prod.properties or test.properties) at
+#      /deployments/config/additional.properties:
 #
+#        docker run -v /path/to/prod.properties:/deployments/config/additional.properties:ro ...
+#
+#      The ENV QUARKUS_CONFIG_LOCATIONS below makes the app read that file. The file is
+#      optional: if nothing is mounted, the app starts without it. Values in it win over
+#      application.properties and local.properties.
+#   2. Environment variables, for example QUARKUS_DATASOURCE_JDBC_URL,
+#      QUARKUS_DATASOURCE_USERNAME, QUARKUS_DATASOURCE_PASSWORD, QUARKUS_OIDC_AUTH_SERVER_URL.
+#      These win over both files.
+#
+# Note: src/main/resources/local.properties is inside the jar, so it is in the image too.
+# Here it ranks BELOW application.properties, so without a mounted file or env vars the
+# defaults are the application.properties ones (mariadb-local, elasticsearch-local).
+#
+# Health: GET /q/health/live answers without a database; /q/health also checks the
+# database and Elasticsearch.
 ###
-FROM fabric8/java-alpine-openjdk8-jre
-ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
-ENV AB_ENABLED=jmx_exporter
-COPY target/lib/* /deployments/lib/
-COPY target/*-runner.jar /deployments/app.jar
-ENTRYPOINT [ "/deployments/run-java.sh" ]
+
+# --- Build stage: Gradle + JDK 21 ---
+FROM eclipse-temurin:21-jdk-alpine AS build
+WORKDIR /build
+
+# Copy the build files first so the Gradle download is cached until they change.
+COPY gradlew settings.gradle build.gradle gradle.properties ./
+COPY gradle gradle
+RUN chmod +x gradlew && ./gradlew --no-daemon --version
+
+COPY src src
+# Tests need MariaDB and Elasticsearch, so they run in CI, not in the image build.
+RUN ./gradlew --no-daemon quarkusBuild -x test
+
+# --- Run stage: JRE 21 only ---
+FROM eclipse-temurin:21-jre-alpine
+WORKDIR /deployments
+
+RUN addgroup -S -g 1001 app && adduser -S -u 1001 -G app app
+
+# Separate layers: dependencies change rarely, application code often.
+COPY --from=build --chown=app:app /build/build/quarkus-app/lib/ lib/
+COPY --from=build --chown=app:app /build/build/quarkus-app/*.jar ./
+COPY --from=build --chown=app:app /build/build/quarkus-app/app/ app/
+COPY --from=build --chown=app:app /build/build/quarkus-app/quarkus/ quarkus/
+
+ENV JAVA_OPTS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
+
+# Do not list local.properties here: a location file would then beat environment variables.
+ENV QUARKUS_CONFIG_LOCATIONS="/deployments/config/additional.properties"
+
+USER app
+EXPOSE 11081
+
+# Liveness only, so a slow database does not mark the container unhealthy.
+HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
+  CMD wget -qO- http://127.0.0.1:11081/q/health/live || exit 1
+
+ENTRYPOINT ["sh", "-c", "exec java $JAVA_OPTS -jar /deployments/quarkus-run.jar"]

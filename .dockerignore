@@ -1,0 +1,26 @@
+# Keep the build context small and keep secrets and local files out of the image.
+# Dockerfile.jvm only needs: gradlew, gradle/, settings.gradle, build.gradle, gradle.properties, src/
+
+# Build output and caches (the image builds its own)
+build/
+.gradle/
+logs/
+
+# Version control, CI and editor files
+.git
+.github
+.idea
+.vscode
+
+# Keystore and local-only config (config is passed at run time)
+config/
+additional.properties
+**/additional.properties
+*.env
+.env*
+
+# Docs and helper scripts, not needed for the build
+*.md
+README
+LICENSE
+*.sh
