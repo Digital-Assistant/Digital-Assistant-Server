@@ -18,7 +18,7 @@ configurations.all {
 }
 
 group "com.nistapp.voice"
-version "0.0.1"
+version "0.0.1" // x-release-please-version
 dependencies {
     implementation 'io.quarkus:quarkus-smallrye-openapi'
     implementation enforcedPlatform("io.quarkus:quarkus-bom:${quarkusVersion}")
