@@ -65,6 +65,8 @@ jobs:
       - name: Test
         continue-on-error: true
         env:
+          # The packaged URL asks for SSL; the CI MariaDB has none.
+          QUARKUS_DATASOURCE_JDBC_URL: jdbc:mariadb://127.0.0.1:3306/udan
           QUARKUS_DATASOURCE_USERNAME: udan
           QUARKUS_DATASOURCE_PASSWORD: ci-test-only
         run: scripts/ci/test.sh
