@@ -105,3 +105,5 @@ src/main/resources/prod.properties
 src/main/resources/test.properties
 udan-prod.sh
 udan-test.sh
+# Gemini automation workflows are not tracked
+.github/workflows/gemini-*.yml
