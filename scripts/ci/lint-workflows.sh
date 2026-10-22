@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Lint the CI workflow with actionlint and zizmor.
-# Only ci.yml is checked. The Gemini workflows are reviewed separately (P09).
+# Checks ci.yml, release.yml and pr-title.yml.
 # Needs: curl, sha256sum, and pip (for zizmor).
 set -euo pipefail
 cd "$(dirname "$0")/../.."
@@ -8,7 +8,7 @@ cd "$(dirname "$0")/../.."
 ACTIONLINT_VERSION="1.7.12"
 ACTIONLINT_SHA256="8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8"
 ZIZMOR_VERSION="1.31.1"
-FILES=(.github/workflows/ci.yml)
+FILES=(.github/workflows/ci.yml .github/workflows/release.yml .github/workflows/pr-title.yml)
 
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT

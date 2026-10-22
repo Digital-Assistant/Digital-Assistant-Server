@@ -1,0 +1,12 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "bootstrap-sha": "2ad917c05f850683dad87ef416125827804dab5c",
+  "packages": {
+    ".": {
+      "release-type": "simple",
+      "package-name": "digital-assistant-server",
+      "include-component-in-tag": false,
+      "extra-files": ["build.gradle"]
+    }
+  }
+}
