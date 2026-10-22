@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
-# Scan the dependencies for known vulnerabilities (OWASP Dependency-Check).
-# Optional: export NVD_API_KEY in your shell for faster database downloads.
-# The key is never stored in this repo.
+# Dependency scan placeholder. The OWASP Dependency-Check scan needs the NVD vulnerability
+# database, which is not used for now (see docs/TODO.md in the UDAN workspace).
+# This script only says so and exits 0. Put the real scan here when one is chosen.
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 
-echo "==> Scanning dependencies (OWASP Dependency-Check)"
-./gradlew dependencyCheckAnalyze
-echo "==> Done. Report is in build/reports/"
+echo "==> Dependency scan skipped: no scanner is set up for the Server yet."
