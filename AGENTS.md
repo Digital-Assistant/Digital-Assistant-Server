@@ -138,3 +138,7 @@ This section defines the different levels of quality assurance required for diff
 > Assume the role of a QA Automation Engineer. Analyze the provided API controller/resource file. Your task is to generate a complete suite of API tests. These tests must be black-box and run against a live instance of the service. For each endpoint, generate tests covering the happy path (e.g., 200 OK), input validation (e.g., 422 Unprocessable Entity), and authorization (e.g., 401 Unauthorized). Assert on both the status code and the key fields in the JSON response body.
 > **For Java/Quarkus:** Use `@QuarkusTest` and `RestAssured`.
 > Present the complete test file as the final output.
+
+## Agent notes
+- Prefer a code-graph tool (the codebase-memory MCP: `search_graph`, `trace_path`, `get_code_snippet`) over grep for code questions; the index project name is derived from this directory.
+- Do not start the server or run `local-up.sh` unless the task needs it; infrastructure lives in the sibling repo `Digital_Assistant_microServices`.
