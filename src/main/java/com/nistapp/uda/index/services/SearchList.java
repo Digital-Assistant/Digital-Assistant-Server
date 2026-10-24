@@ -3,9 +3,7 @@ package com.nistapp.uda.index.services;
 import com.nistapp.uda.index.models.SequenceList;
 import com.nistapp.uda.index.repository.SequenceVotesDAO;
 import com.nistapp.uda.index.utils.SequenceListStatus;
-import io.quarkus.runtime.StartupEvent;
 import io.quarkus.security.Authenticated;
-import org.eclipse.microprofile.config.ConfigProvider;
 import org.hibernate.search.engine.search.predicate.dsl.PredicateFinalStep;
 import org.hibernate.search.engine.search.predicate.dsl.SearchPredicateFactory;
 import org.hibernate.search.engine.search.query.dsl.SearchQueryOptionsStep;
@@ -14,7 +12,6 @@ import org.hibernate.search.mapper.orm.search.loading.dsl.SearchLoadingOptionsSt
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -42,21 +39,6 @@ public class SearchList {
 	SequenceListStatus sequenceListStatus;
 
 
-
-	@Transactional
-	void onStart(@Observes StartupEvent event) throws InterruptedException {
-		logger.info(ConfigProvider.getConfig().getConfigSources().toString());
-		try {
-			Long value = em.createQuery("SELECT COUNT(s.id) FROM SequenceList s where s.deleted=0 and s.isValid=1 and s.isIgnored=0", Long.class).getSingleResult();
-			if (value != null && value != 0) {
-				Search.session(em).massIndexer(SequenceList.class).startAndWait();
-				logger.info("Successfully re-indexed SequenceList data on startup.");
-			}
-		} catch (Exception e) {
-			logger.warn("Skipping SequenceList re-indexing: Could not connect to Database or Elasticsearch.");
-			logger.debug("Re-indexing failure detail: {}", e.getMessage());
-		}
-	}
 
 	@GET
 	@Path("/all")

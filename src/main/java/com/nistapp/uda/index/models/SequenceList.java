@@ -24,7 +24,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "SequenceList")
-@Indexed(index = "prod_sequencelist")
+@Indexed(index = "sequencelist")
 public class SequenceList {
 
     @Id
