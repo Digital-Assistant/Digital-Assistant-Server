@@ -1,9 +1,11 @@
 name: Image
 
 # Builds the Server image, scans it, and (on dev and release tags) pushes it to GHCR.
+# A push to dev then deploys the pushed digest to the TEST tier (job deploy-test, environment
+# `test`, AWS access by OIDC; see scripts/ci/deploy-test.sh). Release tags are never deployed.
 # Only GitHub-owned actions are used (repo allow-list); Docker and Trivy are called from
-# scripts/ci/image*.sh. Nothing is deployed. No layer cache is restored: this workflow
-# publishes images, and a restored cache could carry poisoned layers into them.
+# scripts/ci/image*.sh. No layer cache is restored: this workflow publishes images, and a
+# restored cache could carry poisoned layers into them.
 
 on:
   push:
@@ -131,3 +133,29 @@ jobs:
           subject-name: ${{ env.IMAGE_REPO }}
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
+
+  # Starts the deploy on the TEST box by digest. GitHub holds no AWS key and no app secret: the
+  # environment `test` (branch dev only) is what the AWS role trusts.
+  deploy-test:
+    name: Deploy to TEST
+    needs: push
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/dev' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: test
+    concurrency:
+      group: deploy-test
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          persist-credentials: false
+
+      - name: Deploy digest to TEST
+        env:
+          IMAGE_DIGEST: ${{ needs.push.outputs.digest }}
+        run: scripts/ci/deploy-test.sh server "$IMAGE_DIGEST"

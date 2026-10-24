@@ -1,0 +1,39 @@
+name: Deploy to TEST
+
+# Manual redeploy or rollback of one image digest on the TEST tier (no build).
+# Find a digest in the Actions log of an Image run, or in the box's state files.
+# The environment `test` allows branch dev only, and the AWS role trusts only that environment.
+
+on:
+  workflow_dispatch:
+    inputs:
+      digest:
+        description: 'Image digest to deploy, sha256:<64 hex>'
+        required: true
+        type: string
+
+permissions: {}
+
+concurrency:
+  group: deploy-test
+  cancel-in-progress: false
+
+jobs:
+  deploy-test:
+    name: Deploy to TEST
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: test
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          persist-credentials: false
+
+      - name: Deploy digest to TEST
+        env:
+          IMAGE_DIGEST: ${{ inputs.digest }}
+        run: scripts/ci/deploy-test.sh server "$IMAGE_DIGEST"

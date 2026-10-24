@@ -12,5 +12,6 @@ Run them from anywhere. They move to the repo root themselves. You need Java 21 
 | `image.sh` | Builds the Docker image `udan-server:local`. Does not push. Change the name with `IMAGE_NAME` and `IMAGE_TAG`. With `IMAGE_TAR` set it writes the image to a tar file instead (used by CI). |
 | `image-scan.sh` | Scans an image tar with Trivy (run from a pinned container) and writes a CycloneDX SBOM. Fails on fixable HIGH/CRITICAL findings. Needs Docker. |
 | `image-push.sh` | Loads an image tar and pushes it under the tags you give. Needs a prior `docker login`. Refuses `latest`. Used by `image.yml` only. |
+| `deploy-test.sh` | Sends one image digest to the TEST box through AWS SSM (OIDC login, document `UDAN-DeployTest`) and waits for the result. Runs only in the `test` environment of GitHub Actions; checks its inputs before any AWS call. |
 
 No script contains a secret. Never put one in these files.
