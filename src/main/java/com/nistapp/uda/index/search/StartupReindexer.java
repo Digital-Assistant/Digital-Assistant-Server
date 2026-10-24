@@ -20,6 +20,10 @@ import org.slf4j.LoggerFactory;
  * With {@code udan.search.reindex-on-startup=true} (default) it re-indexes every time, as before. With {@code false}
  * it only fills an index that is empty while the table has rows (first start with a new index prefix).
  * Failures are logged as ERROR, and the counts are logged so deploy checks can read them.
+ * <p>
+ * The mass indexer is throttled (one loading thread, small batches, one type at a time) because some documents are
+ * large and a small shared Elasticsearch trips its circuit breaker under the default parallel load. A run that fails
+ * or ends with fewer documents than rows is repeated once.
  */
 @ApplicationScoped
 public class StartupReindexer {
@@ -34,6 +38,15 @@ public class StartupReindexer {
 
 	@ConfigProperty(name = "udan.search.reindex-on-startup", defaultValue = "true")
 	boolean reindexOnStartup;
+
+	@ConfigProperty(name = "udan.search.reindex.threads", defaultValue = "1")
+	int threads;
+
+	@ConfigProperty(name = "udan.search.reindex.batch-size", defaultValue = "5")
+	int batchSize;
+
+	@ConfigProperty(name = "udan.search.reindex.attempts", defaultValue = "2")
+	int attempts;
 
 	void onStart(@Observes StartupEvent event) {
 		reindexIfNeeded(SequenceList.class);
@@ -58,8 +71,27 @@ public class StartupReindexer {
 			logger.info("Search index {}: re-indexing {} rows (index had {} documents, reindex-on-startup={}).",
 					name, rows, before, reindexOnStartup);
 			long start = System.currentTimeMillis();
-			searchMapping.scope(entity).massIndexer().startAndWait();
-			long indexed = Search.session(em).search(entity).where(f -> f.matchAll()).fetchTotalHitCount();
+			long indexed = -1;
+			for (int attempt = 1; attempt <= Math.max(1, attempts); attempt++) {
+				try {
+					searchMapping.scope(entity).massIndexer()
+							.threadsToLoadObjects(threads)
+							.batchSizeToLoadObjects(batchSize)
+							.typesToIndexInParallel(1)
+							.startAndWait();
+				} catch (RuntimeException e) {
+					logger.error("Search index {}: re-index attempt {} failed (database or Elasticsearch).", name, attempt, e);
+				}
+				indexed = Search.session(em).search(entity).where(f -> f.matchAll()).fetchTotalHitCount();
+				if (indexed == rows) {
+					break;
+				}
+				if (attempt < attempts) {
+					logger.warn("Search index {}: attempt {} left {} documents for {} rows, trying again.",
+							name, attempt, indexed, rows);
+					Thread.sleep(5000);
+				}
+			}
 			long seconds = (System.currentTimeMillis() - start) / 1000;
 			if (indexed != rows) {
 				logger.error("Search index {}: re-index finished in {}s but the index has {} documents for {} rows.",
