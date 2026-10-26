@@ -13,7 +13,7 @@ AWS_REGION="${AWS_REGION:-ap-south-1}"
 INSTANCE_ID="${INSTANCE_ID:-i-0430baf09645f3502}"
 DOCUMENT="UDAN-DeployTest"
 TIMEOUT_MIN="${DEPLOY_TIMEOUT_MIN:-20}"
-POLL_SECONDS=15
+POLL_SECONDS=5
 
 [ "$#" -eq 2 ] || { echo "usage: deploy-test.sh <server|nestjs> <sha256:digest>" >&2; exit 2; }
 component="$1"
@@ -53,6 +53,7 @@ show_output() {
     --instance-id "${INSTANCE_ID}" --query StandardOutputContent --output text || true
 }
 
+started=${SECONDS}
 deadline=$((SECONDS + TIMEOUT_MIN * 60))
 status="Pending"
 while [ "${SECONDS}" -lt "${deadline}" ]; do
@@ -60,7 +61,7 @@ while [ "${SECONDS}" -lt "${deadline}" ]; do
   # The invocation does not exist for a moment after send-command; treat that as Pending.
   status="$(aws ssm get-command-invocation --region "${AWS_REGION}" --command-id "${command_id}" \
     --instance-id "${INSTANCE_ID}" --query Status --output text 2>/dev/null || echo Pending)"
-  echo "status: ${status}"
+  echo "status: ${status} (after $((SECONDS - started))s)"
   case "${status}" in
     Success) show_output; exit 0 ;;
     Failed|Cancelled|TimedOut|Cancelling) show_output; echo "Deploy ended with status ${status}" >&2; exit 1 ;;
