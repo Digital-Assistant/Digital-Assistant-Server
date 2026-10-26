@@ -4,6 +4,35 @@ Small scripts that build, test, scan and package the Server. The GitHub workflow
 
 Run them from anywhere. They move to the repo root themselves. You need Java 21 (`JAVA_HOME` must point to it).
 
+Which workflow calls which script:
+```mermaid
+flowchart LR
+    subgraph WF["Workflows in .github/workflows"]
+        CI["ci.yml<br/>PR and push to dev"]
+        IMG["image.yml<br/>push to dev, release tags, image PRs"]
+        DT["deploy-test.yml<br/>Run workflow button"]
+    end
+    subgraph SC["scripts/ci"]
+        B["build.sh"]
+        T["test.sh"]
+        SN["scan.sh"]
+        SE["secrets.sh"]
+        LW["lint-workflows.sh"]
+        IM["image.sh"]
+        IP["image-push.sh"]
+        IS["image-scan.sh"]
+        LI["latest-image-digest.sh"]
+        DP["deploy-test.sh"]
+        SM["smoke-test.sh"]
+    end
+    BOX["TEST box<br/>deploy script lives in the private infra repo"]
+    CI --> B & T & SN & SE & LW
+    IMG --> IM & IP & IS
+    IMG -. "only if TEST_AUTO_DEPLOY=true" .-> DP & SM
+    DT --> LI & DP & SM
+    DP -- "AWS SSM" --> BOX
+```
+
 | Script | What it does |
 |---|---|
 | `build.sh` | Builds the jar. Skips tests. |
@@ -12,6 +41,8 @@ Run them from anywhere. They move to the repo root themselves. You need Java 21 
 | `image.sh` | Builds the Docker image `udan-server:local`. Does not push. Change the name with `IMAGE_NAME` and `IMAGE_TAG`. With `IMAGE_TAR` set it writes the image to a tar file instead (used by CI). |
 | `image-scan.sh` | Scans an image tar with Trivy (run from a pinned container) and writes a CycloneDX SBOM. Fails on fixable HIGH/CRITICAL findings. Needs Docker. |
 | `image-push.sh` | Loads an image tar and pushes it under the tags you give. Needs a prior `docker login`. Refuses `latest`. Used by `image.yml` only. |
+| `secrets.sh` | Scans a commit range for secrets with a pinned gitleaks (`ci.yml`, job `Secret Scan`). Old history is not scanned. |
+| `lint-workflows.sh` | Lints the workflows with pinned actionlint and zizmor (`ci.yml`, job `Workflow Lint`). |
 | `deploy-test.sh` | Sends one image digest to the TEST box through AWS SSM (OIDC login, document `UDAN-DeployTest`) and waits for the result. Runs only in the `test` environment of GitHub Actions; checks its inputs before any AWS call. |
 | `smoke-test.sh` | Post-deploy sanity check from outside: public search answers JSON (nginx, Server, Elasticsearch), protected endpoint refuses no token and a malformed token (401). No secrets, read-only. Runs as job `Sanity check TEST` after every TEST deploy, with the repo variable `TEST_BASE_URL`. Laptop: `scripts/ci/smoke-test.sh https://<test host>`. |
 | `latest-image-digest.sh` | Prints the digest pushed by the newest successful `image.yml` run on `dev` (artifact `image-digest`). Used by `deploy-test.yml` when no digest is given. Needs `gh` and `GITHUB_REPOSITORY`; works on a laptop too. |
