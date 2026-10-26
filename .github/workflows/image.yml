@@ -211,3 +211,27 @@ jobs:
         env:
           IMAGE_DIGEST: ${{ needs.build-push.outputs.digest }}
         run: scripts/ci/deploy-test.sh server "$IMAGE_DIGEST"
+
+  # Post-deploy hook: unauthenticated checks of TEST from outside (scripts/ci/smoke-test.sh). Deeper
+  # QA (authenticated, agentic) goes in further jobs after this one. TEST_BASE_URL is a repo
+  # variable, so no TEST hostname is written in this repo.
+  sanity-check:
+    name: Sanity check TEST
+    needs: deploy-test
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          persist-credentials: false
+
+      - name: Check TEST from outside
+        shell: bash
+        env:
+          TEST_BASE_URL: ${{ vars.TEST_BASE_URL }}
+        run: |
+          [[ -n "$TEST_BASE_URL" ]] || { echo "::error::Set the repository variable TEST_BASE_URL"; exit 1; }
+          scripts/ci/smoke-test.sh "$TEST_BASE_URL" | tee -a "$GITHUB_STEP_SUMMARY"
