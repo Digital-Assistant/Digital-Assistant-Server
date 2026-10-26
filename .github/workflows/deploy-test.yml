@@ -1,15 +1,20 @@
 name: Deploy to TEST
 
-# Manual redeploy or rollback of one image digest on the TEST tier (no build).
-# Find a digest in the Actions log of an Image run, or in the box's state files.
+# The only way TEST changes: a push to dev builds and pushes the image but does not deploy it
+# (unless the repo variable TEST_AUTO_DEPLOY is 'true', see image.yml). Run this when TEST should
+# get the newest dev image, or pass a digest to redeploy or roll back (no build either way).
+# Empty digest: the newest successful Image run on dev (scripts/ci/latest-image-digest.sh).
+# A digest is also in the summary of each Image run, and in the box's state files.
 # The environment `test` allows branch dev only, and the AWS role trusts only that environment.
+#   gh workflow run deploy-test.yml [-f digest=sha256:<64 hex>]
 
 on:
   workflow_dispatch:
     inputs:
       digest:
-        description: 'Image digest to deploy, sha256:<64 hex>'
-        required: true
+        description: 'Image digest to deploy, sha256:<64 hex>. Empty: the newest dev image'
+        required: false
+        default: ''
         type: string
 
 permissions: {}
@@ -27,13 +32,26 @@ jobs:
     permissions:
       contents: read
       id-token: write
+      actions: read
     steps:
       - name: Checkout Code
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
         with:
           persist-credentials: false
 
+      - name: Choose digest
+        id: digest
+        env:
+          GH_TOKEN: ${{ github.token }}
+          INPUT_DIGEST: ${{ inputs.digest }}
+        run: |
+          digest="$INPUT_DIGEST"
+          [[ -n "$digest" ]] || digest="$(scripts/ci/latest-image-digest.sh)"
+          [[ "$digest" =~ ^sha256:[0-9a-f]{64}$ ]] || { echo "digest must match sha256:<64 hex>"; exit 1; }
+          echo "digest=$digest" >> "$GITHUB_OUTPUT"
+          echo "Deploying \`$digest\` to TEST" >> "$GITHUB_STEP_SUMMARY"
+
       - name: Deploy digest to TEST
         env:
-          IMAGE_DIGEST: ${{ inputs.digest }}
+          IMAGE_DIGEST: ${{ steps.digest.outputs.digest }}
         run: scripts/ci/deploy-test.sh server "$IMAGE_DIGEST"
