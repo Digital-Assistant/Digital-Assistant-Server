@@ -38,7 +38,20 @@ Following these guidelines helps to communicate that you respect the time of the
 
 ## Pull Request Process
 
-1.  **Create a pull request:** Once your changes are ready, push your branch to your fork and create a pull request to the `main` branch of the original repository.
+How a change travels from your branch to a release:
+```mermaid
+flowchart LR
+    A["Fork, or branch from dev"] --> B["Commit your change<br/>run ./gradlew test"]
+    B --> C["PR into dev<br/>title: Conventional Commit, e.g. fix: ..."]
+    C --> D{"CI Gate green<br/>and branch up to date?"}
+    D -- no --> B
+    D -- yes --> E["Squash merge by a maintainer<br/>PR title becomes the commit message"]
+    E --> F["Image built and pushed to GHCR"]
+    F --> G["Maintainers deploy it to TEST<br/>and check it"]
+    G --> H["Release: dev into master,<br/>Release Please tags vX.Y.Z"]
+```
+
+1.  **Create a pull request:** Once your changes are ready, push your branch to your fork and create a pull request to the `dev` branch of the original repository. The PR title must follow [Conventional Commits](https://www.conventionalcommits.org/) (for example `fix: handle a missing session id`), because it becomes the commit message and drives the changelog.
 2.  **Write a good description:** Provide a clear and concise description of your changes in the pull request. Explain the "what" and "why" of your contribution.
 3.  **Tag reviewers:** Tag the appropriate reviewers for your pull request.
 4.  **Address feedback:** Be responsive to any feedback or questions from the reviewers.
@@ -51,4 +64,4 @@ A pull request is considered "done" when it meets the following criteria:
 *   The code is well-documented.
 *   The pull request has been reviewed and approved by at least one other contributor.
 *   All feedback has been addressed.
-*   The pull request is merged into the `main` branch.
+*   The pull request is merged into the `dev` branch.
