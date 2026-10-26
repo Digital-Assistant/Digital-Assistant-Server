@@ -13,6 +13,7 @@ Run them from anywhere. They move to the repo root themselves. You need Java 21 
 | `image-scan.sh` | Scans an image tar with Trivy (run from a pinned container) and writes a CycloneDX SBOM. Fails on fixable HIGH/CRITICAL findings. Needs Docker. |
 | `image-push.sh` | Loads an image tar and pushes it under the tags you give. Needs a prior `docker login`. Refuses `latest`. Used by `image.yml` only. |
 | `deploy-test.sh` | Sends one image digest to the TEST box through AWS SSM (OIDC login, document `UDAN-DeployTest`) and waits for the result. Runs only in the `test` environment of GitHub Actions; checks its inputs before any AWS call. |
+| `smoke-test.sh` | Post-deploy sanity check from outside: public search answers JSON (nginx, Server, Elasticsearch), protected endpoint refuses no token and a malformed token (401). No secrets, read-only. Runs as job `Sanity check TEST` after every TEST deploy, with the repo variable `TEST_BASE_URL`. Laptop: `scripts/ci/smoke-test.sh https://<test host>`. |
 | `latest-image-digest.sh` | Prints the digest pushed by the newest successful `image.yml` run on `dev` (artifact `image-digest`). Used by `deploy-test.yml` when no digest is given. Needs `gh` and `GITHUB_REPOSITORY`; works on a laptop too. |
 
 ## Deploying to TEST
