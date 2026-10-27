@@ -49,6 +49,7 @@ extract_prop() {
 # Pull credentials from properties file
 DB_USER=$(extract_prop "quarkus.datasource.username")
 DB_PASS=$(extract_prop "quarkus.datasource.password")
+DB_URL=$(extract_prop "quarkus.datasource.jdbc.url")
 PG_USER=$(extract_prop "preflight.postgres.username")
 PG_PASS=$(extract_prop "preflight.postgres.password")
 
@@ -84,38 +85,106 @@ if [ $FAILED_CONTAINERS -gt 0 ]; then
     exit 1
 fi
 
-# 1.5. SSL Certificate Check (Shared dependency with microservices)
+# 1.5. SSL Certificate Check (shared dependency with microservices)
+# The same files back Nginx, Keycloak and MariaDB's --ssl-cert, so an expired cert
+# breaks TLS verification for every host client (mariadb CLI, curl, browsers) while
+# Quarkus keeps working, because its JDBC URL sets trustServerCertificate=true.
+# Expiry is therefore a WARNING here, not a failure: it must not block a stack that
+# Quarkus can use. It is reported because it silently breaks everything else.
 SSL_CERT="../Digital_Assistant_microServices/docker/nginx/localhost/localhost.crt"
 echo -n "Checking SSL Certificate... "
-if [ -f "$SSL_CERT" ]; then
-    echo -e "${GREEN}FOUND${NC}"
-else
+if [ ! -f "$SSL_CERT" ]; then
     echo -e "${RED}MISSING (Run ./local-up.sh to generate)${NC}"
     exit 1
+fi
+
+WARNINGS=0
+if CERT_END=$(openssl x509 -in "$SSL_CERT" -noout -enddate 2>/dev/null | cut -d'=' -f2); then
+    # openssl x509 -checkend <seconds> exits non-zero once the cert expires inside that window.
+    if ! openssl x509 -in "$SSL_CERT" -noout -checkend 0 &>/dev/null; then
+        echo -e "${RED}EXPIRED${NC}"
+        echo -e "${YELLOW}   ⚠️  NotAfter=$CERT_END. MariaDB/Nginx/Keycloak serve this cert; host clients that verify it fail with"
+        echo -e "      'ERROR 2026 (HY000): TLS/SSL error: certificate has expired'. Quarkus still connects"
+        echo -e "      (trustServerCertificate=true), so this does not block the server.${NC}"
+        echo -e "${YELLOW}   Fix: delete docker/nginx/localhost/localhost.{crt,key} in Digital_Assistant_microServices,"
+        echo -e "      then ./local-down.sh && ./local-up.sh (local-up.sh regenerates and re-copies to Keycloak).${NC}"
+        WARNINGS=$((WARNINGS+1))
+    elif ! openssl x509 -in "$SSL_CERT" -noout -checkend 604800 &>/dev/null; then
+        echo -e "${YELLOW}EXPIRING WITHIN 7 DAYS (NotAfter=$CERT_END)${NC}"
+        echo -e "${YELLOW}   Fix: ./local-down.sh && ./local-up.sh after deleting docker/nginx/localhost/localhost.{crt,key}.${NC}"
+        WARNINGS=$((WARNINGS+1))
+    else
+        echo -e "${GREEN}VALID (NotAfter=$CERT_END)${NC}"
+    fi
+else
+    echo -e "${YELLOW}UNREADABLE (NotAfter unknown; is openssl installed?)${NC}"
+    WARNINGS=$((WARNINGS+1))
+fi
+
+# What the RUNNING MariaDB serves can lag the file on disk: the container reads its
+# --ssl-cert at startup, so newly regenerated certs do nothing until a restart.
+SERVED_PEM=$(echo | timeout 5 openssl s_client -connect 127.0.0.1:3306 -starttls mysql 2>/dev/null)
+if [ -n "$SERVED_PEM" ] && echo "$SERVED_PEM" | openssl x509 -noout &>/dev/null; then
+    if echo "$SERVED_PEM" | openssl x509 -noout -checkend 0 &>/dev/null; then
+        echo -e "   Served by mariadb-local: ${GREEN}valid${NC}"
+    else
+        SERVED_END=$(echo "$SERVED_PEM" | openssl x509 -noout -enddate | cut -d'=' -f2)
+        echo -e "   Served by mariadb-local: ${RED}EXPIRED ($SERVED_END)${NC}"
+        echo -e "${YELLOW}   The cert file on disk differs from what the container loaded. Restart to pick it up:"
+        echo -e "   ./local-down.sh && ./local-up.sh (in Digital_Assistant_microServices).${NC}"
+        WARNINGS=$((WARNINGS+1))
+    fi
 fi
 
 echo -e "\n📡 ${YELLOW}Testing Connectivity & Credentials...${NC}"
 FAILED_CHECKS=0
 
-# 2. MariaDB Connectivity (Uses extracted DB_USER/DB_PASS)
-echo -n "MariaDB ($DB_USER)... "
+# 2. MariaDB Connectivity (Uses extracted DB_USER/DB_PASS against the primary schema)
+# TLS is negotiated exactly as the JDBC URL does it (useSSL=true&trustServerCertificate=true):
+# encrypted, but the server certificate is NOT verified. Verifying it here would fail on the
+# expired self-signed dev cert while Quarkus connects fine - a false negative that blocks a
+# working stack. Cert health is reported separately in step 1.5.
+DB_NAME=$(echo "$DB_URL" | sed -n 's|.*/\([^/?]*\)?.*|\1|p')
+DB_NAME=${DB_NAME:-udan}
+echo -n "MariaDB ($DB_USER@$DB_NAME)... "
+DB_CLIENT=""
 if command -v mariadb &> /dev/null; then
-    if mariadb -h 127.0.0.1 -u "$DB_USER" -p"$DB_PASS" -e "SELECT 1;" &>/dev/null; then
-        echo -e "${GREEN}CONNECTED${NC}"
-    else
-        echo -e "${RED}AUTH FAILED${NC}"
-        FAILED_CHECKS=$((FAILED_CHECKS+1))
-    fi
+    DB_CLIENT="mariadb"
 elif command -v mysql &> /dev/null; then
-    if mysql -h 127.0.0.1 -u "$DB_USER" -p"$DB_PASS" -e "SELECT 1;" &>/dev/null; then
-        echo -e "${GREEN}CONNECTED${NC}"
+    DB_CLIENT="mysql"
+fi
+
+if [ -n "$DB_CLIENT" ]; then
+    # mariadb CLI and mysql CLI need different flags to get "TLS on, verification off".
+    if [ "$DB_CLIENT" = "mariadb" ]; then
+        DB_ERR=$("$DB_CLIENT" --ssl --ssl-verify-server-cert=OFF -h 127.0.0.1 -P 3306 \
+            -u "$DB_USER" -p"$DB_PASS" -D "$DB_NAME" -e "SELECT 1;" 2>&1 >/dev/null)
     else
-        echo -e "${RED}AUTH FAILED${NC}"
+        DB_ERR=$("$DB_CLIENT" --ssl-mode=REQUIRED -h 127.0.0.1 -P 3306 \
+            -u "$DB_USER" -p"$DB_PASS" -D "$DB_NAME" -e "SELECT 1;" 2>&1 >/dev/null)
+    fi
+    DB_RC=$?
+    if [ $DB_RC -eq 0 ]; then
+        echo -e "${GREEN}CONNECTED${NC}"
+    elif echo "$DB_ERR" | grep -qi "access denied"; then
+        # Credential problem: the message must name the cause, not say "AUTH FAILED" for TLS issues too.
+        echo -e "${RED}AUTH FAILED (rejected user/password)${NC}"
+        echo -e "${YELLOW}   Hint: ./sync-credentials.sh to re-read DOCKER-MAP.md, or check the MariaDB user in docker/mariadb/init/.${NC}"
+        FAILED_CHECKS=$((FAILED_CHECKS+1))
+    elif echo "$DB_ERR" | grep -qiE "certificate|ssl|tls"; then
+        echo -e "${RED}TLS ERROR${NC}"
+        echo -e "${YELLOW}   $DB_ERR${NC}"
+        echo -e "${YELLOW}   Not a credential problem. Regenerate the dev certs (see step 1.5).${NC}"
+        FAILED_CHECKS=$((FAILED_CHECKS+1))
+    else
+        echo -e "${RED}FAILED${NC}"
+        echo -e "${YELLOW}   $DB_ERR${NC}"
         FAILED_CHECKS=$((FAILED_CHECKS+1))
     fi
 else
     if timeout 1 bash -c "</dev/tcp/127.0.0.1/3306" 2>/dev/null; then
-        echo -e "${YELLOW}PORT OPEN (Client not installed)${NC}"
+        echo -e "${YELLOW}PORT OPEN (Client not installed; credentials NOT verified)${NC}"
+        WARNINGS=$((WARNINGS+1))
     else
         echo -e "${RED}UNREACHABLE${NC}"
         FAILED_CHECKS=$((FAILED_CHECKS+1))
@@ -200,6 +269,10 @@ fi
 if [ $FAILED_CHECKS -gt 0 ]; then
     echo -e "\n${RED}❌ $FAILED_CHECKS pre-flight check(s) failed. Please resolve the issues above before starting.${NC}"
     exit 1
+fi
+
+if [ "${WARNINGS:-0}" -gt 0 ]; then
+    echo -e "\n${YELLOW}⚠️  ${WARNINGS} warning(s) above. They do not stop Quarkus, but they break other tooling.${NC}"
 fi
 
 echo -e "\n${GREEN}✅ All pre-flight checks passed!${NC}"
