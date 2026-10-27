@@ -46,8 +46,10 @@ check() {
 
 echo "Sanity check of the Server at ${base}"
 check "public search answers (nginx, Server, Elasticsearch)" 200 '^content-type: application/json' '^\[' \
+  -H "UDAN-Realm: UDAN" \
   "${base}/api/search/links?query=sanitycheck&domain=sanity-check.invalid&size=1"
 check "protected endpoint without token is refused" 401 '^www-authenticate: Bearer' - \
+  -H "UDAN-Realm: UDAN" \
   "${base}/api/search/all?domain=sanity-check.invalid&userSessionId=sanitycheck"
 check "malformed token is refused" 401 - - \
   -H "UDAN-Realm: UDAN" -H "Authorization: Bearer sanity.check.invalid" \
