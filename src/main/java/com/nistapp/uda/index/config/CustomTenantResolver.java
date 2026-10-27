@@ -16,13 +16,17 @@ public class CustomTenantResolver implements TenantResolver {
     @Context
     HttpHeaders httpHeaders;
 
+    /**
+     * The tenant is the value of the {@code UDAN-Realm} header. There is no default realm:
+     * {@link RequireRealmFilter} rejects {@code /api/} requests without it, so a missing header
+     * only reaches here on paths that do not authenticate (health, metrics) and gets no tenant.
+     */
     @Override
     public String resolve(RoutingContext context) {
-        String path = context.request().getHeader("UDAN-Realm");
-        if (path == null || path.isEmpty()) {
-            return "UDAN";
-        } else {
-            return path.toString();
+        String realm = context.request().getHeader("UDAN-Realm");
+        if (realm == null || realm.isBlank()) {
+            return null;
         }
+        return realm.trim();
     }
 }
