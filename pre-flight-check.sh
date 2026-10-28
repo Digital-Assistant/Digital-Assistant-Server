@@ -8,7 +8,8 @@
 #   backend by checking containers, SSL certificates, and credentials.
 #
 # DEPENDENCIES:
-#   1. local.properties in src/main/resources/ (populated with credentials).
+#   1. local.properties and local-secrets.properties in src/main/resources/
+#      (the second holds the credentials; ./sync-credentials.sh creates it).
 #   2. Docker Desktop/Engine running.
 #   3. local-up.sh has been run in Digital_Assistant_microServices.
 #   4. Tools: curl, docker, (optional: mariadb/mysql client, psql client).
@@ -26,6 +27,7 @@ NC='\033[0m' # No Color
 
 # File path for local configuration
 PROP_FILE="src/main/resources/local.properties"
+SECRETS_FILE="src/main/resources/local-secrets.properties"
 
 echo -e "🔍 ${YELLOW}Starting Comprehensive Pre-flight Check for UDAN...${NC}"
 
@@ -35,18 +37,23 @@ if [ ! -f "$PROP_FILE" ]; then
     echo -e "${YELLOW}Hint: Run ./sync-credentials.sh if it's missing or needs update.${NC}"
     exit 1
 fi
+if [ ! -f "$SECRETS_FILE" ]; then
+    echo -e "${RED}❌ Error: local-secrets.properties not found at $SECRETS_FILE${NC}"
+    echo -e "${YELLOW}Hint: Run ./sync-credentials.sh to create it from the microServices checkout.${NC}"
+    exit 1
+fi
 
-# Logic: Extracts value for key from PROP_FILE (prioritizes %dev. prefix)
+# Logic: Extracts value for key from the properties files (prioritizes %dev. prefix)
 extract_prop() {
     local key=$1
-    local val=$(grep "^%dev\.$key=" "$PROP_FILE" | cut -d'=' -f2-)
+    local val=$(cat "$PROP_FILE" "$SECRETS_FILE" | grep "^%dev\.$key=" | cut -d'=' -f2- | head -n 1)
     if [ -z "$val" ]; then
-        val=$(grep "^$key=" "$PROP_FILE" | cut -d'=' -f2-)
+        val=$(cat "$PROP_FILE" "$SECRETS_FILE" | grep "^$key=" | cut -d'=' -f2- | head -n 1)
     fi
     echo "$val" | tr -d '\r\n '
 }
 
-# Pull credentials from properties file
+# Pull settings and credentials from local.properties and local-secrets.properties
 DB_USER=$(extract_prop "quarkus.datasource.username")
 DB_PASS=$(extract_prop "quarkus.datasource.password")
 DB_URL=$(extract_prop "quarkus.datasource.jdbc.url")
