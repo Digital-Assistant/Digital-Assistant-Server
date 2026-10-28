@@ -1,20 +1,26 @@
 version: 2
+# Versions are locked (lockfiles). Routine version PRs are off (open-pull-requests-limit: 0);
+# security updates still arrive (they need "Dependabot security updates" on in the repo
+# settings) and use the commit prefix below so the PR title passes pr-title. Bump everything
+# by hand in a planned window every 3 to 6 months: update everything, run scripts/ci locally,
+# then Deploy to TEST.
 updates:
+  # Actions are pinned by SHA, so only Dependabot moves them. One grouped PR per quarter.
   - package-ecosystem: github-actions
     directory: /
     target-branch: dev
     schedule:
-      interval: weekly
-    cooldown:
-      default-days: 7
+      interval: quarterly
+    groups:
+      actions:
+        patterns: ["*"]
     commit-message:
       prefix: "ci"
   - package-ecosystem: gradle
     directory: /
     target-branch: dev
+    open-pull-requests-limit: 0
     schedule:
-      interval: weekly
-    cooldown:
-      default-days: 7
+      interval: monthly
     commit-message:
       prefix: "build"
