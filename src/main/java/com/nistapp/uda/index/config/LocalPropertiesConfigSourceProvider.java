@@ -31,6 +31,13 @@ public class LocalPropertiesConfigSourceProvider implements ConfigSourceProvider
             logger.info("Adding properties file " + localProperties + " with ordinal " + local.getOrdinal());
             configSources.add(local);
         }
+        // Untracked local credentials written by sync-credentials.sh; absent in CI and in images.
+        URL localSecrets = Thread.currentThread().getContextClassLoader().getResource("local-secrets.properties");
+        if (localSecrets != null) {
+            ConfigSource secrets = new PropertiesConfigSource(localSecrets);
+            logger.info("Adding properties file " + localSecrets + " with ordinal " + secrets.getOrdinal());
+            configSources.add(secrets);
+        }
     }
 
     @Override

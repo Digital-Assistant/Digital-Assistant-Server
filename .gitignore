@@ -37,7 +37,6 @@ release.properties
 # Gradle
 .gradle/
 build/
-#local.properties
 additional.properties
 docker/data/
 
@@ -107,3 +106,6 @@ udan-prod.sh
 udan-test.sh
 # Gemini automation workflows are not tracked
 .github/workflows/gemini-*.yml
+
+# Local credentials, filled by sync-credentials.sh
+local-secrets.properties

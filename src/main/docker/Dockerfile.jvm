@@ -23,7 +23,7 @@
 #      QUARKUS_DATASOURCE_USERNAME, QUARKUS_DATASOURCE_PASSWORD, QUARKUS_OIDC_AUTH_SERVER_URL.
 #      These win over both files.
 #
-# Note: src/main/resources/local.properties is inside the jar, so it is in the image too.
+# Note: src/main/resources/local.properties (settings only, no credentials) is inside the jar, so it is in the image too.
 # Here it ranks BELOW application.properties, so without a mounted file or env vars the
 # defaults are the application.properties ones (mariadb-local, elasticsearch-local).
 #

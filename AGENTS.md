@@ -17,7 +17,7 @@ This is the definitive list of commands required to build, test, and validate wo
 #### **Environment Setup**
 This repo is only the Quarkus server (Gradle, Java, port **11081**). MariaDB, Elasticsearch, Keycloak, Postgres and Nginx live in the sibling repo `Digital_Assistant_microServices`.
 *   **Start infrastructure (in the microServices repo):** `./local-up.sh`; stop with `./local-down.sh`
-*   **Sync credentials into `src/main/resources/local.properties`:** `./sync-credentials.sh`
+*   **Sync credentials into `src/main/resources/local-secrets.properties` (untracked):** `./sync-credentials.sh`
 *   **Check infrastructure health:** `./pre-flight-check.sh`
 *   **Start the server in dev mode (runs the pre-flight check first):** `./start-server.sh` (wraps `./gradlew quarkusDev --no-daemon`)
 *   **View infrastructure logs:** `docker logs -f <container>` (e.g. `keycloak-local`, `mariadb-local`)
@@ -43,7 +43,7 @@ Adherence to these patterns is mandatory. Code lives under `src/main/java/com/ni
 
 *   **Database Access Pattern (Java):** All database interactions **must** go through a Repository/DAO class (e.g. `SequenceListDAO`, `UserclicknodesRepository`). Never inject or use the `EntityManager` directly in a Resource or Service class.
 *   **API Endpoint Pattern (Java):** New endpoints are JAX-RS resources (see `services/Clickevents.java`, `StatusService.java`). Business logic **must** be delegated to an `@ApplicationScoped` service. Resource methods should only handle HTTP concerns.
-*   **Configuration Pattern (Java):** All configuration values (URLs, tokens, feature flags) **must** be read from `application.properties` using `@ConfigProperty`. `src/main/resources/local.properties` is tracked and holds local-stack development values only (sync-credentials.sh rewrites it); never put real environment credentials in it. Deployed environments use a mounted `additional.properties` or environment variables. Keys for search index prefix, startup re-index, realm requirement and CORS are in the README, "Configuration".
+*   **Configuration Pattern (Java):** All configuration values (URLs, tokens, feature flags) **must** be read from `application.properties` using `@ConfigProperty`. `src/main/resources/local.properties` is tracked and holds local-stack settings only, no passwords or secrets. Local credentials go in the untracked `local-secrets.properties` (template `local-secrets.properties.example`, written by sync-credentials.sh from the sibling microServices checkout); never commit credentials from microServices or real environment credentials. Deployed environments use a mounted `additional.properties` or environment variables. Keys for search index prefix, startup re-index, realm requirement and CORS are in the README, "Configuration".
 *   **Base path:** all REST routes are served under `/api` (`RestApplication` has `@ApplicationPath("/api")`), e.g. `/api/clickevents/all`. Resource `@Path` values omit the prefix.
 *   **Multi-tenancy:** The OIDC tenant is chosen from the `UDAN-Realm` request header (`config/CustomTenantResolver.java`). Do not change this without an explicit task. There is no default realm: `RequireRealmFilter` returns 400 for `/api/` requests without the header, and CORS must allow the `udan-realm` header (README, "Configuration").
 *   **Input safety:** Use `utils/InputSanitizer` for user-supplied text; `config/XssSanitizationFilter` and `SecurityHeadersFilter` apply to all requests.

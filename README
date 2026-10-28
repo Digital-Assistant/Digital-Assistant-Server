@@ -17,7 +17,7 @@ If you are setting up for the first time or if the central credentials in `Digit
 ```bash
 ./sync-credentials.sh
 ```
-*This updates `src/main/resources/local.properties` with the latest usernames and passwords.*
+*This creates `src/main/resources/local-secrets.properties` (untracked, from `local-secrets.properties.example`) with the latest passwords and the `backend-service` client secret. Nothing secret is committed.*
 
 ### 2. Start the Server
 To launch the backend with automatic environmental validation:
@@ -43,7 +43,7 @@ If you only want to verify the infrastructure health without starting the server
 
 ## Configuration
 
-Config is read from `application.properties`, the packaged `local.properties` (local-stack development values only) and, last, an optional `additional.properties` file or environment variables; later sources win.
+Config is read from `application.properties`, the packaged `local.properties` (local-stack settings, no credentials), the untracked `local-secrets.properties` (local credentials, written by `sync-credentials.sh`) and, last, an optional `additional.properties` file or environment variables; later sources win.
 
 | Key | Default | What it does |
 |---|---|---|
