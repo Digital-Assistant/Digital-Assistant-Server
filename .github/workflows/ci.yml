@@ -5,6 +5,9 @@ on:
     branches: ['dev']
   pull_request:
     branches: ['dev']
+  # The merge queue verifies PRs on a temporary merge-group ref: without this trigger the
+  # required `CI Gate` check never reports there and every queued merge times out.
+  merge_group:
 
 permissions:
   contents: read
@@ -109,11 +112,15 @@ jobs:
           EVENT: ${{ github.event_name }}
           PR_BASE: ${{ github.event.pull_request.base.sha }}
           PR_HEAD: ${{ github.event.pull_request.head.sha }}
+          MG_BASE: ${{ github.event.merge_group.base_sha }}
+          MG_HEAD: ${{ github.event.merge_group.head_sha }}
           PUSH_BEFORE: ${{ github.event.before }}
           PUSH_AFTER: ${{ github.sha }}
         run: |
           if [[ "$EVENT" == "pull_request" ]]; then
             scripts/ci/secrets.sh "$PR_BASE" "$PR_HEAD"
+          elif [[ "$EVENT" == "merge_group" ]]; then
+            scripts/ci/secrets.sh "$MG_BASE" "$MG_HEAD"
           elif [[ ! "$PUSH_BEFORE" =~ ^0+$ ]]; then
             scripts/ci/secrets.sh "$PUSH_BEFORE" "$PUSH_AFTER"
           else
