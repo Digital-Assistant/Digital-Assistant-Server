@@ -31,6 +31,8 @@ This repo is only the Quarkus server (Gradle, Java, port **11081**). MariaDB, El
 *   **Run all tests:** `./gradlew test`
 *   **Run a single test class:** `./gradlew test --tests 'com.nistapp.uda.index.StatusResourceTest'`
 *   Tests live in `src/test/java/com/nistapp/uda/index/` (Quarkus JUnit5 + RestAssured).
+*   Known failures: the 7 `SecurityHeadersFilterTest` cases fail; the CI test step is non-blocking until they are fixed (see `scripts/ci/README.md`). Tests need MariaDB and Elasticsearch on `127.0.0.1`.
+*   Merge method: squash into `dev` (the PR title becomes the commit, so it must be a Conventional Commit). Default branch is `dev`; GitHub runs manual (`workflow_dispatch`) workflows only from the default branch.
 
 #### **Dependency Management**
 *   **Adding a Java dependency:** edit `build.gradle`. Versions come from the Quarkus BOM (`quarkusVersion` in `gradle.properties`); Flyway is pinned to 9.22.3 in `build.gradle` for MariaDB 10.11 support.
@@ -41,9 +43,9 @@ Adherence to these patterns is mandatory. Code lives under `src/main/java/com/ni
 
 *   **Database Access Pattern (Java):** All database interactions **must** go through a Repository/DAO class (e.g. `SequenceListDAO`, `UserclicknodesRepository`). Never inject or use the `EntityManager` directly in a Resource or Service class.
 *   **API Endpoint Pattern (Java):** New endpoints are JAX-RS resources (see `services/Clickevents.java`, `StatusService.java`). Business logic **must** be delegated to an `@ApplicationScoped` service. Resource methods should only handle HTTP concerns.
-*   **Configuration Pattern (Java):** All configuration values (URLs, tokens, feature flags) **must** be read from `application.properties` using `@ConfigProperty`. Local credentials go in the git-ignored `local.properties`, never in source.
+*   **Configuration Pattern (Java):** All configuration values (URLs, tokens, feature flags) **must** be read from `application.properties` using `@ConfigProperty`. `src/main/resources/local.properties` is tracked and holds local-stack development values only (sync-credentials.sh rewrites it); never put real environment credentials in it. Deployed environments use a mounted `additional.properties` or environment variables. Keys for search index prefix, startup re-index, realm requirement and CORS are in the README, "Configuration".
 *   **Base path:** all REST routes are served under `/api` (`RestApplication` has `@ApplicationPath("/api")`), e.g. `/api/clickevents/all`. Resource `@Path` values omit the prefix.
-*   **Multi-tenancy:** The OIDC tenant is chosen from the `UDAN-Realm` request header (`config/CustomTenantResolver.java`). Do not change this without an explicit task.
+*   **Multi-tenancy:** The OIDC tenant is chosen from the `UDAN-Realm` request header (`config/CustomTenantResolver.java`). Do not change this without an explicit task. There is no default realm: `RequireRealmFilter` returns 400 for `/api/` requests without the header, and CORS must allow the `udan-realm` header (README, "Configuration").
 *   **Input safety:** Use `utils/InputSanitizer` for user-supplied text; `config/XssSanitizationFilter` and `SecurityHeadersFilter` apply to all requests.
 *   **Error Handling Pattern (Java):** For user-driven errors (4xx), throw a standard JAX-RS `WebApplicationException`. For server-side errors (5xx), create a custom unchecked exception and log it in the Service layer (`LoggerUtil`). `config/GlobalExceptionMapper` formats responses.
 

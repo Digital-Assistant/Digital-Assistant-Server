@@ -41,6 +41,38 @@ If you only want to verify the infrastructure health without starting the server
 ./pre-flight-check.sh
 ```
 
+## Configuration
+
+Config is read from `application.properties`, the packaged `local.properties` (local-stack development values only) and, last, an optional `additional.properties` file or environment variables; later sources win.
+
+| Key | Default | What it does |
+|---|---|---|
+| `udan.search.index-prefix` | empty | Prefix put in front of every Elasticsearch index name (empty gives `sequencelist`, `clicktrack`, `userclicknodes`). Lets two environments share one Elasticsearch (for example `test_`). Only `a-z`, `0-9`, `_`, `.`, `-` are allowed; anything else stops the start. A new prefix means new, empty indexes |
+| `udan.search.reindex-on-startup` | `true` | `true` re-indexes every table at each start. `false` only fills an index that is empty while its table has rows (first start with a new prefix), so restarts are quick and light on a small shared Elasticsearch. Counts and failures are logged at startup |
+| `udan.realm.required` | `true` | `/api/` requests without the `UDAN-Realm` header get `400` (`RequireRealmFilter`). Off in the `%test` profile only |
+| `quarkus.http.cors.*` | see below | Browser access |
+
+**Tenant (realm) header.** The OIDC tenant is the value of the request header `UDAN-Realm` (`CustomTenantResolver`). There is no default realm. Each realm needs its own `quarkus.oidc.<realm>` tenant block.
+
+**CORS.** The shipped config only sets `quarkus.http.cors=true`; origins, methods and headers are set for the `%dev` profile only. Every other deployment must set them (in `additional.properties` or as environment variables), because the browser extension calls from a `chrome-extension://` origin and customer sites call from their own origins:
+
+```
+quarkus.http.cors.origins=/.*/
+quarkus.http.cors.methods=GET,POST,PUT,PATCH,DELETE,OPTIONS
+quarkus.http.cors.headers=Content-Type,Authorization,X-Requested-With,x-sdk-client,udan-realm
+quarkus.http.cors.access-control-allow-credentials=true
+```
+
+`/.*/` is a regular expression: any origin is allowed and echoed back, which, unlike `*`, also works with credentials. Authentication is a bearer token, not the origin. The header list must be a comma-separated list that includes `udan-realm`, or the browser's preflight rejects every SDK call. Without these keys the server answers `403 CORS Rejected - Invalid origin`. Check with a preflight from an extension origin:
+
+```
+curl -s -i -X OPTIONS <server>/api/user/getsessionkey -H 'Origin: chrome-extension://x' \
+  -H 'Access-Control-Request-Method: POST' -H 'Access-Control-Request-Headers: content-type,authorization,udan-realm'
+```
+Expect `200` or `204` with `Access-Control-Allow-Origin` and `udan-realm` in `Access-Control-Allow-Headers`.
+
+**Container.** The image bakes in no database settings. Mount a properties file at `/deployments/config/additional.properties` (read-only) or pass `QUARKUS_DATASOURCE_*` and the other settings as environment variables; without them the container starts but cannot reach a database. Values there win over the packaged ones. See the comments in `src/main/docker/Dockerfile.jvm`.
+
 ---
 > [!NOTE]  
 > **Windows Users**: The current startup and synchronization scripts are written for Bash (Linux/macOS/WSL). Native Windows batch (`.bat`) or PowerShell (`.ps1`) scripts are planned for a future update to ensure cross-platform parity.

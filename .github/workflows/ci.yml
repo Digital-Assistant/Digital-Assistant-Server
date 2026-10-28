@@ -61,7 +61,7 @@ jobs:
         run: scripts/ci/build.sh
 
       # TODO: make blocking again once the 7 known SecurityHeadersFilterTest failures are fixed
-      # (see artefacts/cicd/STATE.md). Until then a red test does not fail the gate.
+      # (see the CI notes in scripts/ci/README.md). Until then a red test does not fail the gate.
       - name: Test
         continue-on-error: true
         env:
