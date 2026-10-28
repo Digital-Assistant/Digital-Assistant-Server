@@ -45,7 +45,7 @@ flowchart LR
 | `lint-workflows.sh` | Lints the workflows with pinned actionlint and zizmor (`ci.yml`, job `Workflow Lint`). |
 | `deploy-test.sh` | Sends one image digest to the TEST box through AWS SSM (OIDC login, document `UDAN-DeployTest`) and waits for the result. Runs only in the `test` environment of GitHub Actions; checks its inputs before any AWS call. |
 | `smoke-test.sh` | Post-deploy sanity check from outside: public search answers JSON (nginx, Server, Elasticsearch), protected endpoint refuses no token and a malformed token (401). No secrets, read-only. Runs as job `Sanity check TEST` after every TEST deploy, with the repo variable `TEST_BASE_URL`. Laptop: `scripts/ci/smoke-test.sh https://<test host>`. |
-| `latest-image-digest.sh` | Prints the digest pushed by the newest successful `image.yml` run on `dev` (artifact `image-digest`). Used by `deploy-test.yml` when no digest is given. Needs `gh` and `GITHUB_REPOSITORY`; works on a laptop too. |
+| `latest-image-digest.sh` | Prints the digest pushed by the newest `image.yml` push run on `dev` (artifact `image-digest`). Waits for that run's `Build and Push` job only, not the scan; fails if the job failed, never falls back to an older image. Used by `deploy-test.yml` when no digest is given. Needs `gh` and `GITHUB_REPOSITORY`; works on a laptop too. |
 
 ## Deploying to TEST
 A push to `dev` builds and pushes the image but does not deploy it. TEST changes only when someone runs the `Deploy to TEST` workflow (`deploy-test.yml`): `gh workflow run deploy-test.yml` deploys the newest `dev` image, `-f digest=sha256:<64 hex>` deploys a given one (redeploy or rollback). Setting the repository variable `TEST_AUTO_DEPLOY` to `true` turns the deploy after every push back on.
