@@ -31,7 +31,7 @@ This repo is only the Quarkus server (Gradle, Java, port **11081**). MariaDB, El
 *   **Run all tests:** `./gradlew test`
 *   **Run a single test class:** `./gradlew test --tests 'com.nistapp.uda.index.StatusResourceTest'`
 *   Tests live in `src/test/java/com/nistapp/uda/index/` (Quarkus JUnit5 + RestAssured).
-*   Known failures: the 7 `SecurityHeadersFilterTest` cases fail; the CI test step is non-blocking until they are fixed (see `scripts/ci/README.md`). Tests need MariaDB and Elasticsearch on `127.0.0.1`.
+*   No known failures; the CI test step is blocking. Tests need MariaDB and Elasticsearch on `127.0.0.1`.
 *   Merge method: squash into `dev` (the PR title becomes the commit, so it must be a Conventional Commit). Default branch is `dev`; GitHub runs manual (`workflow_dispatch`) workflows only from the default branch.
 
 #### **Dependency Management**

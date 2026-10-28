@@ -46,6 +46,9 @@ public class SearchList {
 	@Authenticated
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<SequenceList> search(@QueryParam("query") String query, @QueryParam("domain") String domain, @QueryParam("size") Optional<Integer> size, @QueryParam("page") Optional<Integer> page, @QueryParam("userSessionId") String userSessionId) {
+		if (userSessionId == null || userSessionId.isBlank()) {
+			throw new BadRequestException("userSessionId is required");
+		}
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss:SSS");
 //		logger.info("--------------------------------------------------------------------------------------------------");
 //		logger.info("Api invoked at:" + formatter.format(new Date()));

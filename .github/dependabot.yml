@@ -22,5 +22,8 @@ updates:
     open-pull-requests-limit: 0
     schedule:
       interval: monthly
+    groups:
+      gradle-minor-patch:
+        update-types: ["minor", "patch"]
     commit-message:
       prefix: "build"

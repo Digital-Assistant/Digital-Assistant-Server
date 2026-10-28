@@ -36,7 +36,7 @@ flowchart LR
 | Script | What it does |
 |---|---|
 | `build.sh` | Builds the jar. Skips tests. |
-| `test.sh` | Runs the tests (Java 21). Needs MariaDB and Elasticsearch on `127.0.0.1` (start the local stack first). In `ci.yml` the step is non-blocking (`continue-on-error`): 7 `SecurityHeadersFilterTest` cases fail (the expected security response headers, such as `X-Content-Type-Options`, `Content-Security-Policy` and `Permissions-Policy`, are missing from the test responses). The rest pass. CI points the JDBC URL at its own MariaDB without SSL through `QUARKUS_DATASOURCE_JDBC_URL`, because the packaged URL asks for SSL. Fix the 7 failures, then make the step blocking again. |
+| `test.sh` | Runs the tests (Java 21). Needs MariaDB and Elasticsearch on `127.0.0.1` (start the local stack first). CI points the JDBC URL at its own MariaDB without SSL through `QUARKUS_DATASOURCE_JDBC_URL`, because the packaged URL asks for SSL. The step is blocking. |
 | `scan.sh` | Does nothing for now and prints that the scan is skipped. The NVD-based scan is not used. |
 | `image.sh` | Builds the Docker image `udan-server:local`. Does not push. Change the name with `IMAGE_NAME` and `IMAGE_TAG`. With `IMAGE_TAR` set it writes the image to a tar file instead (used by CI). |
 | `image-scan.sh` | Scans an image tar with Trivy (run from a pinned container) and writes a CycloneDX SBOM. Fails on fixable HIGH/CRITICAL findings. Needs Docker. |
