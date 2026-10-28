@@ -147,7 +147,7 @@ jobs:
 
   # Scan and SBOM, off the critical path (runs in parallel with deploy-test).
   # TODO: make blocking once the Quarkus 3.2.10 dependency findings are fixed or accepted
-  # (38 fixable HIGH/CRITICAL on 2026-10-22, see artefacts/cicd/P12-image-builds-output.md).
+  # (38 fixable HIGH/CRITICAL on 2026-10-22; see the image scan notes in scripts/ci/README.md).
   # Until then a finding does not stop the image from being pushed or deployed.
   scan:
     name: Scan image and SBOM
