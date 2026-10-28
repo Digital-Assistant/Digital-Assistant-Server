@@ -51,9 +51,29 @@ jobs:
           echo "digest=$digest" >> "$GITHUB_OUTPUT"
           echo "Deploying \`$digest\` to TEST" >> "$GITHUB_STEP_SUMMARY"
 
+      # The deployment targets are repository variables so no AWS id sits in this public repo.
+      - name: Check deploy variables
+        env:
+          AWS_ROLE_ARN: ${{ vars.AWS_ROLE_ARN }}
+          INSTANCE_ID: ${{ vars.INSTANCE_ID }}
+          SSM_DOCUMENT: ${{ vars.SSM_DOCUMENT }}
+        run: |
+          missing=()
+          for name in AWS_ROLE_ARN INSTANCE_ID SSM_DOCUMENT; do
+            [[ -n "${!name}" ]] || missing+=("$name")
+          done
+          if [[ ${#missing[@]} -gt 0 ]]; then
+            echo "::error::Set the repository variable(s): ${missing[*]}"
+            exit 1
+          fi
+
       - name: Deploy digest to TEST
         env:
           IMAGE_DIGEST: ${{ steps.digest.outputs.digest }}
+          AWS_ROLE_ARN: ${{ vars.AWS_ROLE_ARN }}
+          AWS_REGION: ${{ vars.AWS_REGION }}
+          INSTANCE_ID: ${{ vars.INSTANCE_ID }}
+          SSM_DOCUMENT: ${{ vars.SSM_DOCUMENT }}
         run: scripts/ci/deploy-test.sh server "$IMAGE_DIGEST"
 
   # Post-deploy hook: unauthenticated checks of TEST from outside (scripts/ci/smoke-test.sh). Deeper
