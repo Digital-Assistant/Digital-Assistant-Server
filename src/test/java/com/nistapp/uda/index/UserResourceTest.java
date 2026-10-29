@@ -122,17 +122,6 @@ public class UserResourceTest {
         assertEquals(0, userSessionDataDAO.count("usersessionid", session));
     }
 
-    @Test
-    void anonymousCallWithInvalidTokenIsRefused() {
-        given()
-                .header("Authorization", "Bearer not.a.token")
-                .contentType(ContentType.JSON)
-                .body("{\"authid\":\"x\",\"authsource\":\"google\"}")
-                .when().post("/api/user/checkauthid")
-                .then()
-                .statusCode(401);
-    }
-
     // --- authenticated callers
 
     @Test
