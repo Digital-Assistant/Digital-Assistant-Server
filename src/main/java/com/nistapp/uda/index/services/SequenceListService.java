@@ -2,6 +2,7 @@ package com.nistapp.uda.index.services;
 
 import com.nistapp.uda.index.models.SequenceList;
 import com.nistapp.uda.index.repository.SequenceListDAO;
+import com.nistapp.uda.index.users.CurrentUser;
 import com.nistapp.uda.index.utils.LoggerUtil;
 import io.quarkus.security.Authenticated;
 import org.slf4j.Logger;
@@ -29,79 +30,96 @@ public class SequenceListService {
     @Inject
     SequenceListDAO sequenceListDAO;
 
+    @Inject
+    CurrentUser currentUser;
+
+    /**
+     * Updates name, domain, node list and (merged) additional parameters of a recording. Only the recording's owner
+     * may change it; a body {@code usersessionid} is ignored.
+     *
+     * @return the updated recording
+     * @throws BadRequestException when the id is missing or the update fails
+     * @throws NotFoundException   when no recording has that id
+     * @throws ForbiddenException  when the caller does not own the recording
+     */
     @POST
     @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
     public SequenceList updateSequenceData(SequenceList sequenceList) {
+        if (sequenceList == null || sequenceList.getId() == null) {
+            throw new BadRequestException("id is required");
+        }
         try {
             logger.info("Updating sequence data for ID: " + sequenceList.getId().toString());
 
-            // Fetch the existing entity from the database
-            SequenceList existingSequence = sequenceListDAO.findById(sequenceList.getUsersessionid(), sequenceList.getId());
-
-            if(existingSequence != null) {
-                boolean hasChanges = false;
-
-                // Check and update simple fields
-                if (sequenceList.getName() != null && !Objects.equals(existingSequence.getName(), sequenceList.getName())) {
-                    logger.debug("Field 'name' changed from '" + existingSequence.getName() + "' to '" + sequenceList.getName() + "'");
-                    existingSequence.setName(sequenceList.getName());
-                    hasChanges = true;
-                }
-
-                if (sequenceList.getDomain() != null && !Objects.equals(existingSequence.getDomain(), sequenceList.getDomain())) {
-                    logger.debug("Field 'domain' changed from '" + existingSequence.getDomain() + "' to '" + sequenceList.getDomain() + "'");
-                    existingSequence.setDomain(sequenceList.getDomain());
-                    hasChanges = true;
-                }
-
-                if (sequenceList.getUserclicknodelist() != null && !Objects.equals(existingSequence.getUserclicknodelist(), sequenceList.getUserclicknodelist())) {
-                    logger.debug("Field 'userclicknodelist' changed");
-                    existingSequence.setUserclicknodelist(sequenceList.getUserclicknodelist());
-                    hasChanges = true;
-                }
-
-                // Handle additionalParams separately as it's a complex object
-                Map<String, Object> existingParams = existingSequence.getAdditionalParams();
-                Map<String, Object> newParams = sequenceList.getAdditionalParams();
-
-                if (newParams != null) {
-                    Map<String, Object> mergedParams = new HashMap<>(existingParams != null ? existingParams : new HashMap<>());
-
-                    for (Map.Entry<String, Object> entry : newParams.entrySet()) {
-                        String key = entry.getKey();
-                        Object newValue = entry.getValue();
-                        Object existingValue = existingParams != null ? existingParams.get(key) : null;
-
-                        // Check if the value has changed
-                        if (!Objects.equals(newValue, existingValue)) {
-                            logger.debug("AdditionalParam '" + key + "' changed from '" + existingValue + "' to '" + newValue + "'");
-                            mergedParams.put(key, newValue);
-                            hasChanges = true;
-                        }
-                    }
-
-                    // Only update additionalParams if there are changes
-                    if (hasChanges) {
-                        existingSequence.setAdditionalParams(mergedParams);
-                    }
-                }
-
-                // Only persist if there are actual changes
-                if (hasChanges) {
-                    em.persist(existingSequence);
-                    logger.info("Updated sequence with ID: " + existingSequence.getId() + " - changes detected");
-                } else {
-                    logger.info("No changes detected for sequence with ID: " + existingSequence.getId());
-                }
-
-                return existingSequence;
-            } else {
+            // Fetch the existing entity from the database; only its owner may change it
+            SequenceList existingSequence = sequenceListDAO.findById(sequenceList.getId());
+            if (existingSequence == null) {
                 logger.warn("Sequence with ID: " + sequenceList.getId() + " not found");
-                return null;
+                throw new NotFoundException();
             }
+            currentUser.requireOwner(existingSequence.getOwner());
+
+            boolean hasChanges = false;
+
+            // Check and update simple fields
+            if (sequenceList.getName() != null && !Objects.equals(existingSequence.getName(), sequenceList.getName())) {
+                logger.debug("Field 'name' changed from '" + existingSequence.getName() + "' to '" + sequenceList.getName() + "'");
+                existingSequence.setName(sequenceList.getName());
+                hasChanges = true;
+            }
+
+            if (sequenceList.getDomain() != null && !Objects.equals(existingSequence.getDomain(), sequenceList.getDomain())) {
+                logger.debug("Field 'domain' changed from '" + existingSequence.getDomain() + "' to '" + sequenceList.getDomain() + "'");
+                existingSequence.setDomain(sequenceList.getDomain());
+                hasChanges = true;
+            }
+
+            if (sequenceList.getUserclicknodelist() != null && !Objects.equals(existingSequence.getUserclicknodelist(), sequenceList.getUserclicknodelist())) {
+                logger.debug("Field 'userclicknodelist' changed");
+                existingSequence.setUserclicknodelist(sequenceList.getUserclicknodelist());
+                hasChanges = true;
+            }
+
+            // Handle additionalParams separately as it's a complex object
+            Map<String, Object> existingParams = existingSequence.getAdditionalParams();
+            Map<String, Object> newParams = sequenceList.getAdditionalParams();
+
+            if (newParams != null) {
+                Map<String, Object> mergedParams = new HashMap<>(existingParams != null ? existingParams : new HashMap<>());
+
+                for (Map.Entry<String, Object> entry : newParams.entrySet()) {
+                    String key = entry.getKey();
+                    Object newValue = entry.getValue();
+                    Object existingValue = existingParams != null ? existingParams.get(key) : null;
+
+                    // Check if the value has changed
+                    if (!Objects.equals(newValue, existingValue)) {
+                        logger.debug("AdditionalParam '" + key + "' changed from '" + existingValue + "' to '" + newValue + "'");
+                        mergedParams.put(key, newValue);
+                        hasChanges = true;
+                    }
+                }
+
+                // Only update additionalParams if there are changes
+                if (hasChanges) {
+                    existingSequence.setAdditionalParams(mergedParams);
+                }
+            }
+
+            // Only persist if there are actual changes
+            if (hasChanges) {
+                em.persist(existingSequence);
+                logger.info("Updated sequence with ID: " + existingSequence.getId() + " - changes detected");
+            } else {
+                logger.info("No changes detected for sequence with ID: " + existingSequence.getId());
+            }
+
+            return existingSequence;
+        } catch (WebApplicationException e) {
+            throw e;
         } catch (Exception e) {
             logger.error("Error updating sequence data", e);
             throw new WebApplicationException(Response.Status.BAD_REQUEST);

@@ -1,8 +1,10 @@
 package com.nistapp.uda.index.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
 
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -56,6 +58,12 @@ public class UserAuthData extends PanacheEntityBase {
 		this.authid = authid;
 	}
 
+	/**
+	 * The SHA-512 email hash. Read from request bodies, never written to responses: no client reads it back, and a
+	 * hash of an email is matchable against a list of emails.
+	 */
+	@JsonbTransient
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	public String getEmailid() {
 		return emailid;
 	}

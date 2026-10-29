@@ -3,6 +3,7 @@ package com.nistapp.uda.index.services;
 import com.nistapp.uda.index.models.*;
 import com.nistapp.uda.index.repository.SequenceListDAO;
 import com.nistapp.uda.index.repository.UserclicknodesRepository;
+import com.nistapp.uda.index.users.CurrentUser;
 import com.nistapp.uda.index.utils.SequenceListStatus;
 import io.quarkus.security.Authenticated;
 import org.jose4j.json.internal.json_simple.JSONObject;
@@ -37,6 +38,9 @@ public class Clickevents {
 
     @Inject
     SequenceListStatus sequenceListStatus;
+
+    @Inject
+    CurrentUser currentUser;
 
     @GET
     @Path("/all")
@@ -93,7 +97,8 @@ public class Clickevents {
     }
 
     /**
-     * Saves the clicked node data for a user.
+     * Saves the clicked node data for a user. The owner is the caller from the token; a body
+     * {@code usersessionid} is ignored.
      *
      * @param userClickNodes the clicked node data to be saved
      * @return the saved clicked node data
@@ -104,17 +109,23 @@ public class Clickevents {
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
     public Userclicknodes Userclickednode(@Valid Userclicknodes userClickNodes) {
+        userClickNodes.setId(null);
+        userClickNodes.setSequenceList(null);
+        userClickNodes.setOwner(currentUser.ownerKey());
         em.persist(userClickNodes);
         em.flush();
         return userClickNodes;
     }
 
     /**
-     * Updates the clicked node for a user in the database.
+     * Updates the name and object data of a clicked node. Only the node's owner may change it.
      *
-     * @param userClickNodes the Userclicknodes object containing the updated
-     *                       information
+     * @param userClickNodes the node id and the new values; {@code sessionid} is only used for nodes recorded before
+     *                       nodes had an owner (see {@link #requireClickNodeOwner})
      * @return the updated Userclicknodes object
+     * @throws BadRequestException when the id is missing
+     * @throws NotFoundException   when no node has that id
+     * @throws ForbiddenException  when the caller does not own the node
      */
     @POST
     @Path("/updateclickednode")
@@ -122,19 +133,33 @@ public class Clickevents {
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
     public Userclicknodes UpdateUserclickedNode(Userclicknodes userClickNodes) {
-        try {
-            Userclicknodes clicknode = userclicknodesRepository.findbynodeid(userClickNodes.getSessionid(),
-                    userClickNodes.getId());
-            if (clicknode != null) {
-                clicknode.setClickednodename(userClickNodes.getClickednodename());
-                clicknode.setObjectdata(userClickNodes.getObjectdata());
-                em.persist(clicknode);
-                userClickNodes = clicknode;
-            }
-        } catch (Exception e) {
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        if (userClickNodes == null || userClickNodes.getId() == null) {
+            throw new BadRequestException("id is required");
         }
-        return userClickNodes;
+        Userclicknodes clicknode = userclicknodesRepository.findById(userClickNodes.getId());
+        if (clicknode == null) {
+            throw new NotFoundException();
+        }
+        requireClickNodeOwner(clicknode, userClickNodes.getSessionid());
+        clicknode.setClickednodename(userClickNodes.getClickednodename());
+        clicknode.setObjectdata(userClickNodes.getObjectdata());
+        em.persist(clicknode);
+        return clicknode;
+    }
+
+    /**
+     * A node is the caller's when its owner is the caller. Nodes recorded before V1.0.9 have no owner: they belong
+     * to the owner of the recording they are in, and a node that is in no recording yet may be changed only from the
+     * recording session that created it (the check this endpoint always made).
+     */
+    private void requireClickNodeOwner(Userclicknodes node, String sentSessionId) {
+        if (node.getOwner() != null) {
+            currentUser.requireOwner(node.getOwner());
+        } else if (node.getSequenceList() != null) {
+            currentUser.requireOwner(node.getSequenceList().getOwner());
+        } else if (sentSessionId == null || !sentSessionId.equals(node.getSessionid())) {
+            throw new ForbiddenException();
+        }
     }
 
     @POST
@@ -143,9 +168,29 @@ public class Clickevents {
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
     public SequenceList indexeddata(@Valid SequenceList sequenceList) {
+        // Check every node before anything is written: a recording may only take the caller's own nodes, never
+        // move nodes out of someone else's recording.
+        Set<Userclicknodes> nodes = new HashSet<>();
+        if (sequenceList.getUserclicknodesSet() != null) {
+            for (Userclicknodes userclicknodes : sequenceList.getUserclicknodesSet()) {
+                Userclicknodes u2 = userclicknodes == null || userclicknodes.getId() == null ? null
+                        : em.find(Userclicknodes.class, userclicknodes.getId());
+                if (u2 == null) {
+                    throw new BadRequestException("unknown click node");
+                }
+                if (u2.getOwner() != null) {
+                    currentUser.requireOwner(u2.getOwner());
+                } else if (u2.getSequenceList() != null) {
+                    currentUser.requireOwner(u2.getSequenceList().getOwner());
+                }
+                nodes.add(u2);
+            }
+        }
+        String owner = currentUser.ownerKey();
+
         SequenceList s2 = new SequenceList();
         s2.setDomain(sequenceList.getDomain());
-        s2.setUsersessionid(sequenceList.getUsersessionid());
+        s2.setUsersessionid(owner);
         s2.setName(sequenceList.getName());
         s2.setUserclicknodelist(sequenceList.getUserclicknodelist());
         s2.setIsValid(sequenceList.getIsValid());
@@ -168,18 +213,15 @@ public class Clickevents {
 
         em.persist(s2);
 
-        Set<Userclicknodes> list = new HashSet<>();
-        for (Userclicknodes userclicknodes : sequenceList.getUserclicknodesSet()) {
-            Userclicknodes u2 = em.find(Userclicknodes.class, userclicknodes.getId());
+        for (Userclicknodes u2 : nodes) {
             u2.setSequenceList(s2);
-            list.add(u2);
         }
-        s2.setUserclicknodesSet(list);
+        s2.setUserclicknodesSet(nodes);
 
         Set<SequenceVotes> votes = new HashSet<>();
         SequenceVotes sequenceVotes = new SequenceVotes();
         sequenceVotes.setSequenceid(s2.getId());
-        sequenceVotes.setUsersessionid(s2.getUsersessionid());
+        sequenceVotes.setUsersessionid(owner);
         sequenceVotes.setDownvote(0);
         sequenceVotes.setUpvote(0);
         sequenceVotes.persist();
@@ -192,10 +234,14 @@ public class Clickevents {
     }
 
     /**
-     * A description of the entire Java function.
+     * Replaces the additional parameters of a recording (old path; the SDK now uses {@code /sequence/update}).
+     * Only the recording's owner may change it; a body {@code usersessionid} is ignored.
      *
-     * @param sequenceList The sequence list object to be updated
-     * @return The updated sequence list object
+     * @param sequenceList the recording id and the new additional parameters
+     * @return the updated sequence list object
+     * @throws BadRequestException when the id is missing
+     * @throws NotFoundException   when no recording has that id
+     * @throws ForbiddenException  when the caller does not own the recording
      */
     @POST
     @Path("/updatesequencedata")
@@ -203,21 +249,30 @@ public class Clickevents {
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
     public SequenceList updateSequenceData(SequenceList sequenceList) {
+        SequenceList updateSequenceList = findOwnedSequence(sequenceList);
+        logger.info("Updating additionalParams of sequence {}", updateSequenceList.getId());
+        updateSequenceList.setAdditionalParams(sequenceList.getAdditionalParams());
+        em.persist(updateSequenceList);
+        return updateSequenceList;
+    }
 
-        try {
-            logger.info(sequenceList.getId().toString());
-            SequenceList updateSequenceList = sequenceListDAO.findById(sequenceList.getUsersessionid(),
-                    sequenceList.getId());
-            if (updateSequenceList != null) {
-                updateSequenceList.setAdditionalParams(sequenceList.getAdditionalParams());
-                em.persist(updateSequenceList);
-                sequenceList = updateSequenceList;
-            }
-        } catch (Exception e) {
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
+    /**
+     * Loads the recording named by the body's id and checks that the caller owns it.
+     *
+     * @throws BadRequestException when the id is missing
+     * @throws NotFoundException   when no recording has that id
+     * @throws ForbiddenException  when the caller does not own it
+     */
+    private SequenceList findOwnedSequence(SequenceList sent) {
+        if (sent == null || sent.getId() == null) {
+            throw new BadRequestException("id is required");
         }
-
-        return sequenceList;
+        SequenceList dbresult = sequenceListDAO.findById(sent.getId());
+        if (dbresult == null) {
+            throw new NotFoundException();
+        }
+        currentUser.requireOwner(dbresult.getOwner());
+        return dbresult;
     }
 
     /*
@@ -238,23 +293,18 @@ public class Clickevents {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
+    /**
+     * Marks a recording deleted. Only the recording's owner may delete it; a body {@code usersessionid} is ignored.
+     *
+     * @throws BadRequestException when the id is missing
+     * @throws NotFoundException   when no recording has that id
+     * @throws ForbiddenException  when the caller does not own the recording
+     */
     public SequenceList deletesequence(SequenceList sequenceList) {
-        TypedQuery<SequenceList> query = em.createQuery("select sq from SequenceList sq where sq.id=:id",
-                SequenceList.class);
-        query.setParameter("id", sequenceList.getId());
-        SequenceList dbresult = query.getSingleResult();
-        if (dbresult == null)
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
-        String dbuserid = dbresult.getUsersessionid();
-        String sentuserid = sequenceList.getUsersessionid();
-        if (dbuserid.equals(sentuserid)) {
-            dbresult.setDeleted(1);
-            em.persist(dbresult);
-            return dbresult;
-        } else {
-            System.out.println("Not matched user sessionid");
-            return null;
-        }
+        SequenceList dbresult = findOwnedSequence(sequenceList);
+        dbresult.setDeleted(1);
+        em.persist(dbresult);
+        return dbresult;
     }
 
     @GET
@@ -272,6 +322,8 @@ public class Clickevents {
     @Consumes(MediaType.APPLICATION_JSON)
     @Transactional
     public void addUserClick(@Valid ClickTrack clickTrack) {
+        // The user is the caller from the token; a body usersessionid is ignored.
+        clickTrack.setUsersessionid(currentUser.ownerKey());
         clickTrack.persist();
     }
 

@@ -1,5 +1,6 @@
 package com.nistapp.uda.index.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.search.engine.backend.types.Searchable;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
@@ -24,6 +25,14 @@ public class Userclicknodes {
 	@GenericField
 	@Column(length=500)
 	private String sessionid;
+
+	/**
+	 * The recorder (same owner value as {@link SequenceList#getOwner()}), set from the token on create. Not indexed
+	 * and never written to responses. Null on rows created before V1.0.9.
+	 */
+	@Column(name = "usersessionid", length = 500)
+	@JsonbTransient
+	private String owner;
 
 	@FullTextField(analyzer = "english")
 	@Column(length=2000)
@@ -140,6 +149,19 @@ public class Userclicknodes {
 		this.clickedpath = clickedpath;
 	}
 
+	@JsonIgnore
+	@JsonbTransient
+	public String getOwner() {
+		return owner;
+	}
+
+	@JsonIgnore
+	@JsonbTransient
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+
+	@JsonIgnore
 	public SequenceList getSequenceList() {
 		return sequenceList;
 	}

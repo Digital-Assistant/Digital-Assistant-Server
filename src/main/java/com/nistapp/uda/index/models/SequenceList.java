@@ -2,6 +2,7 @@ package com.nistapp.uda.index.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.nistapp.uda.index.users.OwnerView;
 import com.vladmihalcea.hibernate.type.json.JsonType;
 import org.hibernate.annotations.Type;
 import org.hibernate.search.engine.backend.types.Sortable;
@@ -11,6 +12,7 @@ import org.hibernate.search.mapper.pojo.extractor.mapping.annotation.ContainerEx
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.*;
 
 import jakarta.inject.Inject;
+import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -133,7 +135,21 @@ public class SequenceList {
         this.name = name;
     }
 
+    /**
+     * The owner as shown in responses: the stored value for the owner, {@code null} for anyone else. Server code
+     * that decides ownership must use {@link #getOwner()}.
+     */
     public String getUsersessionid() {
+        return OwnerView.visibleTo(usersessionid);
+    }
+
+    /**
+     * The stored owner ({@code user_auth_data.authid}, or a numeric {@code user_auth_data.id} on old rows), never
+     * written to responses.
+     */
+    @JsonIgnore
+    @JsonbTransient
+    public String getOwner() {
         return usersessionid;
     }
 

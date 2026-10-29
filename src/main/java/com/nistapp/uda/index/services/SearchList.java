@@ -1,6 +1,7 @@
 package com.nistapp.uda.index.services;
 
 import com.nistapp.uda.index.models.SequenceList;
+import com.nistapp.uda.index.users.CurrentUser;
 import com.nistapp.uda.index.repository.SequenceVotesDAO;
 import com.nistapp.uda.index.utils.SequenceListStatus;
 import io.quarkus.security.Authenticated;
@@ -38,6 +39,9 @@ public class SearchList {
 	@Inject
 	SequenceListStatus sequenceListStatus;
 
+	@Inject
+	CurrentUser currentUser;
+
 
 
 	@GET
@@ -46,6 +50,7 @@ public class SearchList {
 	@Authenticated
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<SequenceList> search(@QueryParam("query") String query, @QueryParam("domain") String domain, @QueryParam("size") Optional<Integer> size, @QueryParam("page") Optional<Integer> page, @QueryParam("userSessionId") String userSessionId) {
+		// Still required, as before, so the old 400 contract holds; its value is ignored (the caller comes from the token).
 		if (userSessionId == null || userSessionId.isBlank()) {
 			throw new BadRequestException("userSessionId is required");
 		}
@@ -86,8 +91,16 @@ public class SearchList {
 		SearchQueryOptionsStep<?, SequenceList, SearchLoadingOptionsStep, ?, ?> searchSession;
 //		logger.info("elastic search results start time:" + formatter.format(new Date()));
 
+		// The caller's own recordings (drafts included) come from the token, never from the userSessionId parameter.
+		final List<String> ownerKeys = currentUser.ownerKeys();
 		final Function<SearchPredicateFactory, PredicateFinalStep> userFilter;
-		userFilter = f -> f.match().field("usersessionid").matching(userSessionId);
+		userFilter = f -> {
+			var owned = f.bool();
+			for (String ownerKey : ownerKeys) {
+				owned.should(f.match().field("usersessionid").matching(ownerKey));
+			}
+			return owned;
+		};
 
 		final Function<SearchPredicateFactory, PredicateFinalStep> mustFunction;
 		mustFunction = f -> {

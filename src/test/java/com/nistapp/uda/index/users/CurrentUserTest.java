@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Unit tests of the token-to-identity mapping in {@link CurrentUser#map}. No Quarkus needed.
@@ -47,5 +49,15 @@ class CurrentUserTest {
 	@Test
 	void legacyClientListIsConfigurable() {
 		assertEquals("google", CurrentUser.map("other-legacy", "u", "s", List.of("a", "other-legacy")).authsource());
+	}
+
+	@Test
+	void onlyAllDigitValuesCountAsRowIds() {
+		assertTrue(CurrentUser.isDigits("42"));
+		assertFalse(CurrentUser.isDigits(""));
+		assertFalse(CurrentUser.isDigits(null));
+		assertFalse(CurrentUser.isDigits("4a2"));
+		assertFalse(CurrentUser.isDigits("-42"));
+		assertFalse(CurrentUser.isDigits("0f".repeat(64)));
 	}
 }
