@@ -4,9 +4,10 @@
 # on a laptop too. A first step; deeper QA (authenticated, agentic) can follow as later jobs.
 #   scripts/ci/smoke-test.sh <base-url>        e.g. https://<test host>  (no trailing /api)
 # Checks:
-#   1. GET /api/search/links (public) -> 200 and a JSON array: nginx, Server and Elasticsearch answer.
+#   1. GET /api/user/getsessionkey (public) -> 200 and a session key: nginx and the Server answer.
 #   2. GET /api/search/all without a token -> 401 with WWW-Authenticate: Bearer (the Server's OIDC).
 #   3. The same with a malformed bearer token and realm UDAN -> 401.
+#   4. GET /api/search/links without a token -> 401 (every /api/ path needs a token since PK02).
 # Optional env: SMOKE_ATTEMPTS (default 3), SMOKE_WAIT (seconds between attempts, default 5).
 # Needs: curl.
 set -euo pipefail
@@ -45,15 +46,18 @@ check() {
 }
 
 echo "Sanity check of the Server at ${base}"
-check "public search answers (nginx, Server, Elasticsearch)" 200 '^content-type: application/json' '^\[' \
+check "public session key answers (nginx, Server)" 200 - '^[A-Za-z0-9]{20}$' \
   -H "UDAN-Realm: UDAN" \
-  "${base}/api/search/links?query=sanitycheck&domain=sanity-check.invalid&size=1"
+  "${base}/api/user/getsessionkey"
 check "protected endpoint without token is refused" 401 '^www-authenticate: Bearer' - \
   -H "UDAN-Realm: UDAN" \
   "${base}/api/search/all?domain=sanity-check.invalid&userSessionId=sanitycheck"
 check "malformed token is refused" 401 - - \
   -H "UDAN-Realm: UDAN" -H "Authorization: Bearer sanity.check.invalid" \
   "${base}/api/search/all?domain=sanity-check.invalid&userSessionId=sanitycheck"
+check "former public search needs a token" 401 - - \
+  -H "UDAN-Realm: UDAN" \
+  "${base}/api/search/links?query=sanitycheck&domain=sanity-check.invalid&size=1"
 
 if [[ "${failures}" -gt 0 ]]; then
   echo "Sanity check FAILED: ${failures} check(s). TEST may be broken; roll back with Deploy to TEST and the previous digest." >&2

@@ -50,7 +50,9 @@ public class GlobalExceptionMapperTest {
     }
 
     @Test
+    @TestSecurity(user = "testUser", roles = { "user", "admin" })
     void test404ReturnsJson() {
+        // Authenticated: since PK02 an anonymous caller gets 401 for any /api/ path, known or not.
         given()
                 .when().get("/api/nonexistent-endpoint-12345")
                 .then()
