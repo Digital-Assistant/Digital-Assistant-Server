@@ -1,12 +1,14 @@
 package com.nistapp.uda.index;
 
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
 
 @QuarkusTest
+@TestSecurity(user = "testUser", roles = { "user" })
 public class DomainTest {
 
     @Test
