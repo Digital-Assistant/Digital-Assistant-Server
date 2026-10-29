@@ -2,6 +2,8 @@ package com.nistapp.uda.index.services;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.security.TestSecurity;
+import io.quarkus.test.security.oidc.Claim;
+import io.quarkus.test.security.oidc.OidcSecurity;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
 
@@ -66,6 +68,7 @@ public class VotesResourceTest {
 
     @Test
     @TestSecurity(user = "testUser", roles = { "user" })
+    @OidcSecurity(claims = {@Claim(key = "azp", value = "backend-service"), @Claim(key = "sub", value = "kc-sub-t")})
     void testGetVotesByIdAndSessionReturnsNullForUnknown() {
         given()
                 .when().get("/api/votes/999999/nonexistent-session")

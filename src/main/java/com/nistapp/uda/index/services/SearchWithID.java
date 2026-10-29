@@ -31,7 +31,7 @@ public class SearchWithID {
 	@Transactional
 	@Authenticated
 	@Produces(MediaType.APPLICATION_JSON)
-	public Optional<SequenceList> SearchWithID(@PathParam("id") int id, @QueryParam("domain") String domain) {
+	public Optional<SequenceList> SearchWithID(@PathParam("id") long id, @QueryParam("domain") String domain) {
 
 		final Function<SearchPredicateFactory, PredicateFinalStep> deletedFilter;
 		deletedFilter = f -> f.match().field("deleted").matching(0);

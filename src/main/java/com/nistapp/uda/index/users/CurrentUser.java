@@ -7,6 +7,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.ForbiddenException;
 import jakarta.ws.rs.NotAuthorizedException;
 import java.util.List;
 
@@ -83,6 +84,63 @@ public class CurrentUser {
 	 */
 	public UserAuthData authData() {
 		return authData(null);
+	}
+
+	/**
+	 * The value stored as owner ({@code usersessionid}) on the caller's new recordings, votes, click nodes and
+	 * click tracks.
+	 * <ul>
+	 *     <li>legacy (google) callers: their {@code authid}, which is what the extension has always sent and what
+	 *     existing rows hold, so the Client's "is this mine" check ({@code usersessionid === authData.id}) keeps
+	 *     working;</li>
+	 *     <li>everyone else, and any authid made only of digits: the caller's numeric {@code user_auth_data.id}.</li>
+	 * </ul>
+	 * An all-digit owner value therefore always means a {@code user_auth_data.id} (the form migration V1.0.3 wrote),
+	 * so a token whose username is a number can never pass as the user with that row id.
+	 */
+	public String ownerKey() {
+		Identity id = identity();
+		if (SOURCE_GOOGLE.equals(id.authsource()) && !isDigits(id.authid())) {
+			return id.authid();
+		}
+		return String.valueOf(authData().getId());
+	}
+
+	/**
+	 * Every stored owner value that means the caller: the {@link #ownerKey()} plus, for a legacy caller, the
+	 * numeric row id that rows written before the switch to authids may hold. Used to filter searches.
+	 */
+	public List<String> ownerKeys() {
+		String rowId = String.valueOf(authData().getId());
+		String key = ownerKey();
+		return key.equals(rowId) ? List.of(rowId) : List.of(key, rowId);
+	}
+
+	/**
+	 * Whether a stored owner value ({@code usersessionid}) is the caller. A blank value is nobody's.
+	 */
+	public boolean owns(String storedOwner) {
+		if (isBlank(storedOwner)) {
+			return false;
+		}
+		if (isDigits(storedOwner)) {
+			return storedOwner.equals(String.valueOf(authData().getId()));
+		}
+		Identity id = identity();
+		return SOURCE_GOOGLE.equals(id.authsource()) && storedOwner.equals(id.authid());
+	}
+
+	/**
+	 * @throws ForbiddenException when the stored owner value is not the caller
+	 */
+	public void requireOwner(String storedOwner) {
+		if (!owns(storedOwner)) {
+			throw new ForbiddenException();
+		}
+	}
+
+	static boolean isDigits(String value) {
+		return value != null && !value.isEmpty() && value.chars().allMatch(c -> c >= '0' && c <= '9');
 	}
 
 	/**

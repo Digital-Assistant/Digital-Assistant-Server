@@ -1,6 +1,8 @@
 package com.nistapp.uda.index.services;
 
 import com.nistapp.uda.index.models.SequenceList;
+import com.nistapp.uda.index.search.OwnerFilter;
+import com.nistapp.uda.index.users.CurrentUser;
 import com.nistapp.uda.index.repository.SequenceVotesDAO;
 import com.nistapp.uda.index.utils.SequenceListStatus;
 import io.quarkus.security.Authenticated;
@@ -31,6 +33,9 @@ public class SearchWithPermissions {
 
 	@Inject
 	SequenceListStatus sequenceListStatus;
+
+	@Inject
+	CurrentUser currentUser;
 
 	@GET
 	@Path("withPermissions")
@@ -81,8 +86,9 @@ public class SearchWithPermissions {
 			throw new BadRequestException();
 		}
 
-		final Function<SearchPredicateFactory, PredicateFinalStep> userFilter;
-		userFilter = f -> f.match().field("usersessionid").matching(userSessionId);
+		// The caller's own recordings (drafts included), by the token, never by the userSessionId parameter
+		final Function<SearchPredicateFactory, PredicateFinalStep> userFilter =
+				OwnerFilter.ownedByAnyOf(currentUser.ownerKeys());
 
 		final Function<SearchPredicateFactory, PredicateFinalStep> mustFunction;
 		mustFunction = f -> {

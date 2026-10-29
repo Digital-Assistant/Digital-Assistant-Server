@@ -1,6 +1,7 @@
 package com.nistapp.uda.index.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
 
@@ -18,8 +19,14 @@ public class SequenceVotes extends PanacheEntityBase {
 	@GenericField
 	private long id;
 
+	/**
+	 * The voter (same owner value as {@link SequenceList#getOwner()}). Never written to responses: search results
+	 * embed every vote, and a voter's id is nobody else's business. Requests may still send it; it is ignored and
+	 * the voter is taken from the token.
+	 */
 	@GenericField
 	@Column(length = 500)
+	@JsonbTransient
 	private String usersessionid;
 
 	@GenericField
@@ -64,6 +71,7 @@ public class SequenceVotes extends PanacheEntityBase {
 		this.id = id;
 	}
 
+	@JsonIgnore
 	public String getUsersessionid() {
 		return usersessionid;
 	}
