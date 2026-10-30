@@ -1,0 +1,964 @@
+{
+  "schema_version": "0.1",
+  "repo": {
+    "label": "digital-assistant-server",
+    "default_branch": "dev"
+  },
+  "recipe": {
+    "name": "brownfield-implement",
+    "version": "0.2.0-dev",
+    "framework_rev": "a7e5e023654d48620e4439168bee4158f4a7deaf"
+  },
+  "source_reports": [
+    {
+      "path": "docs/agentic-readiness-report/digital-assistant-server-first-audit-20261028T131409Z.json",
+      "git_sha": "4a48e1976e424f3f424d2510049413c1c3f38dd6",
+      "catalogue_version": "0.2.2"
+    }
+  ],
+  "preferences": [
+    {
+      "key": "format.mass_reformat",
+      "value": "no",
+      "reason": "Q2: formatter in check-only/ratchet mode, violation count recorded as debt, never reformat the tree; other Server PRs are in flight (owner answer via Hermes 2026-10-30)",
+      "by": "owner",
+      "date": "2026-10-30",
+      "phase": "IR03.1"
+    },
+    {
+      "key": "format.java_family",
+      "value": "decide-in-IR04.2",
+      "reason": "Q3: tool chosen in IR04.2; constraint is CONVENTIONS.md style (tabs, LF, 120 columns); Spotless is the likely tool (owner answer via Hermes 2026-10-30)",
+      "by": "owner",
+      "date": "2026-10-30",
+      "phase": "IR03.1"
+    },
+    {
+      "key": "tests.stack_dependent",
+      "value": "decide-in-IR08.2",
+      "reason": "Q4: strategy decided in IR08.2; today tests need the live local stack through local-up.sh (owner answer via Hermes 2026-10-30)",
+      "by": "owner",
+      "date": "2026-10-30",
+      "phase": "IR03.1"
+    },
+    {
+      "key": "agents_md.pointer_section",
+      "value": "section-5",
+      "reason": "Q6: pointer line goes in AGENTS.md section 5 (Development & Contribution Workflow) (owner answer via Hermes 2026-10-30)",
+      "by": "owner",
+      "date": "2026-10-30",
+      "phase": "IR03.1"
+    },
+    {
+      "key": "extra.t3",
+      "value": "keystore-untrack",
+      "reason": "Q5 item 1: git rm --cached config/keycloak-keystore.jks (keep the file locally if useful), fix the CONVENTIONS.md tree line; no key rotation; git history left as is. Consequence of the owner's statement that nothing tracked holds a live secret and all secrets come from the AWS store; recorded as a preference, executed in IR06.2 (owner answer via Hermes 2026-10-30)",
+      "by": "owner",
+      "date": "2026-10-30",
+      "phase": "IR03.1"
+    },
+    {
+      "key": "extra.t2",
+      "value": "jdk-toolchain-pin-and-readme-rename",
+      "reason": "Q5 items 4 and 8: add a java toolchain block (JDK 21) to build.gradle; rename README to README.md and fix the .dockerignore, CONVENTIONS.md and scripts/ci/test.sh references (owner answer via Hermes 2026-10-30)",
+      "by": "owner",
+      "date": "2026-10-30",
+      "phase": "IR03.1"
+    },
+    {
+      "key": "extra.t5",
+      "value": "offline-test-verb",
+      "reason": "Q5 item 7, offline half only: name the three non-QuarkusTest classes as a unit-test subset and state the stack prerequisite in AGENTS.md and the command table. No Testcontainers; record it as debt (owner answer via Hermes 2026-10-30)",
+      "by": "owner",
+      "date": "2026-10-30",
+      "phase": "IR03.1"
+    },
+    {
+      "key": "overlap.section_b",
+      "value": "covered-by-findings",
+      "reason": "Q5 items 2, 3, 5, 6, 9 are not extra work: 2=F-003 (keep the dependabot comment true), 3=F-040(a)/F-024 (rename the no-op job first), 5=F-039/F-012/F-014, 6=F-001/F-022/F-023/F-024/F-041, 9=F-040(c) with F-035 deferred (owner answer via Hermes 2026-10-30)",
+      "by": "owner",
+      "date": "2026-10-30",
+      "phase": "IR03.1"
+    },
+    {
+      "key": "github.owner_handle",
+      "value": "@kcramakrishna",
+      "reason": "Use for F-029 CODEOWNERS and F-040(c) branch protection: the repository owner's verified account (gh auth status). Any other person's handle stays a named placeholder for the owner to fill (owner answer via Hermes 2026-10-30)",
+      "by": "owner",
+      "date": "2026-10-30",
+      "phase": "IR03.1"
+    },
+    {
+      "key": "codeowners.default",
+      "value": "owner-owns-all",
+      "reason": "F-029: @kcramakrishna owns * and the areas in research/p4-owner-asks.md item 1; second reviewer left as a placeholder; do not enable required code-owner review with a single owner (owner answer via Hermes 2026-10-30)",
+      "by": "owner",
+      "date": "2026-10-30",
+      "phase": "IR03.1"
+    },
+    {
+      "key": "security.disclosure",
+      "value": "github-private-vulnerability-reporting",
+      "reason": "F-032: SECURITY.md uses GitHub private vulnerability reporting plus the skeleton; the owner must enable the setting and fill any mailbox/response-time placeholder (owner answer via Hermes 2026-10-30)",
+      "by": "owner",
+      "date": "2026-10-30",
+      "phase": "IR03.1"
+    },
+    {
+      "key": "scanner.choice",
+      "value": "osv-scanner-on-lockfile",
+      "reason": "F-024: OSV-Scanner on gradle.lockfile (after F-003), no secret needed; rename the no-op Dependency Scan job and correct AGENTS.md line 27 first; drop or leave the OWASP plugin as decided in IR04.2 (owner answer via Hermes 2026-10-30)",
+      "by": "owner",
+      "date": "2026-10-30",
+      "phase": "IR03.1"
+    },
+    {
+      "key": "ci.image_scan_debt",
+      "value": "accept-38-with-ratchet",
+      "reason": "F-040(b): accept the 38 fixable HIGH/CRITICAL image findings as recorded debt with a list that may only shrink; do not make the scan blocking now; review date placeholder for the owner (owner answer via Hermes 2026-10-30)",
+      "by": "owner",
+      "date": "2026-10-30",
+      "phase": "IR03.1"
+    },
+    {
+      "key": "ci.branch_protection_runbook",
+      "value": "admin-owner",
+      "reason": "F-040(c): runbook under docs/ after T6 names CI Gate as the required check; the admin is @kcramakrishna; the agent cannot read or set the GitHub setting (owner answer via Hermes 2026-10-30)",
+      "by": "owner",
+      "date": "2026-10-30",
+      "phase": "IR03.1"
+    },
+    {
+      "key": "agents_md.section6",
+      "value": "move-to-docs-stance-b",
+      "reason": "F-039: move section 6 intact to docs/workflow-profiles.md, link it from section 5 steps 3-4; EntityManager rule marked target state for new code, the 14 existing files tolerated and listed in the first ADR (owner answer via Hermes 2026-10-30)",
+      "by": "owner",
+      "date": "2026-10-30",
+      "phase": "IR03.1"
+    },
+    {
+      "key": "agents_md.release_tags",
+      "value": "never-tag-or-release",
+      "reason": "F-013: add a section 4 bullet: agents must not create, move or delete tags or releases; Release Please owns both (owner answer via Hermes 2026-10-30)",
+      "by": "owner",
+      "date": "2026-10-30",
+      "phase": "IR03.1"
+    },
+    {
+      "key": "ci.edits_authorised",
+      "value": "yes",
+      "reason": "The owner's go-with-the-recommendations answer is the explicit instruction AGENTS.md lines 56 and 59 ask for: T1 may add build plugins, T4 may edit ci.yml and image.yml, within the kept findings (owner answer via Hermes 2026-10-30)",
+      "by": "owner",
+      "date": "2026-10-30",
+      "phase": "IR03.1"
+    }
+  ],
+  "themes": [
+    {
+      "id": "T1",
+      "title": "Command surface and quality tools",
+      "status": "not_started",
+      "phase": null,
+      "branch": null,
+      "pr": null,
+      "merged_sha": null
+    },
+    {
+      "id": "T2",
+      "title": "Execution determinism",
+      "status": "not_started",
+      "phase": null,
+      "branch": null,
+      "pr": null,
+      "merged_sha": null
+    },
+    {
+      "id": "T3",
+      "title": "Secrets and env",
+      "status": "not_started",
+      "phase": null,
+      "branch": null,
+      "pr": null,
+      "merged_sha": null
+    },
+    {
+      "id": "T4",
+      "title": "CI parity, hooks, commits",
+      "status": "not_started",
+      "phase": null,
+      "branch": null,
+      "pr": null,
+      "merged_sha": null
+    },
+    {
+      "id": "T5",
+      "title": "Tests and baselines",
+      "status": "not_started",
+      "phase": null,
+      "branch": null,
+      "pr": null,
+      "merged_sha": null
+    },
+    {
+      "id": "T6",
+      "title": "Docs and navigation",
+      "status": "not_started",
+      "phase": null,
+      "branch": null,
+      "pr": null,
+      "merged_sha": null
+    },
+    {
+      "id": "T7",
+      "title": "AGENTS.md and governance",
+      "status": "not_started",
+      "phase": null,
+      "branch": null,
+      "pr": null,
+      "merged_sha": null
+    },
+    {
+      "id": "T8",
+      "title": "Hygiene and index",
+      "status": "not_started",
+      "phase": null,
+      "branch": null,
+      "pr": null,
+      "merged_sha": null
+    }
+  ],
+  "items": [
+    {
+      "finding": "F-001",
+      "check": "CMD-01",
+      "severity": "BLOCKER",
+      "theme": "T1",
+      "statement": "An agent cannot run the standardized command surface literally because 5 of 7 framework verbs are not defined on any runner (format, format:check, lint, typecheck, security).",
+      "status": "queued",
+      "by": "agent",
+      "date": "2026-10-30",
+      "reason": null,
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-002",
+      "check": "CON-02",
+      "severity": "BLOCKER",
+      "theme": "T7",
+      "statement": "An agent cannot trust that a failing test is not rewritten to pass because the prohibitions section of AGENTS.md does not name any test directory.",
+      "status": "queued",
+      "by": "agent",
+      "date": "2026-10-30",
+      "reason": null,
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-003",
+      "check": "EXEC-02",
+      "severity": "BLOCKER",
+      "theme": "T2",
+      "statement": "An agent cannot install identical dependencies on every run because the jvm project has no lockfile (gradle.lockfile), so a fresh install resolves whatever versions are current.",
+      "status": "queued",
+      "by": "agent",
+      "date": "2026-10-30",
+      "reason": null,
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-004",
+      "check": "EXEC-03",
+      "severity": "BLOCKER",
+      "theme": "T2",
+      "statement": "An agent cannot prepare the environment non-interactively because no devcontainer, compose file, Dockerfile, setup target/script, or documented install command exists.",
+      "status": "queued",
+      "by": "agent",
+      "date": "2026-10-30",
+      "reason": null,
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-005",
+      "check": "EXEC-04",
+      "severity": "BLOCKER",
+      "theme": "T3",
+      "statement": "An agent cannot know the CI variables the scripts need because AWS_ROLE_ARN, INSTANCE_ID, SSM_DOCUMENT (repository variables), IMAGE_TAR and CACHE_DIR (optional script inputs) are documented only in scripts/ci/README.md and script headers, not in a committed example file (SECONDS, also reported by the engine, is a bash builtin and is not a gap).",
+      "status": "queued",
+      "by": "agent",
+      "date": "2026-10-30",
+      "reason": null,
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-007",
+      "check": "AGT-03",
+      "severity": "DEGRADER",
+      "theme": "T7",
+      "statement": "An agent cannot know where permanent and scratch documentation live because AGENTS.md does not name docs/STYLE_GUIDE.md, artefacts/.",
+      "status": "queued",
+      "by": "agent",
+      "date": "2026-10-30",
+      "reason": null,
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-008",
+      "check": "AGT-04",
+      "severity": "DEGRADER",
+      "theme": "T7",
+      "statement": "An agent cannot keep code and its documentation in step because no definition-of-done sentence ties a documentation trigger to the same change set.",
+      "status": "queued",
+      "by": "agent",
+      "date": "2026-10-30",
+      "reason": null,
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-009",
+      "check": "AGT-05",
+      "severity": "DEGRADER",
+      "theme": "T7",
+      "statement": "An agent cannot use the project's own commands instead of inventing them because not named: format:check, lint, typecheck; not resolved: format, format:check, lint, typecheck, security.",
+      "status": "queued",
+      "by": "agent",
+      "date": "2026-10-30",
+      "reason": null,
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-010",
+      "check": "AGT-07",
+      "severity": "DEGRADER",
+      "theme": "T7",
+      "statement": "An agent cannot rely on an explicit do-not list because AGENTS.md does not prohibit edits to tests, generated files.",
+      "status": "queued",
+      "by": "agent",
+      "date": "2026-10-30",
+      "reason": null,
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-011",
+      "check": "AGT-08",
+      "severity": "DEGRADER",
+      "theme": "T7",
+      "statement": "An agent cannot be sure that both files are read because CLAUDE.md shadows AGENTS.md for the harness that defines the pair, so only one of the two is ever loaded.",
+      "status": "skipped",
+      "by": "owner",
+      "date": "2026-10-30",
+      "reason": "CLAUDE.md is an @AGENTS.md import stub (11 bytes), not a shadowing file; the audit could not tell the pattern apart. Owner: go with the recommendations (owner answer via Hermes 2026-10-30)",
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-012",
+      "check": "AGT-08",
+      "severity": "DEGRADER",
+      "theme": "T7",
+      "statement": "An agent cannot know which instruction file is authoritative because 2 vendor-specific instruction files exist alongside the canonical one (CLAUDE.md, CONVENTIONS.md).",
+      "status": "queued",
+      "by": "agent",
+      "date": "2026-10-30",
+      "reason": null,
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-013",
+      "check": "AGT-09",
+      "severity": "DEGRADER",
+      "theme": "T7",
+      "statement": "An agent cannot know which branch to work on and whether it may cut a release because the branch model is stated but nothing says whether an agent may tag or release.",
+      "status": "queued",
+      "by": "agent",
+      "date": "2026-10-30",
+      "reason": null,
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-014",
+      "check": "AGT-10",
+      "severity": "DEGRADER",
+      "theme": "T7",
+      "statement": "An agent cannot trust that the referenced rules are actually loaded because the instruction file defers its content to CONVENTIONS.md and no harness configuration names that file, so loading depends on the agent choosing to follow the pointer.",
+      "status": "queued",
+      "by": "agent",
+      "date": "2026-10-30",
+      "reason": null,
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-015",
+      "check": "BASE-01",
+      "severity": "DEGRADER",
+      "theme": "T5",
+      "statement": "An agent cannot distinguish pre-existing debt from new debt because no baseline or suppression artifact is committed.",
+      "status": "queued",
+      "by": "agent",
+      "date": "2026-10-30",
+      "reason": null,
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-016",
+      "check": "BASE-02",
+      "severity": "DEGRADER",
+      "theme": "T5",
+      "statement": "An agent cannot state how many violations exist today because no violation-counting tooling, budget or artifact is configured.",
+      "status": "queued",
+      "by": "agent",
+      "date": "2026-10-30",
+      "reason": null,
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-017",
+      "check": "BASE-03",
+      "severity": "DEGRADER",
+      "theme": "T5",
+      "statement": "An agent cannot stop the violation count from growing because no baseline, budget or comparison step exists, so the count is not guarded.",
+      "status": "queued",
+      "by": "agent",
+      "date": "2026-10-30",
+      "reason": null,
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-018",
+      "check": "BASE-04",
+      "severity": "DEGRADER",
+      "theme": "T5",
+      "statement": "An agent cannot know when coverage drops below an agreed floor because no coverage threshold is configured in the test runner.",
+      "status": "queued",
+      "by": "agent",
+      "date": "2026-10-30",
+      "reason": null,
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-019",
+      "check": "DOC-01",
+      "severity": "DEGRADER",
+      "theme": "T6",
+      "statement": "An agent cannot find the project's documentation because no docs/ directory exists in the repository.",
+      "status": "queued",
+      "by": "agent",
+      "date": "2026-10-30",
+      "reason": null,
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-020",
+      "check": "DOC-02",
+      "severity": "DEGRADER",
+      "theme": "T6",
+      "statement": "An agent cannot find the canonical authoring rules for documentation because docs/STYLE_GUIDE.md does not exist.",
+      "status": "queued",
+      "by": "agent",
+      "date": "2026-10-30",
+      "reason": null,
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-021",
+      "check": "SEC-03",
+      "severity": "DEGRADER",
+      "theme": "T3",
+      "statement": "An agent cannot trust that secret shapes cannot be committed because ignore rules do not cover ssh private key, PFX, keystore, certificate (.crt), certificate (.cer), AWS credentials.",
+      "status": "queued",
+      "by": "agent",
+      "date": "2026-10-30",
+      "reason": null,
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-022",
+      "check": "TOOL-01",
+      "severity": "DEGRADER",
+      "theme": "T1",
+      "statement": "An agent cannot format a change set the same way every time because no formatter is configured and no format verb is defined.",
+      "status": "queued",
+      "by": "agent",
+      "date": "2026-10-30",
+      "reason": null,
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-023",
+      "check": "TOOL-02",
+      "severity": "DEGRADER",
+      "theme": "T1",
+      "statement": "An agent cannot catch lint regressions before they land because no linter is configured and no lint verb is defined.",
+      "status": "queued",
+      "by": "agent",
+      "date": "2026-10-30",
+      "reason": null,
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-024",
+      "check": "TOOL-04",
+      "severity": "DEGRADER",
+      "theme": "T1",
+      "statement": "An agent cannot know whether a dependency carries a known vulnerability because no resolvable verb runs a dependency-audit check.",
+      "status": "queued",
+      "by": "agent",
+      "date": "2026-10-30",
+      "reason": null,
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-025",
+      "check": "TOOL-05",
+      "severity": "DEGRADER",
+      "theme": "T4",
+      "statement": "An agent cannot rely on local hooks to run before a commit because no hook manager is configured.",
+      "status": "queued",
+      "by": "agent",
+      "date": "2026-10-30",
+      "reason": null,
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-027",
+      "check": "AGT-08",
+      "severity": "COSMETIC",
+      "theme": "T7",
+      "statement": "An agent cannot assume every harness on the team sees the project rules because 21 of 27 known harnesses reach an instruction file; Amazon Q Developer, Continue, Google Gemini CLI, Qwen Code, Replit Agent, Void reach nothing.",
+      "status": "queued",
+      "by": "agent",
+      "date": "2026-10-30",
+      "reason": null,
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-028",
+      "check": "DOC-04",
+      "severity": "COSMETIC",
+      "theme": "T6",
+      "statement": "An agent cannot find the decisions of record because no ADR directory (docs/architecture/adrs/ or docs/adr/) exists.",
+      "status": "queued",
+      "by": "agent",
+      "date": "2026-10-30",
+      "reason": null,
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-029",
+      "check": "HYG-02",
+      "severity": "COSMETIC",
+      "theme": "T8",
+      "statement": "An agent cannot know who owns a path before changing it because no CODEOWNERS file exists at the root, under .github/, or under docs/.",
+      "status": "queued",
+      "by": "agent",
+      "date": "2026-10-30",
+      "reason": null,
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-030",
+      "check": "HYG-03",
+      "severity": "COSMETIC",
+      "theme": "T8",
+      "statement": "An agent cannot file a change with the information reviewers need because no .github/pull_request_template file exists.",
+      "status": "queued",
+      "by": "agent",
+      "date": "2026-10-30",
+      "reason": null,
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-031",
+      "check": "HYG-04",
+      "severity": "COSMETIC",
+      "theme": "T8",
+      "statement": "An agent cannot report a bug or request in a structured way because no .github/ISSUE_TEMPLATE entry exists.",
+      "status": "queued",
+      "by": "agent",
+      "date": "2026-10-30",
+      "reason": null,
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-032",
+      "check": "HYG-06",
+      "severity": "COSMETIC",
+      "theme": "T8",
+      "statement": "An agent cannot report a vulnerability responsibly because no SECURITY document exists at the root, under .github/, or under docs/.",
+      "status": "queued",
+      "by": "agent",
+      "date": "2026-10-30",
+      "reason": null,
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-033",
+      "check": "HYG-07",
+      "severity": "COSMETIC",
+      "theme": "T8",
+      "statement": "An agent cannot see what changed between two versions because no CHANGELOG (or CHANGES/HISTORY) document exists.",
+      "status": "deferred",
+      "by": "owner",
+      "date": "2026-10-30",
+      "reason": "Release Please (release-type simple) creates and maintains CHANGELOG.md at the first release; a hand-written file would fight it. Revisit after the first release PR (owner answer via Hermes 2026-10-30)",
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-034",
+      "check": "HYG-08",
+      "severity": "COSMETIC",
+      "theme": "T8",
+      "statement": "An agent cannot know how a release is cut because no text or markdown document describing the release process exists.",
+      "status": "queued",
+      "by": "agent",
+      "date": "2026-10-30",
+      "reason": null,
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-035",
+      "check": "HYG-11",
+      "severity": "COSMETIC",
+      "theme": "T8",
+      "statement": "An agent cannot reproduce the protected-branch rules as code because the github provider is detected but no branch-protection configuration exists.",
+      "status": "deferred",
+      "by": "owner",
+      "date": "2026-10-30",
+      "reason": "Branch protection as code needs repo-admin access and an infra repo outside this track; the runbook half is covered by F-040(c) (owner answer via Hermes 2026-10-30)",
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-036",
+      "check": "NAV-04",
+      "severity": "COSMETIC",
+      "theme": "T6",
+      "statement": "An agent cannot orient itself from a map instead of exploring blindly because no docs/architecture/, ADR directory or diagram exists.",
+      "status": "queued",
+      "by": "agent",
+      "date": "2026-10-30",
+      "reason": null,
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-037",
+      "check": "TOOL-06",
+      "severity": "COSMETIC",
+      "theme": "T4",
+      "statement": "An agent cannot rely on a consistent commit-message convention because no commitlint config, commit-msg hook, or equivalent exists.",
+      "status": "skipped",
+      "by": "owner",
+      "date": "2026-10-30",
+      "reason": "Commit format already enforced where it counts: pr-title.yml rejects non-Conventional-Commit PR titles and merges are squashed, so a local hook adds install friction for no change in dev history (owner answer via Hermes 2026-10-30)",
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-038",
+      "check": "TST-05",
+      "severity": "COSMETIC",
+      "theme": "T5",
+      "statement": "An agent cannot see how much of the code the suite actually covers because no coverage configuration or coverage-invoking command is present.",
+      "status": "queued",
+      "by": "agent",
+      "date": "2026-10-30",
+      "reason": null,
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-039",
+      "check": "AGT-11",
+      "severity": "DEGRADER",
+      "theme": "T7",
+      "statement": "An agent cannot rely on AGENTS.md being specific because about 62% of its rule lines are generic (section 6 role-play prompts, persona lines) and its EntityManager rule is contradicted by the code in several services.",
+      "status": "queued",
+      "by": "agent",
+      "date": "2026-10-30",
+      "reason": null,
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-040",
+      "check": "CI-04",
+      "severity": "DEGRADER",
+      "theme": "T4",
+      "statement": "An agent cannot trust a green CI because the dependency scan job is a placeholder that always passes, the image scan is continue-on-error, and no committed evidence shows the CI Gate is a required status check.",
+      "status": "queued",
+      "by": "agent",
+      "date": "2026-10-30",
+      "reason": null,
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-041",
+      "check": "CMD-02",
+      "severity": "DEGRADER",
+      "theme": "T1",
+      "statement": "An agent cannot treat ./gradlew check as the pre-merge gate because it composes only test: no format-check or typecheck task exists (same root cause as the missing verbs in CMD-01).",
+      "status": "queued",
+      "by": "agent",
+      "date": "2026-10-30",
+      "reason": null,
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    },
+    {
+      "finding": "F-042",
+      "check": "IDX-03",
+      "severity": "COSMETIC",
+      "theme": "T8",
+      "statement": "An agent cannot be sure the index matches HEAD because the index predates the HEAD commit by one commit (CI files only, no indexed symbols affected).",
+      "status": "skipped",
+      "by": "owner",
+      "date": "2026-10-30",
+      "reason": "Moment-in-time observation (index one commit behind HEAD at audit time), not a repository artefact; re-indexing before agent work is the remedy (owner answer via Hermes 2026-10-30)",
+      "commits": [],
+      "verification": null,
+      "debt": [],
+      "notes": ""
+    }
+  ],
+  "not_queued": [
+    {
+      "finding": "F-006",
+      "check": "SEC-02",
+      "severity": "BLOCKER",
+      "note": "Owner: sentinel token in 401 smoke test"
+    },
+    {
+      "finding": "F-026",
+      "check": "TST-04",
+      "severity": "DEGRADER",
+      "note": ""
+    }
+  ],
+  "log": [
+    {
+      "date": "2026-10-30",
+      "phase": "IR03.1",
+      "event": "State created from docs/agentic-readiness-report/digital-assistant-server-first-audit-20261028T131409Z.json: 40 queued, 0 deferred, 2 not queued."
+    },
+    {
+      "date": "2026-10-30",
+      "phase": "IR03.1",
+      "event": "F-011 queued to skipped by owner: CLAUDE.md is an @AGENTS.md import stub (11 bytes), not a shadowing file; the audit could not tell the pattern apart. Owner: go with the recommendations (owner answer via Hermes 2026-10-30)"
+    },
+    {
+      "date": "2026-10-30",
+      "phase": "IR03.1",
+      "event": "F-037 queued to skipped by owner: Commit format already enforced where it counts: pr-title.yml rejects non-Conventional-Commit PR titles and merges are squashed, so a local hook adds install friction for no change in dev history (o..."
+    },
+    {
+      "date": "2026-10-30",
+      "phase": "IR03.1",
+      "event": "F-042 queued to skipped by owner: Moment-in-time observation (index one commit behind HEAD at audit time), not a repository artefact; re-indexing before agent work is the remedy (owner answer via Hermes 2026-10-30)"
+    },
+    {
+      "date": "2026-10-30",
+      "phase": "IR03.1",
+      "event": "F-033 queued to deferred by owner: Release Please (release-type simple) creates and maintains CHANGELOG.md at the first release; a hand-written file would fight it. Revisit after the first release PR (owner answer via Hermes 2026-10..."
+    },
+    {
+      "date": "2026-10-30",
+      "phase": "IR03.1",
+      "event": "F-035 queued to deferred by owner: Branch protection as code needs repo-admin access and an infra repo outside this track; the runbook half is covered by F-040(c) (owner answer via Hermes 2026-10-30)"
+    },
+    {
+      "date": "2026-10-30",
+      "phase": "IR03.1",
+      "event": "preference format.mass_reformat set to no: Q2: formatter in check-only/ratchet mode, violation count recorded as debt, never reformat the tree; other Server PRs are in flight (owner answer via Hermes 2026-10-30)"
+    },
+    {
+      "date": "2026-10-30",
+      "phase": "IR03.1",
+      "event": "preference format.java_family set to decide-in-IR04.2: Q3: tool chosen in IR04.2; constraint is CONVENTIONS.md style (tabs, LF, 120 columns); Spotless is the likely tool (owner answer via Hermes 2026-10-30)"
+    },
+    {
+      "date": "2026-10-30",
+      "phase": "IR03.1",
+      "event": "preference tests.stack_dependent set to decide-in-IR08.2: Q4: strategy decided in IR08.2; today tests need the live local stack through local-up.sh (owner answer via Hermes 2026-10-30)"
+    },
+    {
+      "date": "2026-10-30",
+      "phase": "IR03.1",
+      "event": "preference agents_md.pointer_section set to section-5: Q6: pointer line goes in AGENTS.md section 5 (Development & Contribution Workflow) (owner answer via Hermes 2026-10-30)"
+    },
+    {
+      "date": "2026-10-30",
+      "phase": "IR03.1",
+      "event": "preference extra.t3 set to keystore-untrack: Q5 item 1: git rm --cached config/keycloak-keystore.jks (keep the file locally if useful), fix the CONVENTIONS.md tree line; no key rotation; git history left as is. Consequence of the owner's stat..."
+    },
+    {
+      "date": "2026-10-30",
+      "phase": "IR03.1",
+      "event": "preference extra.t2 set to jdk-toolchain-pin-and-readme-rename: Q5 items 4 and 8: add a java toolchain block (JDK 21) to build.gradle; rename README to README.md and fix the .dockerignore, CONVENTIONS.md and scripts/ci/test.sh references (owner answer via Herme..."
+    },
+    {
+      "date": "2026-10-30",
+      "phase": "IR03.1",
+      "event": "preference extra.t5 set to offline-test-verb: Q5 item 7, offline half only: name the three non-QuarkusTest classes as a unit-test subset and state the stack prerequisite in AGENTS.md and the command table. No Testcontainers; record it as debt ..."
+    },
+    {
+      "date": "2026-10-30",
+      "phase": "IR03.1",
+      "event": "preference overlap.section_b set to covered-by-findings: Q5 items 2, 3, 5, 6, 9 are not extra work: 2=F-003 (keep the dependabot comment true), 3=F-040(a)/F-024 (rename the no-op job first), 5=F-039/F-012/F-014, 6=F-001/F-022/F-023/F-024/F-041, 9=F-040(c..."
+    },
+    {
+      "date": "2026-10-30",
+      "phase": "IR03.1",
+      "event": "preference github.owner_handle set to @kcramakrishna: Use for F-029 CODEOWNERS and F-040(c) branch protection: the repository owner's verified account (gh auth status). Any other person's handle stays a named placeholder for the owner to fill (owner a..."
+    },
+    {
+      "date": "2026-10-30",
+      "phase": "IR03.1",
+      "event": "preference codeowners.default set to owner-owns-all: F-029: @kcramakrishna owns * and the areas in research/p4-owner-asks.md item 1; second reviewer left as a placeholder; do not enable required code-owner review with a single owner (owner answer via..."
+    },
+    {
+      "date": "2026-10-30",
+      "phase": "IR03.1",
+      "event": "preference security.disclosure set to github-private-vulnerability-reporting: F-032: SECURITY.md uses GitHub private vulnerability reporting plus the skeleton; the owner must enable the setting and fill any mailbox/response-time placeholder (owner answer via Hermes 2026-10-30)"
+    },
+    {
+      "date": "2026-10-30",
+      "phase": "IR03.1",
+      "event": "preference scanner.choice set to osv-scanner-on-lockfile: F-024: OSV-Scanner on gradle.lockfile (after F-003), no secret needed; rename the no-op Dependency Scan job and correct AGENTS.md line 27 first; drop or leave the OWASP plugin as decided in IR04.2 ..."
+    },
+    {
+      "date": "2026-10-30",
+      "phase": "IR03.1",
+      "event": "preference ci.image_scan_debt set to accept-38-with-ratchet: F-040(b): accept the 38 fixable HIGH/CRITICAL image findings as recorded debt with a list that may only shrink; do not make the scan blocking now; review date placeholder for the owner (owner answe..."
+    },
+    {
+      "date": "2026-10-30",
+      "phase": "IR03.1",
+      "event": "preference ci.branch_protection_runbook set to admin-owner: F-040(c): runbook under docs/ after T6 names CI Gate as the required check; the admin is @kcramakrishna; the agent cannot read or set the GitHub setting (owner answer via Hermes 2026-10-30)"
+    },
+    {
+      "date": "2026-10-30",
+      "phase": "IR03.1",
+      "event": "preference agents_md.section6 set to move-to-docs-stance-b: F-039: move section 6 intact to docs/workflow-profiles.md, link it from section 5 steps 3-4; EntityManager rule marked target state for new code, the 14 existing files tolerated and listed in the f..."
+    },
+    {
+      "date": "2026-10-30",
+      "phase": "IR03.1",
+      "event": "preference agents_md.release_tags set to never-tag-or-release: F-013: add a section 4 bullet: agents must not create, move or delete tags or releases; Release Please owns both (owner answer via Hermes 2026-10-30)"
+    },
+    {
+      "date": "2026-10-30",
+      "phase": "IR03.1",
+      "event": "preference ci.edits_authorised set to yes: The owner's go-with-the-recommendations answer is the explicit instruction AGENTS.md lines 56 and 59 ask for: T1 may add build plugins, T4 may edit ci.yml and image.yml, within the kept findings (o..."
+    }
+  ]
+}
