@@ -1,0 +1,131 @@
+name: Deploy to PROD
+
+# The only way PROD changes. One click: Actions > Deploy to PROD > Run workflow (branch dev).
+# The run waits in the environment `production` until one of its required reviewers approves; the
+# environment allows branch dev only, and the AWS role trusts only that environment.
+# Nothing is built: PROD gets an image digest that already ran on TEST. Empty digests (the default)
+# deploy exactly what TEST is running now; the box refuses any digest that has not run on TEST, except
+# PROD's own current or previous one (rollback). Server first, then NestJS, never at the same time.
+#   gh workflow run deploy-prod.yml --ref dev [-f component=server] [-f digest_server=sha256:<64 hex>]
+
+on:
+  workflow_dispatch:
+    inputs:
+      component:
+        description: 'What to deploy: all (Server, then NestJS), server or nestjs'
+        required: true
+        default: all
+        type: choice
+        options: [all, server, nestjs]
+      digest_server:
+        description: 'Server image digest, sha256:<64 hex>. Empty: the one TEST runs now'
+        required: false
+        default: ''
+        type: string
+      digest_nestjs:
+        description: 'NestJS image digest, sha256:<64 hex>. Empty: the one TEST runs now'
+        required: false
+        default: ''
+        type: string
+
+permissions: {}
+
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false
+
+jobs:
+  deploy-prod:
+    name: Deploy to PROD
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
+    environment: production
+    permissions:
+      contents: read
+      id-token: write
+      actions: read
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Check inputs
+        env:
+          REF: ${{ github.ref }}
+          COMPONENT: ${{ inputs.component }}
+          DIGEST_SERVER: ${{ inputs.digest_server }}
+          DIGEST_NESTJS: ${{ inputs.digest_nestjs }}
+        run: |
+          [[ "$REF" == refs/heads/dev ]] || { echo "::error::Deploy to PROD runs only on dev, not $REF"; exit 1; }
+          [[ "$COMPONENT" =~ ^(all|server|nestjs)$ ]] || { echo "::error::component must be all, server or nestjs"; exit 1; }
+          for d in "$DIGEST_SERVER" "$DIGEST_NESTJS"; do
+            [[ -z "$d" || "$d" =~ ^sha256:[0-9a-f]{64}$ ]] || { echo "::error::a digest must be empty or sha256:<64 hex>"; exit 1; }
+          done
+          {
+            echo "Deploy to PROD: \`$COMPONENT\`, approved through environment \`production\`"
+            echo ""
+            echo "- Server digest: \`${DIGEST_SERVER:-what TEST runs now}\`"
+            echo "- NestJS digest: \`${DIGEST_NESTJS:-what TEST runs now}\`"
+            echo ""
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # The deployment targets are repository variables so no AWS id sits in this public repo.
+      - name: Check deploy variables
+        env:
+          PROD_AWS_ROLE_ARN: ${{ vars.PROD_AWS_ROLE_ARN }}
+          INSTANCE_ID: ${{ vars.INSTANCE_ID }}
+          PROD_SSM_DOCUMENT: ${{ vars.PROD_SSM_DOCUMENT }}
+        run: |
+          missing=()
+          for name in PROD_AWS_ROLE_ARN INSTANCE_ID PROD_SSM_DOCUMENT; do
+            [[ -n "${!name}" ]] || missing+=("$name")
+          done
+          if [[ ${#missing[@]} -gt 0 ]]; then
+            echo "::error::Set the repository variable(s): ${missing[*]}"
+            exit 1
+          fi
+
+      - name: Deploy Server to PROD
+        if: inputs.component == 'all' || inputs.component == 'server'
+        env:
+          IMAGE_DIGEST: ${{ inputs.digest_server }}
+          AWS_ROLE_ARN: ${{ vars.PROD_AWS_ROLE_ARN }}
+          AWS_REGION: ${{ vars.AWS_REGION }}
+          INSTANCE_ID: ${{ vars.INSTANCE_ID }}
+          SSM_DOCUMENT: ${{ vars.PROD_SSM_DOCUMENT }}
+        run: scripts/ci/deploy-prod.sh server "$IMAGE_DIGEST"
+
+      # Runs only if the Server step succeeded (or was not asked for).
+      - name: Deploy NestJS to PROD
+        if: inputs.component == 'all' || inputs.component == 'nestjs'
+        env:
+          IMAGE_DIGEST: ${{ inputs.digest_nestjs }}
+          AWS_ROLE_ARN: ${{ vars.PROD_AWS_ROLE_ARN }}
+          AWS_REGION: ${{ vars.AWS_REGION }}
+          INSTANCE_ID: ${{ vars.INSTANCE_ID }}
+          SSM_DOCUMENT: ${{ vars.PROD_SSM_DOCUMENT }}
+        run: scripts/ci/deploy-prod.sh nestjs "$IMAGE_DIGEST"
+
+  # Unauthenticated checks of the PROD Server from outside (scripts/ci/smoke-test.sh). Runs when the
+  # Server was deployed and the repository variable PROD_BASE_URL is set, so no PROD hostname is
+  # written in this repo.
+  sanity-check:
+    name: Sanity check PROD
+    needs: deploy-prod
+    if: inputs.component != 'nestjs' && vars.PROD_BASE_URL != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Check PROD from outside
+        shell: bash
+        env:
+          PROD_BASE_URL: ${{ vars.PROD_BASE_URL }}
+        run: scripts/ci/smoke-test.sh "$PROD_BASE_URL" | tee -a "$GITHUB_STEP_SUMMARY"
