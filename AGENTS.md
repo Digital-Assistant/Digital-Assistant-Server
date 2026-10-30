@@ -71,6 +71,8 @@ All contributions must follow this comprehensive, sequential lifecycle:
 6.  **Committing:** Commit your final, validated work with a message conforming to the Conventional Commits specification.
 7.  **Pull Request:** Create a Pull Request. The PR description **must** link to the issue it resolves using the keyword `Closes #NUMBER`. In the description, confirm which Workflow Profile was applied.
 
+Agentic-readiness work: read `docs/agentic-readiness/digital-assistant-server-agentic-readiness-STATE.md` before changing tooling, CI, docs or this file; skipped findings in it are final.
+
 ## 6. Quality Assurance Workflow Profiles & Prompts
 
 This section defines the different levels of quality assurance required for different types of tasks. The agent **must** use the profile that matches the `workflow:` label on the assigned issue.
