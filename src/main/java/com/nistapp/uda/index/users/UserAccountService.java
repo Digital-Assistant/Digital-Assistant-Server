@@ -52,6 +52,8 @@ public class UserAccountService {
 		row.setAuthsource(authsource);
 		row.setEmailid(isBlank(emailid) ? null : emailid);
 		userAuthDataDAO.persist(row);
+		// Ids and source only: never the authid (a Keycloak sub or a profile hash) or the email hash.
+		LoggerUtil.info(logger, "new user_auth_data row id " + row.getId() + ", authsource " + authsource);
 		return row;
 	}
 

@@ -2,7 +2,6 @@ package com.nistapp.uda.index.users;
 
 import com.nistapp.uda.index.models.UserAuthData;
 import io.quarkus.security.identity.SecurityIdentity;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import jakarta.enterprise.context.RequestScoped;
@@ -21,8 +20,14 @@ import java.util.List;
  *     ({@code preferred_username}, {@code google}). The token service creates those Keycloak users with
  *     username = the extension's SHA-512 hex of the Google profile id, which is exactly the {@code authid}
  *     the extension stores with {@code authsource = google}, so existing users and recordings keep working;</li>
- *     <li>any other token maps to ({@code sub}, {@code keycloak}).</li>
+ *     <li>a token of a public PKCE client ({@code azp} in {@code udan.auth.pkce-client-ids}, by default
+ *     {@code udan-extension}) maps to ({@code sub}, {@code keycloak}). This rule is checked first, so it holds
+ *     even when the same client id is also listed as legacy ({@link AuthClients});</li>
+ *     <li>any other token maps to ({@code sub}, {@code keycloak}) too.</li>
  * </ul>
+ * There is no linking: a Keycloak user is a new user even when an older google row has the same email hash (owner
+ * decisions Q2/Q10, start fresh). Their owner key is the numeric row id that {@code checkauthid} returns as
+ * {@code id} ({@link #ownerKey()}).
  * The matching {@code user_auth_data} row is found or created on first use and cached for the request.
  */
 @RequestScoped
@@ -37,8 +42,8 @@ public class CurrentUser {
 	@Inject
 	UserAccountService userAccountService;
 
-	@ConfigProperty(name = "udan.auth.legacy-client-ids", defaultValue = "backend-service")
-	List<String> legacyClientIds;
+	@Inject
+	AuthClients authClients;
 
 	private Identity resolved;
 	private UserAuthData authData;
@@ -60,7 +65,7 @@ public class CurrentUser {
 				throw new NotAuthorizedException("Bearer");
 			}
 			resolved = map(jwt.getClaim("azp"), jwt.getClaim("preferred_username"), jwt.getSubject(),
-					legacyClientIds);
+					authClients.legacyClientIds(), authClients.pkceClientIds());
 		}
 		return resolved;
 	}
@@ -148,8 +153,10 @@ public class CurrentUser {
 	 *
 	 * @throws NotAuthorizedException when the claim the mapping needs is missing (fail closed)
 	 */
-	static Identity map(String azp, String preferredUsername, String sub, List<String> legacyClientIds) {
-		if (azp != null && legacyClientIds != null && legacyClientIds.contains(azp)) {
+	static Identity map(String azp, String preferredUsername, String sub, List<String> legacyClientIds,
+			List<String> pkceClientIds) {
+		boolean pkce = azp != null && pkceClientIds != null && pkceClientIds.contains(azp);
+		if (!pkce && azp != null && legacyClientIds != null && legacyClientIds.contains(azp)) {
 			if (isBlank(preferredUsername)) {
 				throw new NotAuthorizedException("Bearer");
 			}

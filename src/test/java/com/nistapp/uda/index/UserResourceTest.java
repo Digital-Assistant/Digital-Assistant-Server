@@ -13,6 +13,9 @@ import io.restassured.http.ContentType;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.util.HexFormat;
 import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
@@ -31,6 +34,10 @@ public class UserResourceTest {
     static final String USER_A = "pk02-test-user-a";
     static final String USER_B = "pk02-test-user-b";
     static final String PKCE_SUB = "pk02-test-sub-0001";
+    static final String PK10_SUB_REPEAT = "pk10-test-sub-repeat";
+    static final String PK10_SUB_NOLINK = "pk10-test-sub-nolink";
+    static final String PK10_GOOGLE_USER = "pk10-test-google-user";
+    static final String PK10_EMAIL = "pk10-user@example.test";
 
     @Inject
     UserAccountService userAccountService;
@@ -218,6 +225,76 @@ public class UserResourceTest {
                 .body("authsource", equalTo("keycloak"));
     }
 
+    // --- PKCE tokens (public client udan-extension, track authPKCE PK10): (sub, keycloak), no linking
+
+    @Test
+    @TestSecurity(user = "pk10-someone")
+    @OidcSecurity(claims = {@Claim(key = "azp", value = "udan-extension"),
+            @Claim(key = "sub", value = PK10_SUB_REPEAT)})
+    void pkceCheckAuthIdIsIdempotent() {
+        int first = given()
+                .contentType(ContentType.JSON)
+                .body("{\"authid\":\"anything\",\"authsource\":\"google\"}")
+                .when().post("/api/user/checkauthid")
+                .then()
+                .statusCode(200)
+                .body("authid", equalTo(PK10_SUB_REPEAT))
+                .body("authsource", equalTo("keycloak"))
+                .body("id", greaterThan(0))
+                .extract().path("id");
+        given()
+                .contentType(ContentType.JSON)
+                .body("{\"authid\":\"something-else\",\"authsource\":\"keycloak\"}")
+                .when().post("/api/user/checkauthid")
+                .then()
+                .statusCode(200)
+                .body("id", equalTo(first));
+        assertEquals(1, userAuthDataDAO.count("authid = ?1 and authsource = ?2", PK10_SUB_REPEAT, "keycloak"),
+                "repeat calls (and repeat test runs) keep one row per (sub, keycloak)");
+    }
+
+    @Test
+    @TestSecurity(user = PK10_GOOGLE_USER)
+    @OidcSecurity(claims = {@Claim(key = "azp", value = "udan-extension"), @Claim(key = "sub", value = PK10_SUB_NOLINK),
+            @Claim(key = "email", value = PK10_EMAIL), @Claim(key = "email_verified", value = "true")})
+    void pkceUserIsNotLinkedToAGoogleUserWithTheSameEmailOrUsername() throws Exception {
+        // Owner decisions Q2/Q10: start fresh. Same verified email hash and a username equal to the google authid
+        // still give a new keycloak row; the google row keeps its identity.
+        String emailHash = sha512(PK10_EMAIL);
+        UserAuthData google = userAccountService.findOrCreate(PK10_GOOGLE_USER, "google", emailHash);
+        given()
+                .contentType(ContentType.JSON)
+                .body("{\"authid\":\"" + PK10_GOOGLE_USER + "\",\"authsource\":\"google\",\"emailid\":\"" + emailHash
+                        + "\"}")
+                .when().post("/api/user/checkauthid")
+                .then()
+                .statusCode(200)
+                .body("authid", equalTo(PK10_SUB_NOLINK))
+                .body("authsource", equalTo("keycloak"))
+                .body("id", not(equalTo((int) google.getId())));
+        UserAuthData after = userAccountService.findOrCreate(PK10_GOOGLE_USER, "google", null);
+        assertEquals(google.getId(), after.getId());
+        assertEquals(PK10_GOOGLE_USER, after.getAuthid());
+        assertEquals("google", after.getAuthsource());
+    }
+
+    @Test
+    @TestSecurity(user = "pk10-someone")
+    @OidcSecurity(claims = {@Claim(key = "azp", value = "udan-extension"),
+            @Claim(key = "sub", value = PK10_SUB_REPEAT)})
+    void pkceCheckUserSessionBindsToTheKeycloakRow() {
+        long ownId = userAccountService.findOrCreate(PK10_SUB_REPEAT, "keycloak", null).getId();
+        String session = "pk10-" + UUID.randomUUID();
+        given()
+                .contentType(ContentType.JSON)
+                .body("{\"usersessionid\":\"" + session + "\",\"userauthid\":1}")
+                .when().post("/api/user/checkusersession")
+                .then()
+                .statusCode(200)
+                .body("userauthid", equalTo((int) ownId))
+                .body("usersessionid", equalTo(session));
+    }
+
     @Test
     @TestSecurity(user = "plain-user")
     void tokenWithoutClaimsIsRefused() {
@@ -236,6 +313,11 @@ public class UserResourceTest {
         long first = insertRow(authid);
         insertRow(authid);
         assertEquals(first, userAccountService.findOrCreate(authid, "google", null).getId());
+    }
+
+    static String sha512(String email) throws Exception {
+        byte[] digest = MessageDigest.getInstance("SHA-512").digest(email.getBytes(StandardCharsets.UTF_8));
+        return HexFormat.of().formatHex(digest);
     }
 
     long insertRow(String authid) {
