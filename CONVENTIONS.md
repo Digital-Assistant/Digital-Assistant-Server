@@ -12,7 +12,7 @@
 ├── settings.gradle
 ├── CONVENTIONS.md
 ├── LICENSE
-├── README
+├── README.md
 ├── config/
 │   └── keycloak-keystore.jks
 ├── gradle/

@@ -21,6 +21,6 @@ additional.properties
 
 # Docs and helper scripts, not needed for the build
 *.md
-README
+README.md
 LICENSE
 *.sh
