@@ -38,6 +38,7 @@ public class OwnershipTest {
 
 	static final String USER_A = "pk03-test-user-a";
 	static final String USER_B = "pk03-test-user-b";
+	static final String PKCE_SUB = "pk10-test-sub-owner";
 
 	@Inject
 	EntityManager em;
@@ -209,6 +210,33 @@ public class OwnershipTest {
 	}
 
 	// --- recordings: update (both paths)
+
+	// --- PKCE users (public client udan-extension, PK10): owner value is their numeric user_auth_data.id
+
+	@Test
+	@TestSecurity(user = "pk10-owner")
+	@OidcSecurity(claims = {@Claim(key = "azp", value = "udan-extension"), @Claim(key = "sub", value = PKCE_SUB)})
+	void pkceUserOwnsRecordingsByTheirRowId() {
+		String rowId = String.valueOf(userAccountService.findOrCreate(PKCE_SUB, "keycloak", null).getId());
+		long seq = recording(rowId, domain(), false);
+		given().contentType(ContentType.JSON).body(body(seq, USER_A))
+				.when().post("/api/clickevents/sequence/delete")
+				.then().statusCode(200)
+				.body("deleted", equalTo(1))
+				.body("usersessionid", equalTo(rowId));
+	}
+
+	@Test
+	@TestSecurity(user = USER_A)
+	@OidcSecurity(claims = {@Claim(key = "azp", value = "udan-extension"), @Claim(key = "sub", value = PKCE_SUB)})
+	void pkceUserNamedLikeAGoogleUserCannotTouchTheirRecordings() {
+		// On a public client the user picks preferred_username; USER_A here is not the google user USER_A.
+		long seq = recording(USER_A, domain(), false);
+		given().contentType(ContentType.JSON).body(body(seq, USER_A))
+				.when().post("/api/clickevents/sequence/delete")
+				.then().statusCode(403);
+		assertEquals(0, load(seq).getDeleted());
+	}
 
 	@Test
 	@TestSecurity(user = USER_B)
