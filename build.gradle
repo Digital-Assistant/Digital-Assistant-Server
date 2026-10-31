@@ -24,6 +24,12 @@ configurations.all {
     }
 }
 
+// Dependency versions are locked in gradle.lockfile (all configurations). After changing a dependency or
+// plugin, regenerate it with: ./gradlew dependencies --write-locks
+dependencyLocking {
+    lockAllConfigurations()
+}
+
 group "com.nistapp.voice"
 version "0.0.1" // x-release-please-version
 dependencies {
