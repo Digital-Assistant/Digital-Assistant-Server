@@ -56,6 +56,34 @@ pmd {
     consoleOutput = true
 }
 
+// Command surface (see CONTRIBUTING.md). Gradle task names cannot contain ':', so the format:check verb is formatCheck.
+// format rewrites files; every other verb is read-only. `security` is not defined yet: it needs the lockfile scanner.
+tasks.register('format') {
+    group = 'verification'
+    description = 'Format changed Java files in place (ratchet against origin/dev).'
+    dependsOn 'spotlessApply'
+}
+tasks.register('formatCheck') {
+    group = 'verification'
+    description = 'Fail if changed Java files are not formatted (read-only).'
+    dependsOn 'spotlessCheck'
+}
+tasks.register('lint') {
+    group = 'verification'
+    description = 'Run the PMD bug-oriented ruleset on main and test code (read-only).'
+    dependsOn 'pmdMain', 'pmdTest'
+}
+tasks.register('typecheck') {
+    group = 'verification'
+    description = 'Compile main and test Java without running anything.'
+    dependsOn 'compileJava', 'compileTestJava'
+}
+
+// check = formatCheck, then typecheck, then test (PMD joins check through its plugin and is green under the baseline).
+check.dependsOn 'formatCheck', 'typecheck'
+tasks.named('typecheck') { mustRunAfter 'formatCheck' }
+tasks.named('test') { mustRunAfter 'typecheck' }
+
 group "com.nistapp.voice"
 version "0.0.1" // x-release-please-version
 dependencies {
