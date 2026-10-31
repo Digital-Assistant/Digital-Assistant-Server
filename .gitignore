@@ -69,6 +69,13 @@ logs/
 *.key
 *.p12
 *.jks
+*.pfx
+*.keystore
+*.crt
+*.cer
+id_rsa*
+id_ed25519*
+.aws/credentials
 
 # Quarkus dev mode
 .quarkus/
