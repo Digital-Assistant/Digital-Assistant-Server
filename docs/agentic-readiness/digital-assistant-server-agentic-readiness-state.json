@@ -248,6 +248,14 @@
       "by": "owner",
       "date": "2026-10-31",
       "phase": "IR04.2"
+    },
+    {
+      "key": "layout.env_example",
+      "value": "scripts/ci/env.example",
+      "reason": "Owner Q1 \"Yes.\" (via Hermes 2026-10-30); IR06.2 Q1-Q5 recommended option each (via Hermes 2026-10-31): QUARKUS_*/UDAN_* overrides listed as optional names only",
+      "by": "owner",
+      "date": "2026-10-31",
+      "phase": "IR06.2"
     }
   ],
   "themes": [
@@ -412,12 +420,17 @@
       "severity": "BLOCKER",
       "theme": "T3",
       "statement": "An agent cannot know the CI variables the scripts need because AWS_ROLE_ARN, INSTANCE_ID, SSM_DOCUMENT (repository variables), IMAGE_TAR and CACHE_DIR (optional script inputs) are documented only in scripts/ci/README.md and script headers, not in a committed example file (SECONDS, also reported by the engine, is a bash builtin and is not a gap).",
-      "status": "queued",
+      "status": "done",
       "by": "agent",
-      "date": "2026-10-30",
+      "date": "2026-10-31",
       "reason": null,
-      "commits": [],
-      "verification": null,
+      "commits": [
+        "2fb9426"
+      ],
+      "verification": {
+        "command": "compare inventory with scripts/ci/env.example",
+        "result": "every read name declared or on the header's not-inventory list; no values"
+      },
       "debt": [],
       "notes": ""
     },
@@ -637,12 +650,17 @@
       "severity": "DEGRADER",
       "theme": "T3",
       "statement": "An agent cannot trust that secret shapes cannot be committed because ignore rules do not cover ssh private key, PFX, keystore, certificate (.crt), certificate (.cer), AWS credentials.",
-      "status": "queued",
+      "status": "done",
       "by": "agent",
-      "date": "2026-10-30",
+      "date": "2026-10-31",
       "reason": null,
-      "commits": [],
-      "verification": null,
+      "commits": [
+        "3631fea"
+      ],
+      "verification": {
+        "command": "git ls-files -ci --exclude-standard",
+        "result": "empty after untracking config/keycloak-keystore.jks (c0a9735); all eleven shapes covered"
+      },
       "debt": [],
       "notes": ""
     },
@@ -1256,6 +1274,31 @@
       "date": "2026-10-31",
       "phase": "IR04.2",
       "event": "theme T1 not_started to pr_open: branch agentic-readiness/ir04-command-surface, PR #111"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR06.2",
+      "event": "preference layout.env_example set to scripts/ci/env.example: Owner Q1 \"Yes.\" (via Hermes 2026-10-30); IR06.2 Q1-Q5 recommended option each (via Hermes 2026-10-31): QUARKUS_*/UDAN_* overrides listed as optional names only"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR06.2",
+      "event": "F-005 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR06.2",
+      "event": "F-005 in_progress to done by agent"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR06.2",
+      "event": "F-021 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR06.2",
+      "event": "F-021 in_progress to done by agent"
     }
   ]
 }
