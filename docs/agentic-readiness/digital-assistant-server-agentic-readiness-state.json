@@ -223,10 +223,10 @@
     {
       "id": "T2",
       "title": "Execution determinism",
-      "status": "not_started",
-      "phase": null,
-      "branch": null,
-      "pr": null,
+      "status": "pr_open",
+      "phase": "IR05.2",
+      "branch": "agentic-readiness/ir05-determinism",
+      "pr": 110,
       "merged_sha": null
     },
     {
@@ -1081,6 +1081,11 @@
       "date": "2026-10-31",
       "phase": "IR05.2",
       "event": "F-004 in_progress to partial by agent"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR05.2",
+      "event": "theme T2 not_started to pr_open: branch agentic-readiness/ir05-determinism, PR #110"
     }
   ]
 }

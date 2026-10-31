@@ -61,7 +61,7 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | Theme | Title | Status | Items | Open | Phase | Branch | PR | Merged |
 |---|---|---|---|---|---|---|---|---|
 | T1 | Command surface and quality tools | not_started | 5 | 5 | - | - | - | - |
-| T2 | Execution determinism | not_started | 2 | 1 | - | - | - | - |
+| T2 | Execution determinism | pr_open | 2 | 1 | IR05.2 | `agentic-readiness/ir05-determinism` | #110 | - |
 | T3 | Secrets and env | not_started | 2 | 2 | - | - | - | - |
 | T4 | CI parity, hooks, commits | not_started | 3 | 2 | - | - | - | - |
 | T5 | Tests and baselines | not_started | 5 | 5 | - | - | - | - |
@@ -228,3 +228,4 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | 2026-10-31 | IR05.2 | F-004 queued to in_progress by agent |
 | 2026-10-31 | IR05.2 | F-003 in_progress to done by agent |
 | 2026-10-31 | IR05.2 | F-004 in_progress to partial by agent |
+| 2026-10-31 | IR05.2 | theme T2 not_started to pr_open: branch agentic-readiness/ir05-determinism, PR #110 |
