@@ -152,6 +152,62 @@
       "by": "owner",
       "date": "2026-10-30",
       "phase": "IR03.1"
+    },
+    {
+      "key": "tools.jdk_major",
+      "value": "21",
+      "reason": "IR05.2 Q1: toolchain block only, JDK 21 (answered via Hermes 2026-10-31)",
+      "by": "owner",
+      "date": "2026-10-31",
+      "phase": "IR05.2"
+    },
+    {
+      "key": "lock.gradle_width",
+      "value": "lockAllConfigurations",
+      "reason": "IR05.1 Q1: dependencyLocking lockAllConfigurations + --write-locks, one gradle.lockfile",
+      "by": "owner",
+      "date": "2026-10-31",
+      "phase": "IR05.2"
+    },
+    {
+      "key": "exec03.owner",
+      "value": "define-command-surface",
+      "reason": "IR05.1 Q2: F-004 owned by define-command-surface; IR05.2 only verifies",
+      "by": "owner",
+      "date": "2026-10-31",
+      "phase": "IR05.2"
+    },
+    {
+      "key": "lock.verify_configurations",
+      "value": "all-resolvable",
+      "reason": "IR05.2 Q2: before/after compare over all resolvable configurations",
+      "by": "owner",
+      "date": "2026-10-31",
+      "phase": "IR05.2"
+    },
+    {
+      "key": "ci.t2_edits",
+      "value": "none",
+      "reason": "IR05.2 Q4: no workflow or Dockerfile edit; all already name JDK 21",
+      "by": "owner",
+      "date": "2026-10-31",
+      "phase": "IR05.2"
+    },
+    {
+      "key": "dependabot.header_names_lockfile",
+      "value": "yes",
+      "reason": "IR05.2 Q5: reword dependabot.yml header with gradle.lockfile and regenerate command (comment only)",
+      "by": "owner",
+      "date": "2026-10-31",
+      "phase": "IR05.2"
+    },
+    {
+      "key": "order.ir05_before_ir04",
+      "value": "yes",
+      "reason": "IR05.2 Q3: run ahead of IR04.2; IR04.2 regenerates the lock when it adds plugins",
+      "by": "owner",
+      "date": "2026-10-31",
+      "phase": "IR05.2"
     }
   ],
   "themes": [
@@ -167,10 +223,10 @@
     {
       "id": "T2",
       "title": "Execution determinism",
-      "status": "not_started",
-      "phase": null,
-      "branch": null,
-      "pr": null,
+      "status": "pr_open",
+      "phase": "IR05.2",
+      "branch": "agentic-readiness/ir05-determinism",
+      "pr": 110,
       "merged_sha": null
     },
     {
@@ -265,14 +321,19 @@
       "severity": "BLOCKER",
       "theme": "T2",
       "statement": "An agent cannot install identical dependencies on every run because the jvm project has no lockfile (gradle.lockfile), so a fresh install resolves whatever versions are current.",
-      "status": "queued",
+      "status": "done",
       "by": "agent",
-      "date": "2026-10-30",
+      "date": "2026-10-31",
       "reason": null,
-      "commits": [],
-      "verification": null,
+      "commits": [
+        "dc0c8dd"
+      ],
+      "verification": {
+        "command": "resolved-version report over all resolvable configurations (+buildscript), before vs after; ./gradlew build -x test on JDK 21",
+        "result": "5674 lines identical before/after; gradle.lockfile tracked, unchanged by build; lock regenerated under JDK 21 equals JDK 17 run. Engine cannot see dependencyLocking: re-audit may read EXEC-02 UNKNOWN (engine limit). gradle.lockfile now exists: unblocks the security verb (osv-scanner) in configure-quality-tools/IR04.2. Toolchain pin ed0b169; dependabot header bde7928. Quarkus-generated configurations are in the lock; none left unlocked."
+      },
       "debt": [],
-      "notes": ""
+      "notes": "Regenerate with ./gradlew dependencies --write-locks whenever IR04.2 adds plugins."
     },
     {
       "finding": "F-004",
@@ -280,14 +341,20 @@
       "severity": "BLOCKER",
       "theme": "T2",
       "statement": "An agent cannot prepare the environment non-interactively because no devcontainer, compose file, Dockerfile, setup target/script, or documented install command exists.",
-      "status": "queued",
+      "status": "partial",
       "by": "agent",
-      "date": "2026-10-30",
+      "date": "2026-10-31",
       "reason": null,
       "commits": [],
       "verification": null,
-      "debt": [],
-      "notes": ""
+      "debt": [
+        {
+          "what": "no single non-interactive setup command (owned by define-command-surface, IR04.2)",
+          "count": 1,
+          "baseline_file": null
+        }
+      ],
+      "notes": "Check only (owner: define-command-surface owns the fix, IR05.1 Q2). README.md and AGENTS.md document ./sync-credentials.sh then ./start-server.sh (neither prompts), but there is no single build/install setup command and the stack must already be up. Added no script. Engine may now PASS EXEC-03 on the README.md rename alone (engine limit)."
     },
     {
       "finding": "F-005",
@@ -959,6 +1026,66 @@
       "date": "2026-10-30",
       "phase": "IR03.1",
       "event": "preference ci.edits_authorised set to yes: The owner's go-with-the-recommendations answer is the explicit instruction AGENTS.md lines 56 and 59 ask for: T1 may add build plugins, T4 may edit ci.yml and image.yml, within the kept findings (o..."
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR05.2",
+      "event": "preference tools.jdk_major set to 21: IR05.2 Q1: toolchain block only, JDK 21 (answered via Hermes 2026-10-31)"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR05.2",
+      "event": "preference lock.gradle_width set to lockAllConfigurations: IR05.1 Q1: dependencyLocking lockAllConfigurations + --write-locks, one gradle.lockfile"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR05.2",
+      "event": "preference exec03.owner set to define-command-surface: IR05.1 Q2: F-004 owned by define-command-surface; IR05.2 only verifies"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR05.2",
+      "event": "preference lock.verify_configurations set to all-resolvable: IR05.2 Q2: before/after compare over all resolvable configurations"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR05.2",
+      "event": "preference ci.t2_edits set to none: IR05.2 Q4: no workflow or Dockerfile edit; all already name JDK 21"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR05.2",
+      "event": "preference dependabot.header_names_lockfile set to yes: IR05.2 Q5: reword dependabot.yml header with gradle.lockfile and regenerate command (comment only)"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR05.2",
+      "event": "preference order.ir05_before_ir04 set to yes: IR05.2 Q3: run ahead of IR04.2; IR04.2 regenerates the lock when it adds plugins"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR05.2",
+      "event": "F-003 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR05.2",
+      "event": "F-004 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR05.2",
+      "event": "F-003 in_progress to done by agent"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR05.2",
+      "event": "F-004 in_progress to partial by agent"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR05.2",
+      "event": "theme T2 not_started to pr_open: branch agentic-readiness/ir05-determinism, PR #110"
     }
   ]
 }

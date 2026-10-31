@@ -8,6 +8,13 @@ repositories {
     mavenCentral()
 }
 
+// Same JDK as CI (Temurin 21) and src/main/docker/Dockerfile.jvm; the build no longer depends on JAVA_HOME.
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
 // Flyway 9.17.0 (Quarkus BOM default) does not support MariaDB 10.11+
 // Override with 9.22.3 which is the latest 9.x community release with full MariaDB 10.11 support
 configurations.all {
@@ -15,6 +22,12 @@ configurations.all {
         force 'org.flywaydb:flyway-core:9.22.3'
         force 'org.flywaydb:flyway-mysql:9.22.3'
     }
+}
+
+// Dependency versions are locked in gradle.lockfile (all configurations). After changing a dependency or
+// plugin, regenerate it with: ./gradlew dependencies --write-locks
+dependencyLocking {
+    lockAllConfigurations()
 }
 
 group "com.nistapp.voice"

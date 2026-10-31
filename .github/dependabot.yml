@@ -1,5 +1,6 @@
 version: 2
-# Versions are locked (lockfiles). Routine version PRs are off (open-pull-requests-limit: 0);
+# Versions are locked (gradle.lockfile; regenerate with ./gradlew dependencies --write-locks after any
+# dependency or plugin change). Routine version PRs are off (open-pull-requests-limit: 0);
 # security updates still arrive (they need "Dependabot security updates" on in the repo
 # settings) and use the commit prefix below so the PR title passes pr-title. Bump everything
 # by hand in a planned window every 3 to 6 months: update everything, run scripts/ci locally,
