@@ -148,7 +148,8 @@ jobs:
   # Scan and SBOM, off the critical path (runs in parallel with deploy-test).
   # TODO: make blocking once the Quarkus 3.2.10 dependency findings are fixed or accepted
   # (38 fixable HIGH/CRITICAL on 2026-10-22; see the image scan notes in scripts/ci/README.md).
-  # Until then a finding does not stop the image from being pushed or deployed.
+  # Until then a finding does not stop the image from being pushed or deployed; the fixable count goes to the
+  # job summary. Debt review date: placeholder for the owner (set it in the state file, not here).
   scan:
     name: Scan image and SBOM
     needs: [build, build-push]
@@ -169,7 +170,7 @@ jobs:
           name: image
           path: ${{ runner.temp }}
 
-      - name: Scan image and write SBOM
+      - name: Scan image and SBOM (report-only)
         continue-on-error: true
         env:
           IMAGE_TAR: ${{ runner.temp }}/image.tar
