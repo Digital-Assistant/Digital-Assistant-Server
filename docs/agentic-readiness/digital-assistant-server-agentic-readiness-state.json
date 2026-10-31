@@ -254,10 +254,10 @@
     {
       "id": "T1",
       "title": "Command surface and quality tools",
-      "status": "not_started",
-      "phase": null,
-      "branch": null,
-      "pr": null,
+      "status": "pr_open",
+      "phase": "IR04.2",
+      "branch": "agentic-readiness/ir04-command-surface",
+      "pr": 111,
       "merged_sha": null
     },
     {
@@ -1251,6 +1251,11 @@
       "date": "2026-10-31",
       "phase": "IR04.2",
       "event": "F-004 in_progress to done by agent"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR04.2",
+      "event": "theme T1 not_started to pr_open: branch agentic-readiness/ir04-command-surface, PR #111"
     }
   ]
 }

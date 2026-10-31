@@ -16,12 +16,12 @@ A skipped finding is final until the owner unskips it, and every preference bind
 
 | Status | Items |
 |---|---|
-| queued | 33 |
+| queued | 28 |
 | in_progress | 0 |
-| done | 1 |
-| partial | 1 |
+| done | 3 |
+| partial | 3 |
 | failed | 0 |
-| blocked | 0 |
+| blocked | 1 |
 | deferred | 2 |
 | skipped | 3 |
 | total | 40 |
@@ -34,9 +34,11 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | `agents_md.pointer_section` | section-5 | Q6: pointer line goes in AGENTS.md section 5 (Development & Contribution Workflow) (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
 | `agents_md.release_tags` | never-tag-or-release | F-013: add a section 4 bullet: agents must not create, move or delete tags or releases; Release Please owns both (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
 | `agents_md.section6` | move-to-docs-stance-b | F-039: move section 6 intact to docs/workflow-profiles.md, link it from section 5 steps 3-4; EntityManager rule marked target state for new code, the 14 existing files tolerated and listed in the first ADR (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
+| `check.verify_without_stack` | yes | Q5 option 1: check -x test and --dry-run locally; CI proves the test leg | owner | 2026-10-31 | IR04.2 |
 | `ci.branch_protection_runbook` | admin-owner | F-040(c): runbook under docs/ after T6 names CI Gate as the required check; the admin is @kcramakrishna; the agent cannot read or set the GitHub setting (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
 | `ci.edits_authorised` | yes | The owner's go-with-the-recommendations answer is the explicit instruction AGENTS.md lines 56 and 59 ask for: T1 may add build plugins, T4 may edit ci.yml and image.yml, within the kept findings (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
 | `ci.image_scan_debt` | accept-38-with-ratchet | F-040(b): accept the 38 fixable HIGH/CRITICAL image findings as recorded debt with a list that may only shrink; do not make the scan blocking now; review date placeholder for the owner (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
+| `ci.t1_minimum` | fetch-depth-only | Q4 option 1: only fetch-depth 0; report-only steps in IR07.2 | owner | 2026-10-31 | IR04.2 |
 | `ci.t2_edits` | none | IR05.2 Q4: no workflow or Dockerfile edit; all already name JDK 21 | owner | 2026-10-31 | IR05.2 |
 | `codeowners.default` | owner-owns-all | F-029: @kcramakrishna owns * and the areas in research/p4-owner-asks.md item 1; second reviewer left as a placeholder; do not enable required code-owner review with a single owner (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
 | `dependabot.header_names_lockfile` | yes | IR05.2 Q5: reword dependabot.yml header with gradle.lockfile and regenerate command (comment only) | owner | 2026-10-31 | IR05.2 |
@@ -44,15 +46,18 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | `extra.t2` | jdk-toolchain-pin-and-readme-rename | Q5 items 4 and 8: add a java toolchain block (JDK 21) to build.gradle; rename README to README.md and fix the .dockerignore, CONVENTIONS.md and scripts/ci/test.sh references (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
 | `extra.t3` | keystore-untrack | Q5 item 1: git rm --cached config/keycloak-keystore.jks (keep the file locally if useful), fix the CONVENTIONS.md tree line; no key rotation; git history left as is. Consequence of the owner's statement that nothing tracked holds a live secret and all secrets come from the AWS store; recorded as a preference, executed in IR06.2 (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
 | `extra.t5` | offline-test-verb | Q5 item 7, offline half only: name the three non-QuarkusTest classes as a unit-test subset and state the stack prerequisite in AGENTS.md and the command table. No Testcontainers; record it as debt (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
+| `format.java` | spotless-eclipse-jdt | owner via Hermes 2026-10-31: accept all recommendations (Q1) | owner | 2026-10-31 | IR04.2 |
 | `format.java_family` | decide-in-IR04.2 | Q3: tool chosen in IR04.2; constraint is CONVENTIONS.md style (tabs, LF, 120 columns); Spotless is the likely tool (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
 | `format.mass_reformat` | no | Q2: formatter in check-only/ratchet mode, violation count recorded as debt, never reformat the tree; other Server PRs are in flight (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
 | `github.owner_handle` | @kcramakrishna | Use for F-029 CODEOWNERS and F-040(c) branch protection: the repository owner's verified account (gh auth status). Any other person's handle stays a named placeholder for the owner to fill (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
+| `lint.java` | pmd | Q2 recommended option | owner | 2026-10-31 | IR04.2 |
 | `lock.gradle_width` | lockAllConfigurations | IR05.1 Q1: dependencyLocking lockAllConfigurations + --write-locks, one gradle.lockfile | owner | 2026-10-31 | IR05.2 |
 | `lock.verify_configurations` | all-resolvable | IR05.2 Q2: before/after compare over all resolvable configurations | owner | 2026-10-31 | IR05.2 |
 | `order.ir05_before_ir04` | yes | IR05.2 Q3: run ahead of IR04.2; IR04.2 regenerates the lock when it adds plugins | owner | 2026-10-31 | IR05.2 |
 | `overlap.section_b` | covered-by-findings | Q5 items 2, 3, 5, 6, 9 are not extra work: 2=F-003 (keep the dependabot comment true), 3=F-040(a)/F-024 (rename the no-op job first), 5=F-039/F-012/F-014, 6=F-001/F-022/F-023/F-024/F-041, 9=F-040(c) with F-035 deferred (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
 | `scanner.choice` | osv-scanner-on-lockfile | F-024: OSV-Scanner on gradle.lockfile (after F-003), no secret needed; rename the no-op Dependency Scan job and correct AGENTS.md line 27 first; drop or leave the OWASP plugin as decided in IR04.2 (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
 | `security.disclosure` | github-private-vulnerability-reporting | F-032: SECURITY.md uses GitHub private vulnerability reporting plus the skeleton; the owner must enable the setting and fill any mailbox/response-time placeholder (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
+| `security.verb.deferred-to-t2` | yes | Q3 option 1: no security verb until OSV-Scanner on gradle.lockfile; OWASP plugin left in place | owner | 2026-10-31 | IR04.2 |
 | `tests.stack_dependent` | decide-in-IR08.2 | Q4: strategy decided in IR08.2; today tests need the live local stack through local-up.sh (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
 | `tools.jdk_major` | 21 | IR05.2 Q1: toolchain block only, JDK 21 (answered via Hermes 2026-10-31) | owner | 2026-10-31 | IR05.2 |
 
@@ -60,8 +65,8 @@ A skipped finding is final until the owner unskips it, and every preference bind
 
 | Theme | Title | Status | Items | Open | Phase | Branch | PR | Merged |
 |---|---|---|---|---|---|---|---|---|
-| T1 | Command surface and quality tools | not_started | 5 | 5 | - | - | - | - |
-| T2 | Execution determinism | pr_open | 2 | 1 | IR05.2 | `agentic-readiness/ir05-determinism` | #110 | - |
+| T1 | Command surface and quality tools | pr_open | 5 | 4 | IR04.2 | `agentic-readiness/ir04-command-surface` | #111 | - |
+| T2 | Execution determinism | pr_open | 2 | 0 | IR05.2 | `agentic-readiness/ir05-determinism` | #110 | - |
 | T3 | Secrets and env | not_started | 2 | 2 | - | - | - | - |
 | T4 | CI parity, hooks, commits | not_started | 3 | 2 | - | - | - | - |
 | T5 | Tests and baselines | not_started | 5 | 5 | - | - | - | - |
@@ -75,21 +80,27 @@ A skipped finding is final until the owner unskips it, and every preference bind
 
 | Finding | Check | Severity | Status | By | Date | Statement |
 |---|---|---|---|---|---|---|
-| F-001 | CMD-01 | BLOCKER | queued | agent | 2026-10-30 | An agent cannot run the standardized command surface literally because 5 of 7 framework verbs are not defined on any runner (format, format:check, lint, typecheck, security). |
-| F-022 | TOOL-01 | DEGRADER | queued | agent | 2026-10-30 | An agent cannot format a change set the same way every time because no formatter is configured and no format verb is defined. |
-| F-023 | TOOL-02 | DEGRADER | queued | agent | 2026-10-30 | An agent cannot catch lint regressions before they land because no linter is configured and no lint verb is defined. |
-| F-024 | TOOL-04 | DEGRADER | queued | agent | 2026-10-30 | An agent cannot know whether a dependency carries a known vulnerability because no resolvable verb runs a dependency-audit check. |
-| F-041 | CMD-02 | DEGRADER | queued | agent | 2026-10-30 | An agent cannot treat ./gradlew check as the pre-merge gate because it composes only test: no format-check or typecheck task exists (same root cause as the missing verbs in CMD-01). |
+| F-001 | CMD-01 | BLOCKER | partial | agent | 2026-10-31 | An agent cannot run the standardized command surface literally because 5 of 7 framework verbs are not defined on any runner (format, format:check, lint, typecheck, security). |
+| F-022 | TOOL-01 | DEGRADER | partial | agent | 2026-10-31 | An agent cannot format a change set the same way every time because no formatter is configured and no format verb is defined. |
+| F-023 | TOOL-02 | DEGRADER | partial | agent | 2026-10-31 | An agent cannot catch lint regressions before they land because no linter is configured and no lint verb is defined. |
+| F-024 | TOOL-04 | DEGRADER | blocked | agent | 2026-10-31 | An agent cannot know whether a dependency carries a known vulnerability because no resolvable verb runs a dependency-audit check. |
+| F-041 | CMD-02 | DEGRADER | done | agent | 2026-10-31 | An agent cannot treat ./gradlew check as the pre-merge gate because it composes only test: no format-check or typecheck task exists (same root cause as the missing verbs in CMD-01). |
+
+- **F-001**: commits: `8a291b2`; verification: `./gradlew format formatCheck lint typecheck test check --dry-run` gave 6 of 7 verbs resolve; security does not
+- **F-022**: commits: `73eccae`; verification: `./gradlew formatCheck` gave exit 0 on changed files (ratchet vs origin/dev); ./gradlew spotlessCheck -PspotlessFull reports 51 of 89 files; a touched unformatted file fails formatCheck
+- **F-023**: commits: `73eccae`; verification: `./gradlew lint` gave exit 0 under the exclude list; 32 violations in 18 files before the list
+- **F-024**: reason: needs T2 lockfile scanner (OSV-Scanner on gradle.lockfile); no security verb defined in T1 (Q3); verification: `none` gave not run
+- **F-041**: commits: `8a291b2`; verification: `./gradlew check --dry-run` gave order: formatCheck, typecheck, test; check -x test BUILD SUCCESSFUL
 
 ### T2 Execution determinism
 
 | Finding | Check | Severity | Status | By | Date | Statement |
 |---|---|---|---|---|---|---|
 | F-003 | EXEC-02 | BLOCKER | done | agent | 2026-10-31 | An agent cannot install identical dependencies on every run because the jvm project has no lockfile (gradle.lockfile), so a fresh install resolves whatever versions are current. |
-| F-004 | EXEC-03 | BLOCKER | partial | agent | 2026-10-31 | An agent cannot prepare the environment non-interactively because no devcontainer, compose file, Dockerfile, setup target/script, or documented install command exists. |
+| F-004 | EXEC-03 | BLOCKER | done | agent | 2026-10-31 | An agent cannot prepare the environment non-interactively because no devcontainer, compose file, Dockerfile, setup target/script, or documented install command exists. |
 
 - **F-003**: notes: Regenerate with ./gradlew dependencies --write-locks whenever IR04.2 adds plugins.; commits: `dc0c8dd`; verification: `resolved-version report over all resolvable configurations (+buildscript), before vs after; ./gradlew build -x test on JDK 21` gave 5674 lines identical before/after; gradle.lockfile tracked, unchanged by build; lock regenerated under JDK 21 equals JDK 17 run. Engine cannot see dependencyLocking: re-audit may read EXEC-02 UNKNOWN (engine limit). gradle.lockfile now exists: unblocks the security verb (osv-scanner) in configure-quality-tools/IR04.2. Toolchain pin ed0b169; dependabot header bde7928. Quarkus-generated configurations are in the lock; none left unlocked.
-- **F-004**: notes: Check only (owner: define-command-surface owns the fix, IR05.1 Q2). README.md and AGENTS.md document ./sync-credentials.sh then ./start-server.sh (neither prompts), but there is no single build/install setup command and the stack must already be up. Added no script. Engine may now PASS EXEC-03 on the README.md rename alone (engine limit).
+- **F-004**: notes: Check only (owner: define-command-surface owns the fix, IR05.1 Q2). README.md and AGENTS.md document ./sync-credentials.sh then ./start-server.sh (neither prompts), but there is no single build/install setup command and the stack must already be up. Added no script. Engine may now PASS EXEC-03 on the README.md rename alone (engine limit).; commits: `5296eb3`; verification: `./gradlew assemble` gave BUILD SUCCESSFUL on JDK 21; documented in AGENTS.md Build & Validation
 
 ### T3 Secrets and env
 
@@ -181,7 +192,9 @@ A skipped finding is final until the owner unskips it, and every preference bind
 
 | Finding | Check | What | Count | Baseline file |
 |---|---|---|---|---|
-| F-004 | EXEC-03 | no single non-interactive setup command (owned by define-command-surface, IR04.2) | 1 | - |
+| F-001 | CMD-01 | security verb missing (waits for lockfile scanner) | 1 | - |
+| F-022 | TOOL-01 | files not matching the Eclipse JDT profile (full tree) | 51 | `config/spotless/eclipse-formatter.xml` |
+| F-023 | TOOL-02 | files excluded from PMD (32 violations: 29 main, 3 test) | 18 | `config/pmd/ruleset.xml` |
 
 ## Not queued
 
@@ -229,3 +242,21 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | 2026-10-31 | IR05.2 | F-003 in_progress to done by agent |
 | 2026-10-31 | IR05.2 | F-004 in_progress to partial by agent |
 | 2026-10-31 | IR05.2 | theme T2 not_started to pr_open: branch agentic-readiness/ir05-determinism, PR #110 |
+| 2026-10-31 | IR04.2 | preference format.java set to spotless-eclipse-jdt: owner via Hermes 2026-10-31: accept all recommendations (Q1) |
+| 2026-10-31 | IR04.2 | preference lint.java set to pmd: Q2 recommended option |
+| 2026-10-31 | IR04.2 | preference ci.t1_minimum set to fetch-depth-only: Q4 option 1: only fetch-depth 0; report-only steps in IR07.2 |
+| 2026-10-31 | IR04.2 | preference check.verify_without_stack set to yes: Q5 option 1: check -x test and --dry-run locally; CI proves the test leg |
+| 2026-10-31 | IR04.2 | preference security.verb.deferred-to-t2 set to yes: Q3 option 1: no security verb until OSV-Scanner on gradle.lockfile; OWASP plugin left in place |
+| 2026-10-31 | IR04.2 | F-001 queued to in_progress by agent |
+| 2026-10-31 | IR04.2 | F-041 queued to in_progress by agent |
+| 2026-10-31 | IR04.2 | F-022 queued to in_progress by agent |
+| 2026-10-31 | IR04.2 | F-023 queued to in_progress by agent |
+| 2026-10-31 | IR04.2 | F-024 queued to in_progress by agent |
+| 2026-10-31 | IR04.2 | F-041 in_progress to done by agent |
+| 2026-10-31 | IR04.2 | F-022 in_progress to partial by agent |
+| 2026-10-31 | IR04.2 | F-023 in_progress to partial by agent |
+| 2026-10-31 | IR04.2 | F-024 in_progress to blocked by agent: needs T2 lockfile scanner (OSV-Scanner on gradle.lockfile); no security verb defined in T1 (Q3) |
+| 2026-10-31 | IR04.2 | F-001 in_progress to partial by agent |
+| 2026-10-31 | IR04.2 | F-004 partial to in_progress by agent |
+| 2026-10-31 | IR04.2 | F-004 in_progress to done by agent |
+| 2026-10-31 | IR04.2 | theme T1 not_started to pr_open: branch agentic-readiness/ir04-command-surface, PR #111 |
