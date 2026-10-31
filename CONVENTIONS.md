@@ -14,7 +14,8 @@
 ├── LICENSE
 ├── README.md
 ├── config/
-│   └── keycloak-keystore.jks
+│   ├── pmd/
+│   └── spotless/
 ├── gradle/
 │   └── wrapper/
 │       ├── gradle-wrapper.jar
