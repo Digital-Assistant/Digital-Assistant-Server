@@ -20,7 +20,7 @@ concurrency:
 jobs:
   build-test:
     name: Build and Test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 30
     # Throwaway services for the tests. The password exists only inside this job.
     services:
@@ -86,7 +86,7 @@ jobs:
 
   scan:
     name: Dependency Scan
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 10
     steps:
       - name: Checkout Code
@@ -100,7 +100,7 @@ jobs:
 
   secrets:
     name: Secret Scan
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 10
     steps:
       - name: Checkout Code
@@ -133,7 +133,7 @@ jobs:
     name: CodeQL (Java)
     # Fork PRs get a read-only token and cannot upload results, so they skip this job.
     if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 30
     permissions:
       contents: read
@@ -169,7 +169,7 @@ jobs:
 
   workflow-lint:
     name: Workflow Lint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 10
     steps:
       - name: Checkout Code
@@ -182,10 +182,10 @@ jobs:
 
   docs-lint:
     name: Docs Lint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 10
     # Advisory: not part of `gate` yet (owner decision). Runs only when Markdown or its lint wiring changes.
-    # Uses the Node 22+ preinstalled on ubuntu-latest; setup-node and an npm/Puppeteer cache are left out until
+    # Uses the Node 22+ preinstalled on ubuntu-22.04; setup-node and an npm/Puppeteer cache are left out until
     # their pinned SHAs are verified (the CI theme can add them).
     steps:
       - name: Checkout Code
@@ -221,7 +221,7 @@ jobs:
     name: CI Gate
     needs: [build-test, scan, secrets, codeql, workflow-lint]
     if: ${{ always() }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 5
     steps:
       - name: Evaluate results
