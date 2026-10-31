@@ -16,9 +16,9 @@ A skipped finding is final until the owner unskips it, and every preference bind
 
 | Status | Items |
 |---|---|
-| queued | 28 |
+| queued | 26 |
 | in_progress | 0 |
-| done | 3 |
+| done | 5 |
 | partial | 3 |
 | failed | 0 |
 | blocked | 1 |
@@ -50,6 +50,7 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | `format.java_family` | decide-in-IR04.2 | Q3: tool chosen in IR04.2; constraint is CONVENTIONS.md style (tabs, LF, 120 columns); Spotless is the likely tool (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
 | `format.mass_reformat` | no | Q2: formatter in check-only/ratchet mode, violation count recorded as debt, never reformat the tree; other Server PRs are in flight (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
 | `github.owner_handle` | @kcramakrishna | Use for F-029 CODEOWNERS and F-040(c) branch protection: the repository owner's verified account (gh auth status). Any other person's handle stays a named placeholder for the owner to fill (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
+| `layout.env_example` | scripts/ci/env.example | Owner Q1 "Yes." (via Hermes 2026-10-30); IR06.2 Q1-Q5 recommended option each (via Hermes 2026-10-31): QUARKUS_*/UDAN_* overrides listed as optional names only | owner | 2026-10-31 | IR06.2 |
 | `lint.java` | pmd | Q2 recommended option | owner | 2026-10-31 | IR04.2 |
 | `lock.gradle_width` | lockAllConfigurations | IR05.1 Q1: dependencyLocking lockAllConfigurations + --write-locks, one gradle.lockfile | owner | 2026-10-31 | IR05.2 |
 | `lock.verify_configurations` | all-resolvable | IR05.2 Q2: before/after compare over all resolvable configurations | owner | 2026-10-31 | IR05.2 |
@@ -67,7 +68,7 @@ A skipped finding is final until the owner unskips it, and every preference bind
 |---|---|---|---|---|---|---|---|---|
 | T1 | Command surface and quality tools | pr_open | 5 | 4 | IR04.2 | `agentic-readiness/ir04-command-surface` | #111 | - |
 | T2 | Execution determinism | pr_open | 2 | 0 | IR05.2 | `agentic-readiness/ir05-determinism` | #110 | - |
-| T3 | Secrets and env | not_started | 2 | 2 | - | - | - | - |
+| T3 | Secrets and env | pr_open | 2 | 0 | IR06.2 | `agentic-readiness/ir06-secrets-env` | #112 | - |
 | T4 | CI parity, hooks, commits | not_started | 3 | 2 | - | - | - | - |
 | T5 | Tests and baselines | not_started | 5 | 5 | - | - | - | - |
 | T6 | Docs and navigation | not_started | 4 | 4 | - | - | - | - |
@@ -106,8 +107,11 @@ A skipped finding is final until the owner unskips it, and every preference bind
 
 | Finding | Check | Severity | Status | By | Date | Statement |
 |---|---|---|---|---|---|---|
-| F-005 | EXEC-04 | BLOCKER | queued | agent | 2026-10-30 | An agent cannot know the CI variables the scripts need because AWS_ROLE_ARN, INSTANCE_ID, SSM_DOCUMENT (repository variables), IMAGE_TAR and CACHE_DIR (optional script inputs) are documented only in scripts/ci/README.md and script headers, not in a committed example file (SECONDS, also reported by the engine, is a bash builtin and is not a gap). |
-| F-021 | SEC-03 | DEGRADER | queued | agent | 2026-10-30 | An agent cannot trust that secret shapes cannot be committed because ignore rules do not cover ssh private key, PFX, keystore, certificate (.crt), certificate (.cer), AWS credentials. |
+| F-005 | EXEC-04 | BLOCKER | done | agent | 2026-10-31 | An agent cannot know the CI variables the scripts need because AWS_ROLE_ARN, INSTANCE_ID, SSM_DOCUMENT (repository variables), IMAGE_TAR and CACHE_DIR (optional script inputs) are documented only in scripts/ci/README.md and script headers, not in a committed example file (SECONDS, also reported by the engine, is a bash builtin and is not a gap). |
+| F-021 | SEC-03 | DEGRADER | done | agent | 2026-10-31 | An agent cannot trust that secret shapes cannot be committed because ignore rules do not cover ssh private key, PFX, keystore, certificate (.crt), certificate (.cer), AWS credentials. |
+
+- **F-005**: commits: `2fb9426`; verification: `compare inventory with scripts/ci/env.example` gave every read name declared or on the header's not-inventory list; no values
+- **F-021**: commits: `3631fea`; verification: `git ls-files -ci --exclude-standard` gave empty after untracking config/keycloak-keystore.jks (c0a9735); all eleven shapes covered
 
 ### T4 CI parity, hooks, commits
 
@@ -260,3 +264,9 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | 2026-10-31 | IR04.2 | F-004 partial to in_progress by agent |
 | 2026-10-31 | IR04.2 | F-004 in_progress to done by agent |
 | 2026-10-31 | IR04.2 | theme T1 not_started to pr_open: branch agentic-readiness/ir04-command-surface, PR #111 |
+| 2026-10-31 | IR06.2 | preference layout.env_example set to scripts/ci/env.example: Owner Q1 "Yes." (via Hermes 2026-10-30); IR06.2 Q1-Q5 recommended option each (via Hermes 2026-10-31): QUARKUS_*/UDAN_* overrides listed as optional names only |
+| 2026-10-31 | IR06.2 | F-005 queued to in_progress by agent |
+| 2026-10-31 | IR06.2 | F-005 in_progress to done by agent |
+| 2026-10-31 | IR06.2 | F-021 queued to in_progress by agent |
+| 2026-10-31 | IR06.2 | F-021 in_progress to done by agent |
+| 2026-10-31 | IR06.2 | theme T3 not_started to pr_open: branch agentic-readiness/ir06-secrets-env, PR #112 |

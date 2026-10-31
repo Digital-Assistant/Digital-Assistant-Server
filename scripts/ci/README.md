@@ -59,4 +59,6 @@ A push to `dev` builds and pushes the image but does not deploy it. TEST changes
 ## Deploying to PROD
 One click: Actions > **Deploy to PROD** > Run workflow (branch `dev`). Defaults: `component=all` (Server, then NestJS) and empty digests, which deploy exactly what TEST runs now. The run waits until a required reviewer of the `production` environment approves. To roll back, run it again with the previous digest from the last run's summary (the box allows PROD's own previous digest). Command form: `gh workflow run deploy-prod.yml --ref dev [-f component=server] [-f digest_server=sha256:<64 hex>]`. Sanity check PROD runs after a Server deploy when the repository variable `PROD_BASE_URL` is set.
 
+Every variable these scripts and workflows read is declared by name in [`env.example`](env.example) (names only, required or optional).
+
 No script contains a secret. Never put one in these files.

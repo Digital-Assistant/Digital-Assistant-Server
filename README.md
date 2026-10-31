@@ -78,7 +78,7 @@ curl -s -i -X OPTIONS <server>/api/user/getsessionkey -H 'Origin: chrome-extensi
 ```
 Expect `200` or `204` with `Access-Control-Allow-Origin` and `udan-realm` in `Access-Control-Allow-Headers`.
 
-**Container.** The image bakes in no database settings. Mount a properties file at `/deployments/config/additional.properties` (read-only) or pass `QUARKUS_DATASOURCE_*` and the other settings as environment variables; without them the container starts but cannot reach a database. Values there win over the packaged ones. See the comments in `src/main/docker/Dockerfile.jvm`.
+**Container.** The image bakes in no database settings. Mount a properties file at `/deployments/config/additional.properties` (read-only) or pass `QUARKUS_DATASOURCE_*` and the other settings as environment variables; without them the container starts but cannot reach a database. Values there win over the packaged ones. See the comments in `src/main/docker/Dockerfile.jvm`. Every variable name (CI, scripts and these overrides) is listed in `scripts/ci/env.example`.
 
 ---
 > [!NOTE]  
