@@ -16,9 +16,9 @@ A skipped finding is final until the owner unskips it, and every preference bind
 
 | Status | Items |
 |---|---|
-| queued | 26 |
+| queued | 22 |
 | in_progress | 0 |
-| done | 5 |
+| done | 9 |
 | partial | 3 |
 | failed | 0 |
 | blocked | 1 |
@@ -42,6 +42,13 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | `ci.t2_edits` | none | IR05.2 Q4: no workflow or Dockerfile edit; all already name JDK 21 | owner | 2026-10-31 | IR05.2 |
 | `codeowners.default` | owner-owns-all | F-029: @kcramakrishna owns * and the areas in research/p4-owner-asks.md item 1; second reviewer left as a placeholder; do not enable required code-owner review with a single owner (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
 | `dependabot.header_names_lockfile` | yes | IR05.2 Q5: reword dependabot.yml header with gradle.lockfile and regenerate command (comment only) | owner | 2026-10-31 | IR05.2 |
+| `docs.adr_dir` | docs/adr | IR09.1 Q1/Q5 via Hermes 2026-10-30; IR09.2 Q3: three ADRs, status proposed until owner accepts | owner | 2026-10-31 | IR09.2 |
+| `docs.agents_line` | yes | IR09.1 Q4 / IR09.2 Q6 via Hermes: one AGENTS.md line in section 5 naming style guide, ADR and architecture dirs | owner | 2026-10-31 | IR09.2 |
+| `docs.lint_ratchet` | growing-path-list | IR09.2 Q2 via Hermes 2026-10-31: gating list that only grows plus report-only run over all Markdown; no mass reformat | owner | 2026-10-31 | IR09.2 |
+| `docs.lint_tools` | markdownlint-cli2+mmdc | Owner approved Node-based docs lint twice in IR09.1; IR09.2 Q1 via Hermes 2026-10-31: separate advisory CI job, not in gate | owner | 2026-10-31 | IR09.2 |
+| `docs.lychee` | skip | IR09.2 Q7 via Hermes 2026-10-31: accept recommendation, skip link checker for Server; revisit if docs grow | owner | 2026-10-31 | IR09.2 |
+| `docs.nav03` | document-only | IR09.2 Q5 via Hermes 2026-10-31: document census, move nothing | owner | 2026-10-31 | IR09.2 |
+| `docs.style_guide_source` | framework-diataxis | IR09.2 Q4 via Hermes 2026-10-31: adapt framework STYLE_GUIDE.md to one page | owner | 2026-10-31 | IR09.2 |
 | `exec03.owner` | define-command-surface | IR05.1 Q2: F-004 owned by define-command-surface; IR05.2 only verifies | owner | 2026-10-31 | IR05.2 |
 | `extra.t2` | jdk-toolchain-pin-and-readme-rename | Q5 items 4 and 8: add a java toolchain block (JDK 21) to build.gradle; rename README to README.md and fix the .dockerignore, CONVENTIONS.md and scripts/ci/test.sh references (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
 | `extra.t3` | keystore-untrack | Q5 item 1: git rm --cached config/keycloak-keystore.jks (keep the file locally if useful), fix the CONVENTIONS.md tree line; no key rotation; git history left as is. Consequence of the owner's statement that nothing tracked holds a live secret and all secrets come from the AWS store; recorded as a preference, executed in IR06.2 (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
@@ -71,7 +78,7 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | T3 | Secrets and env | pr_open | 2 | 0 | IR06.2 | `agentic-readiness/ir06-secrets-env` | #112 | - |
 | T4 | CI parity, hooks, commits | not_started | 3 | 2 | - | - | - | - |
 | T5 | Tests and baselines | not_started | 5 | 5 | - | - | - | - |
-| T6 | Docs and navigation | not_started | 4 | 4 | - | - | - | - |
+| T6 | Docs and navigation | branch_open | 4 | 0 | IR09.2 | `agentic-readiness/ir09-docs` | - | - |
 | T7 | AGENTS.md and governance | not_started | 11 | 10 | - | - | - | - |
 | T8 | Hygiene and index | not_started | 8 | 7 | - | - | - | - |
 
@@ -137,10 +144,15 @@ A skipped finding is final until the owner unskips it, and every preference bind
 
 | Finding | Check | Severity | Status | By | Date | Statement |
 |---|---|---|---|---|---|---|
-| F-019 | DOC-01 | DEGRADER | queued | agent | 2026-10-30 | An agent cannot find the project's documentation because no docs/ directory exists in the repository. |
-| F-020 | DOC-02 | DEGRADER | queued | agent | 2026-10-30 | An agent cannot find the canonical authoring rules for documentation because docs/STYLE_GUIDE.md does not exist. |
-| F-028 | DOC-04 | COSMETIC | queued | agent | 2026-10-30 | An agent cannot find the decisions of record because no ADR directory (docs/architecture/adrs/ or docs/adr/) exists. |
-| F-036 | NAV-04 | COSMETIC | queued | agent | 2026-10-30 | An agent cannot orient itself from a map instead of exploring blindly because no docs/architecture/, ADR directory or diagram exists. |
+| F-019 | DOC-01 | DEGRADER | done | agent | 2026-10-31 | An agent cannot find the project's documentation because no docs/ directory exists in the repository. |
+| F-020 | DOC-02 | DEGRADER | done | agent | 2026-10-31 | An agent cannot find the canonical authoring rules for documentation because docs/STYLE_GUIDE.md does not exist. |
+| F-028 | DOC-04 | COSMETIC | done | agent | 2026-10-31 | An agent cannot find the decisions of record because no ADR directory (docs/architecture/adrs/ or docs/adr/) exists. |
+| F-036 | NAV-04 | COSMETIC | done | agent | 2026-10-31 | An agent cannot orient itself from a map instead of exploring blindly because no docs/architecture/, ADR directory or diagram exists. |
+
+- **F-019**: notes: Stale finding: docs/ existed at head e8b3728 (drift); index added to the existing folder, no second docs/; commits: `312a8e3`; verification: `git ls-files 'docs/*.md'` gave docs/ already existed (report folders); docs/README.md index added
+- **F-020**: notes: one-page guide adapted from the framework guide; commits: `312a8e3`; verification: `test -f docs/STYLE_GUIDE.md && grep -n STYLE_GUIDE.md AGENTS.md` gave present; named in AGENTS.md
+- **F-028**: notes: ADRs wait for owner acceptance; commits: `4299ae6`; verification: `ls docs/adr` gave template, index, 3 ADRs (proposed)
+- **F-036**: notes: census in Repository notes; commits: `824e2cf`; verification: `test -f docs/architecture/overview.md` gave present; Mermaid diagram validated (MCP and mmdc 12.0.0)
 
 ### T7 AGENTS.md and governance
 
@@ -270,3 +282,19 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | 2026-10-31 | IR06.2 | F-021 queued to in_progress by agent |
 | 2026-10-31 | IR06.2 | F-021 in_progress to done by agent |
 | 2026-10-31 | IR06.2 | theme T3 not_started to pr_open: branch agentic-readiness/ir06-secrets-env, PR #112 |
+| 2026-10-31 | IR09.2 | preference docs.lint_tools set to markdownlint-cli2+mmdc: Owner approved Node-based docs lint twice in IR09.1; IR09.2 Q1 via Hermes 2026-10-31: separate advisory CI job, not in gate |
+| 2026-10-31 | IR09.2 | preference docs.adr_dir set to docs/adr: IR09.1 Q1/Q5 via Hermes 2026-10-30; IR09.2 Q3: three ADRs, status proposed until owner accepts |
+| 2026-10-31 | IR09.2 | preference docs.agents_line set to yes: IR09.1 Q4 / IR09.2 Q6 via Hermes: one AGENTS.md line in section 5 naming style guide, ADR and architecture dirs |
+| 2026-10-31 | IR09.2 | preference docs.lychee set to skip: IR09.2 Q7 via Hermes 2026-10-31: accept recommendation, skip link checker for Server; revisit if docs grow |
+| 2026-10-31 | IR09.2 | preference docs.lint_ratchet set to growing-path-list: IR09.2 Q2 via Hermes 2026-10-31: gating list that only grows plus report-only run over all Markdown; no mass reformat |
+| 2026-10-31 | IR09.2 | preference docs.nav03 set to document-only: IR09.2 Q5 via Hermes 2026-10-31: document census, move nothing |
+| 2026-10-31 | IR09.2 | preference docs.style_guide_source set to framework-diataxis: IR09.2 Q4 via Hermes 2026-10-31: adapt framework STYLE_GUIDE.md to one page |
+| 2026-10-31 | IR09.2 | F-019 queued to in_progress by agent |
+| 2026-10-31 | IR09.2 | F-019 in_progress to done by agent |
+| 2026-10-31 | IR09.2 | F-020 queued to in_progress by agent |
+| 2026-10-31 | IR09.2 | F-020 in_progress to done by agent |
+| 2026-10-31 | IR09.2 | F-028 queued to in_progress by agent |
+| 2026-10-31 | IR09.2 | F-028 in_progress to done by agent |
+| 2026-10-31 | IR09.2 | F-036 queued to in_progress by agent |
+| 2026-10-31 | IR09.2 | F-036 in_progress to done by agent |
+| 2026-10-31 | IR09.2 | theme T6 not_started to branch_open: branch agentic-readiness/ir09-docs |

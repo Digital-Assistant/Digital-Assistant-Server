@@ -256,6 +256,62 @@
       "by": "owner",
       "date": "2026-10-31",
       "phase": "IR06.2"
+    },
+    {
+      "key": "docs.lint_tools",
+      "value": "markdownlint-cli2+mmdc",
+      "reason": "Owner approved Node-based docs lint twice in IR09.1; IR09.2 Q1 via Hermes 2026-10-31: separate advisory CI job, not in gate",
+      "by": "owner",
+      "date": "2026-10-31",
+      "phase": "IR09.2"
+    },
+    {
+      "key": "docs.adr_dir",
+      "value": "docs/adr",
+      "reason": "IR09.1 Q1/Q5 via Hermes 2026-10-30; IR09.2 Q3: three ADRs, status proposed until owner accepts",
+      "by": "owner",
+      "date": "2026-10-31",
+      "phase": "IR09.2"
+    },
+    {
+      "key": "docs.agents_line",
+      "value": "yes",
+      "reason": "IR09.1 Q4 / IR09.2 Q6 via Hermes: one AGENTS.md line in section 5 naming style guide, ADR and architecture dirs",
+      "by": "owner",
+      "date": "2026-10-31",
+      "phase": "IR09.2"
+    },
+    {
+      "key": "docs.lychee",
+      "value": "skip",
+      "reason": "IR09.2 Q7 via Hermes 2026-10-31: accept recommendation, skip link checker for Server; revisit if docs grow",
+      "by": "owner",
+      "date": "2026-10-31",
+      "phase": "IR09.2"
+    },
+    {
+      "key": "docs.lint_ratchet",
+      "value": "growing-path-list",
+      "reason": "IR09.2 Q2 via Hermes 2026-10-31: gating list that only grows plus report-only run over all Markdown; no mass reformat",
+      "by": "owner",
+      "date": "2026-10-31",
+      "phase": "IR09.2"
+    },
+    {
+      "key": "docs.nav03",
+      "value": "document-only",
+      "reason": "IR09.2 Q5 via Hermes 2026-10-31: document census, move nothing",
+      "by": "owner",
+      "date": "2026-10-31",
+      "phase": "IR09.2"
+    },
+    {
+      "key": "docs.style_guide_source",
+      "value": "framework-diataxis",
+      "reason": "IR09.2 Q4 via Hermes 2026-10-31: adapt framework STYLE_GUIDE.md to one page",
+      "by": "owner",
+      "date": "2026-10-31",
+      "phase": "IR09.2"
     }
   ],
   "themes": [
@@ -307,9 +363,9 @@
     {
       "id": "T6",
       "title": "Docs and navigation",
-      "status": "not_started",
-      "phase": null,
-      "branch": null,
+      "status": "branch_open",
+      "phase": "IR09.2",
+      "branch": "agentic-readiness/ir09-docs",
       "pr": null,
       "merged_sha": null
     },
@@ -620,14 +676,19 @@
       "severity": "DEGRADER",
       "theme": "T6",
       "statement": "An agent cannot find the project's documentation because no docs/ directory exists in the repository.",
-      "status": "queued",
+      "status": "done",
       "by": "agent",
-      "date": "2026-10-30",
+      "date": "2026-10-31",
       "reason": null,
-      "commits": [],
-      "verification": null,
+      "commits": [
+        "312a8e3"
+      ],
+      "verification": {
+        "command": "git ls-files 'docs/*.md'",
+        "result": "docs/ already existed (report folders); docs/README.md index added"
+      },
       "debt": [],
-      "notes": ""
+      "notes": "Stale finding: docs/ existed at head e8b3728 (drift); index added to the existing folder, no second docs/"
     },
     {
       "finding": "F-020",
@@ -635,14 +696,19 @@
       "severity": "DEGRADER",
       "theme": "T6",
       "statement": "An agent cannot find the canonical authoring rules for documentation because docs/STYLE_GUIDE.md does not exist.",
-      "status": "queued",
+      "status": "done",
       "by": "agent",
-      "date": "2026-10-30",
+      "date": "2026-10-31",
       "reason": null,
-      "commits": [],
-      "verification": null,
+      "commits": [
+        "312a8e3"
+      ],
+      "verification": {
+        "command": "test -f docs/STYLE_GUIDE.md && grep -n STYLE_GUIDE.md AGENTS.md",
+        "result": "present; named in AGENTS.md"
+      },
       "debt": [],
-      "notes": ""
+      "notes": "one-page guide adapted from the framework guide"
     },
     {
       "finding": "F-021",
@@ -770,14 +836,19 @@
       "severity": "COSMETIC",
       "theme": "T6",
       "statement": "An agent cannot find the decisions of record because no ADR directory (docs/architecture/adrs/ or docs/adr/) exists.",
-      "status": "queued",
+      "status": "done",
       "by": "agent",
-      "date": "2026-10-30",
+      "date": "2026-10-31",
       "reason": null,
-      "commits": [],
-      "verification": null,
+      "commits": [
+        "4299ae6"
+      ],
+      "verification": {
+        "command": "ls docs/adr",
+        "result": "template, index, 3 ADRs (proposed)"
+      },
       "debt": [],
-      "notes": ""
+      "notes": "ADRs wait for owner acceptance"
     },
     {
       "finding": "F-029",
@@ -890,14 +961,19 @@
       "severity": "COSMETIC",
       "theme": "T6",
       "statement": "An agent cannot orient itself from a map instead of exploring blindly because no docs/architecture/, ADR directory or diagram exists.",
-      "status": "queued",
+      "status": "done",
       "by": "agent",
-      "date": "2026-10-30",
+      "date": "2026-10-31",
       "reason": null,
-      "commits": [],
-      "verification": null,
+      "commits": [
+        "824e2cf"
+      ],
+      "verification": {
+        "command": "test -f docs/architecture/overview.md",
+        "result": "present; Mermaid diagram validated (MCP and mmdc 12.0.0)"
+      },
       "debt": [],
-      "notes": ""
+      "notes": "census in Repository notes"
     },
     {
       "finding": "F-037",
@@ -1304,6 +1380,86 @@
       "date": "2026-10-31",
       "phase": "IR06.2",
       "event": "theme T3 not_started to pr_open: branch agentic-readiness/ir06-secrets-env, PR #112"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR09.2",
+      "event": "preference docs.lint_tools set to markdownlint-cli2+mmdc: Owner approved Node-based docs lint twice in IR09.1; IR09.2 Q1 via Hermes 2026-10-31: separate advisory CI job, not in gate"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR09.2",
+      "event": "preference docs.adr_dir set to docs/adr: IR09.1 Q1/Q5 via Hermes 2026-10-30; IR09.2 Q3: three ADRs, status proposed until owner accepts"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR09.2",
+      "event": "preference docs.agents_line set to yes: IR09.1 Q4 / IR09.2 Q6 via Hermes: one AGENTS.md line in section 5 naming style guide, ADR and architecture dirs"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR09.2",
+      "event": "preference docs.lychee set to skip: IR09.2 Q7 via Hermes 2026-10-31: accept recommendation, skip link checker for Server; revisit if docs grow"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR09.2",
+      "event": "preference docs.lint_ratchet set to growing-path-list: IR09.2 Q2 via Hermes 2026-10-31: gating list that only grows plus report-only run over all Markdown; no mass reformat"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR09.2",
+      "event": "preference docs.nav03 set to document-only: IR09.2 Q5 via Hermes 2026-10-31: document census, move nothing"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR09.2",
+      "event": "preference docs.style_guide_source set to framework-diataxis: IR09.2 Q4 via Hermes 2026-10-31: adapt framework STYLE_GUIDE.md to one page"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR09.2",
+      "event": "F-019 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR09.2",
+      "event": "F-019 in_progress to done by agent"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR09.2",
+      "event": "F-020 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR09.2",
+      "event": "F-020 in_progress to done by agent"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR09.2",
+      "event": "F-028 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR09.2",
+      "event": "F-028 in_progress to done by agent"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR09.2",
+      "event": "F-036 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR09.2",
+      "event": "F-036 in_progress to done by agent"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR09.2",
+      "event": "theme T6 not_started to branch_open: branch agentic-readiness/ir09-docs"
     }
   ]
 }
