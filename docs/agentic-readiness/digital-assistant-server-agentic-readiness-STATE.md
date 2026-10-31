@@ -68,7 +68,7 @@ A skipped finding is final until the owner unskips it, and every preference bind
 |---|---|---|---|---|---|---|---|---|
 | T1 | Command surface and quality tools | pr_open | 5 | 4 | IR04.2 | `agentic-readiness/ir04-command-surface` | #111 | - |
 | T2 | Execution determinism | pr_open | 2 | 0 | IR05.2 | `agentic-readiness/ir05-determinism` | #110 | - |
-| T3 | Secrets and env | not_started | 2 | 0 | - | - | - | - |
+| T3 | Secrets and env | pr_open | 2 | 0 | IR06.2 | `agentic-readiness/ir06-secrets-env` | #112 | - |
 | T4 | CI parity, hooks, commits | not_started | 3 | 2 | - | - | - | - |
 | T5 | Tests and baselines | not_started | 5 | 5 | - | - | - | - |
 | T6 | Docs and navigation | not_started | 4 | 4 | - | - | - | - |
@@ -269,3 +269,4 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | 2026-10-31 | IR06.2 | F-005 in_progress to done by agent |
 | 2026-10-31 | IR06.2 | F-021 queued to in_progress by agent |
 | 2026-10-31 | IR06.2 | F-021 in_progress to done by agent |
+| 2026-10-31 | IR06.2 | theme T3 not_started to pr_open: branch agentic-readiness/ir06-secrets-env, PR #112 |
