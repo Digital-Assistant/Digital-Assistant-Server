@@ -1,0 +1,10 @@
+# Markdown files that must lint clean (one path per line). The list only grows.
+docs/README.md
+docs/STYLE_GUIDE.md
+docs/adr/README.md
+docs/adr/0000-template.md
+docs/adr/0001-flyway-for-schema-migrations.md
+docs/adr/0002-tenant-from-udan-realm-header.md
+docs/adr/0003-database-access-through-repositories.md
+docs/architecture/overview.md
+docs/agentic-readiness/README.md

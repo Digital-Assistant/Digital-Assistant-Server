@@ -180,6 +180,41 @@ jobs:
       - name: Lint workflows
         run: scripts/ci/lint-workflows.sh
 
+  docs-lint:
+    name: Docs Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # Advisory: not part of `gate` yet (owner decision). Runs only when Markdown or its lint wiring changes.
+    # Uses the Node 22+ preinstalled on ubuntu-latest; setup-node and an npm/Puppeteer cache are left out until
+    # their pinned SHAs are verified (the CI theme can add them).
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Detect docs changes
+        id: changes
+        env:
+          EVENT: ${{ github.event_name }}
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          if [[ "$EVENT" == "pull_request" ]]; then
+            git fetch --no-tags --depth=1 origin "$BASE" "$HEAD"
+            if git diff --name-only "$BASE" "$HEAD" | grep -E '\.md$|^\.markdownlint-cli2\.yaml$|^scripts/ci/docs-lint' ; then
+              echo "run=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "run=false" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Lint docs
+        if: ${{ steps.changes.outputs.run == 'true' }}
+        run: scripts/ci/docs-lint.sh
+
   # Single required status check for branch protection. Skipped jobs count as success;
   # failed or cancelled jobs fail the gate.
   gate:

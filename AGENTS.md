@@ -82,6 +82,9 @@ All contributions must follow this comprehensive, sequential lifecycle:
 
 Agentic-readiness work: read `docs/agentic-readiness/digital-assistant-server-agentic-readiness-STATE.md` before changing tooling, CI, docs or this file; skipped findings in it are final.
 
+Documentation: `docs/README.md` indexes `docs/`; follow `docs/STYLE_GUIDE.md`, record decisions in `docs/adr/`, and
+read `docs/architecture/` for the map of the code.
+
 ## 6. Quality Assurance Workflow Profiles & Prompts
 
 This section defines the different levels of quality assurance required for different types of tasks. The agent **must** use the profile that matches the `workflow:` label on the assigned issue.
