@@ -26,7 +26,7 @@ concurrency:
 jobs:
   deploy-test:
     name: Deploy to TEST
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 30
     environment: test
     permissions:
@@ -82,7 +82,7 @@ jobs:
   sanity-check:
     name: Sanity check TEST
     needs: deploy-test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 5
     permissions:
       contents: read

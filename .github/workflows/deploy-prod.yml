@@ -37,7 +37,7 @@ concurrency:
 jobs:
   deploy-prod:
     name: Deploy to PROD
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 100
     environment: production
     permissions:
@@ -114,7 +114,7 @@ jobs:
     name: Sanity check PROD
     needs: deploy-prod
     if: inputs.component != 'nestjs' && vars.PROD_BASE_URL != ''
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 5
     permissions:
       contents: read

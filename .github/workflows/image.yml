@@ -38,7 +38,7 @@ jobs:
   build:
     name: Build image (PR)
     if: ${{ github.event_name == 'pull_request' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 30
     permissions:
       contents: read
@@ -68,7 +68,7 @@ jobs:
   build-push:
     name: Build and Push to GHCR
     if: ${{ github.event_name == 'push' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 30
     # The pushed image digest (sha256:...), for the deploy job (needs: build-push).
     outputs:
@@ -153,7 +153,7 @@ jobs:
     name: Scan image and SBOM
     needs: [build, build-push]
     if: ${{ !cancelled() && (needs.build.result == 'success' || needs.build-push.result == 'success') }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 15
     permissions:
       contents: read
@@ -192,7 +192,7 @@ jobs:
     name: Deploy to TEST
     needs: build-push
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/dev' && vars.TEST_AUTO_DEPLOY == 'true' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 30
     environment: test
     concurrency:
@@ -218,7 +218,7 @@ jobs:
   sanity-check:
     name: Sanity check TEST
     needs: deploy-test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 5
     permissions:
       contents: read
