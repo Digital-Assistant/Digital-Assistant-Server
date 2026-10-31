@@ -2,6 +2,8 @@ plugins {
     id 'java'
     id 'io.quarkus' version '3.2.10.Final'
     id "org.owasp.dependencycheck" version "9.0.9"
+    id 'pmd'
+    id 'com.diffplug.spotless' version '8.10.4'
 }
 
 repositories {
@@ -28,6 +30,30 @@ configurations.all {
 // plugin, regenerate it with: ./gradlew dependencies --write-locks
 dependencyLocking {
     lockAllConfigurations()
+}
+
+// Formatter: Eclipse JDT profile that encodes CONVENTIONS.md (tabs, LF, 120 columns). Ratchet: only files changed
+// since origin/dev are checked or rewritten, the rest of the tree is never reformatted. Full-tree report (does not
+// fail on existing debt only if you ignore the exit code): ./gradlew spotlessCheck -PspotlessFull
+spotless {
+    if (!project.hasProperty('spotlessFull')) {
+        ratchetFrom 'origin/dev'
+    }
+    java {
+        target 'src/**/*.java'
+        eclipse().configFile('config/spotless/eclipse-formatter.xml')
+        lineEndings = com.diffplug.spotless.LineEnding.UNIX
+        endWithNewline()
+    }
+}
+
+// Linter: bug-oriented PMD ruleset. PMD has no baseline file, so files that violate it today are listed in the
+// ruleset's exclude patterns (config/pmd/ruleset.xml); that list only shrinks. New files are checked in full.
+pmd {
+    toolVersion = '7.29.0'
+    ruleSetFiles = files('config/pmd/ruleset.xml')
+    ruleSets = []
+    consoleOutput = true
 }
 
 group "com.nistapp.voice"
