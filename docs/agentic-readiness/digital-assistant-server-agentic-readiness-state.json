@@ -363,10 +363,10 @@
     {
       "id": "T6",
       "title": "Docs and navigation",
-      "status": "branch_open",
+      "status": "pr_open",
       "phase": "IR09.2",
       "branch": "agentic-readiness/ir09-docs",
-      "pr": null,
+      "pr": 113,
       "merged_sha": null
     },
     {
@@ -1460,6 +1460,11 @@
       "date": "2026-10-31",
       "phase": "IR09.2",
       "event": "theme T6 not_started to branch_open: branch agentic-readiness/ir09-docs"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR09.2",
+      "event": "theme T6 branch_open to pr_open: branch agentic-readiness/ir09-docs, PR #113"
     }
   ]
 }

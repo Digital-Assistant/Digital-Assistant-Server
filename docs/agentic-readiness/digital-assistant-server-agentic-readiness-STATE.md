@@ -78,7 +78,7 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | T3 | Secrets and env | pr_open | 2 | 0 | IR06.2 | `agentic-readiness/ir06-secrets-env` | #112 | - |
 | T4 | CI parity, hooks, commits | not_started | 3 | 2 | - | - | - | - |
 | T5 | Tests and baselines | not_started | 5 | 5 | - | - | - | - |
-| T6 | Docs and navigation | branch_open | 4 | 0 | IR09.2 | `agentic-readiness/ir09-docs` | - | - |
+| T6 | Docs and navigation | pr_open | 4 | 0 | IR09.2 | `agentic-readiness/ir09-docs` | #113 | - |
 | T7 | AGENTS.md and governance | not_started | 11 | 10 | - | - | - | - |
 | T8 | Hygiene and index | not_started | 8 | 7 | - | - | - | - |
 
@@ -298,3 +298,4 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | 2026-10-31 | IR09.2 | F-036 queued to in_progress by agent |
 | 2026-10-31 | IR09.2 | F-036 in_progress to done by agent |
 | 2026-10-31 | IR09.2 | theme T6 not_started to branch_open: branch agentic-readiness/ir09-docs |
+| 2026-10-31 | IR09.2 | theme T6 branch_open to pr_open: branch agentic-readiness/ir09-docs, PR #113 |
