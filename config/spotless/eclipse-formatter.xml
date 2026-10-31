@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Eclipse JDT formatter profile for Spotless. Encodes CONVENTIONS.md section 1: tabs, 120 columns.
+     Only the settings that differ from the Eclipse defaults are set; line endings (LF) are set in build.gradle. -->
+<profiles version="21">
+	<profile kind="CodeFormatterProfile" name="UDAN" version="21">
+		<setting id="org.eclipse.jdt.core.formatter.tabulation.char" value="tab"/>
+		<setting id="org.eclipse.jdt.core.formatter.tabulation.size" value="4"/>
+		<setting id="org.eclipse.jdt.core.formatter.indentation.size" value="4"/>
+		<setting id="org.eclipse.jdt.core.formatter.lineSplit" value="120"/>
+		<setting id="org.eclipse.jdt.core.formatter.comment.line_length" value="120"/>
+		<setting id="org.eclipse.jdt.core.formatter.join_wrapped_lines" value="false"/>
+		<setting id="org.eclipse.jdt.core.formatter.join_lines_in_comments" value="false"/>
+		<setting id="org.eclipse.jdt.core.formatter.comment.format_javadoc_comments" value="false"/>
+		<setting id="org.eclipse.jdt.core.formatter.comment.format_block_comments" value="false"/>
+		<setting id="org.eclipse.jdt.core.formatter.comment.format_line_comments" value="false"/>
+		<setting id="org.eclipse.jdt.core.formatter.number_of_empty_lines_to_preserve" value="1"/>
+	</profile>
+</profiles>

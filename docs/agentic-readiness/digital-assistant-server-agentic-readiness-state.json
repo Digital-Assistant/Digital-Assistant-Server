@@ -208,16 +208,56 @@
       "by": "owner",
       "date": "2026-10-31",
       "phase": "IR05.2"
+    },
+    {
+      "key": "format.java",
+      "value": "spotless-eclipse-jdt",
+      "reason": "owner via Hermes 2026-10-31: accept all recommendations (Q1)",
+      "by": "owner",
+      "date": "2026-10-31",
+      "phase": "IR04.2"
+    },
+    {
+      "key": "lint.java",
+      "value": "pmd",
+      "reason": "Q2 recommended option",
+      "by": "owner",
+      "date": "2026-10-31",
+      "phase": "IR04.2"
+    },
+    {
+      "key": "ci.t1_minimum",
+      "value": "fetch-depth-only",
+      "reason": "Q4 option 1: only fetch-depth 0; report-only steps in IR07.2",
+      "by": "owner",
+      "date": "2026-10-31",
+      "phase": "IR04.2"
+    },
+    {
+      "key": "check.verify_without_stack",
+      "value": "yes",
+      "reason": "Q5 option 1: check -x test and --dry-run locally; CI proves the test leg",
+      "by": "owner",
+      "date": "2026-10-31",
+      "phase": "IR04.2"
+    },
+    {
+      "key": "security.verb.deferred-to-t2",
+      "value": "yes",
+      "reason": "Q3 option 1: no security verb until OSV-Scanner on gradle.lockfile; OWASP plugin left in place",
+      "by": "owner",
+      "date": "2026-10-31",
+      "phase": "IR04.2"
     }
   ],
   "themes": [
     {
       "id": "T1",
       "title": "Command surface and quality tools",
-      "status": "not_started",
-      "phase": null,
-      "branch": null,
-      "pr": null,
+      "status": "pr_open",
+      "phase": "IR04.2",
+      "branch": "agentic-readiness/ir04-command-surface",
+      "pr": 111,
       "merged_sha": null
     },
     {
@@ -291,13 +331,24 @@
       "severity": "BLOCKER",
       "theme": "T1",
       "statement": "An agent cannot run the standardized command surface literally because 5 of 7 framework verbs are not defined on any runner (format, format:check, lint, typecheck, security).",
-      "status": "queued",
+      "status": "partial",
       "by": "agent",
-      "date": "2026-10-30",
+      "date": "2026-10-31",
       "reason": null,
-      "commits": [],
-      "verification": null,
-      "debt": [],
+      "commits": [
+        "8a291b2"
+      ],
+      "verification": {
+        "command": "./gradlew format formatCheck lint typecheck test check --dry-run",
+        "result": "6 of 7 verbs resolve; security does not"
+      },
+      "debt": [
+        {
+          "what": "security verb missing (waits for lockfile scanner)",
+          "count": 1,
+          "baseline_file": null
+        }
+      ],
       "notes": ""
     },
     {
@@ -341,19 +392,18 @@
       "severity": "BLOCKER",
       "theme": "T2",
       "statement": "An agent cannot prepare the environment non-interactively because no devcontainer, compose file, Dockerfile, setup target/script, or documented install command exists.",
-      "status": "partial",
+      "status": "done",
       "by": "agent",
       "date": "2026-10-31",
       "reason": null,
-      "commits": [],
-      "verification": null,
-      "debt": [
-        {
-          "what": "no single non-interactive setup command (owned by define-command-surface, IR04.2)",
-          "count": 1,
-          "baseline_file": null
-        }
+      "commits": [
+        "5296eb3"
       ],
+      "verification": {
+        "command": "./gradlew assemble",
+        "result": "BUILD SUCCESSFUL on JDK 21; documented in AGENTS.md Build & Validation"
+      },
+      "debt": [],
       "notes": "Check only (owner: define-command-surface owns the fix, IR05.1 Q2). README.md and AGENTS.md document ./sync-credentials.sh then ./start-server.sh (neither prompts), but there is no single build/install setup command and the stack must already be up. Added no script. Engine may now PASS EXEC-03 on the README.md rename alone (engine limit)."
     },
     {
@@ -602,13 +652,24 @@
       "severity": "DEGRADER",
       "theme": "T1",
       "statement": "An agent cannot format a change set the same way every time because no formatter is configured and no format verb is defined.",
-      "status": "queued",
+      "status": "partial",
       "by": "agent",
-      "date": "2026-10-30",
+      "date": "2026-10-31",
       "reason": null,
-      "commits": [],
-      "verification": null,
-      "debt": [],
+      "commits": [
+        "73eccae"
+      ],
+      "verification": {
+        "command": "./gradlew formatCheck",
+        "result": "exit 0 on changed files (ratchet vs origin/dev); ./gradlew spotlessCheck -PspotlessFull reports 51 of 89 files; a touched unformatted file fails formatCheck"
+      },
+      "debt": [
+        {
+          "what": "files not matching the Eclipse JDT profile (full tree)",
+          "count": 51,
+          "baseline_file": "config/spotless/eclipse-formatter.xml"
+        }
+      ],
       "notes": ""
     },
     {
@@ -617,13 +678,24 @@
       "severity": "DEGRADER",
       "theme": "T1",
       "statement": "An agent cannot catch lint regressions before they land because no linter is configured and no lint verb is defined.",
-      "status": "queued",
+      "status": "partial",
       "by": "agent",
-      "date": "2026-10-30",
+      "date": "2026-10-31",
       "reason": null,
-      "commits": [],
-      "verification": null,
-      "debt": [],
+      "commits": [
+        "73eccae"
+      ],
+      "verification": {
+        "command": "./gradlew lint",
+        "result": "exit 0 under the exclude list; 32 violations in 18 files before the list"
+      },
+      "debt": [
+        {
+          "what": "files excluded from PMD (32 violations: 29 main, 3 test)",
+          "count": 18,
+          "baseline_file": "config/pmd/ruleset.xml"
+        }
+      ],
       "notes": ""
     },
     {
@@ -632,12 +704,15 @@
       "severity": "DEGRADER",
       "theme": "T1",
       "statement": "An agent cannot know whether a dependency carries a known vulnerability because no resolvable verb runs a dependency-audit check.",
-      "status": "queued",
+      "status": "blocked",
       "by": "agent",
-      "date": "2026-10-30",
-      "reason": null,
+      "date": "2026-10-31",
+      "reason": "needs T2 lockfile scanner (OSV-Scanner on gradle.lockfile); no security verb defined in T1 (Q3)",
       "commits": [],
-      "verification": null,
+      "verification": {
+        "command": "none",
+        "result": "not run"
+      },
       "debt": [],
       "notes": ""
     },
@@ -872,12 +947,17 @@
       "severity": "DEGRADER",
       "theme": "T1",
       "statement": "An agent cannot treat ./gradlew check as the pre-merge gate because it composes only test: no format-check or typecheck task exists (same root cause as the missing verbs in CMD-01).",
-      "status": "queued",
+      "status": "done",
       "by": "agent",
-      "date": "2026-10-30",
+      "date": "2026-10-31",
       "reason": null,
-      "commits": [],
-      "verification": null,
+      "commits": [
+        "8a291b2"
+      ],
+      "verification": {
+        "command": "./gradlew check --dry-run",
+        "result": "order: formatCheck, typecheck, test; check -x test BUILD SUCCESSFUL"
+      },
       "debt": [],
       "notes": ""
     },
@@ -1086,6 +1166,96 @@
       "date": "2026-10-31",
       "phase": "IR05.2",
       "event": "theme T2 not_started to pr_open: branch agentic-readiness/ir05-determinism, PR #110"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR04.2",
+      "event": "preference format.java set to spotless-eclipse-jdt: owner via Hermes 2026-10-31: accept all recommendations (Q1)"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR04.2",
+      "event": "preference lint.java set to pmd: Q2 recommended option"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR04.2",
+      "event": "preference ci.t1_minimum set to fetch-depth-only: Q4 option 1: only fetch-depth 0; report-only steps in IR07.2"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR04.2",
+      "event": "preference check.verify_without_stack set to yes: Q5 option 1: check -x test and --dry-run locally; CI proves the test leg"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR04.2",
+      "event": "preference security.verb.deferred-to-t2 set to yes: Q3 option 1: no security verb until OSV-Scanner on gradle.lockfile; OWASP plugin left in place"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR04.2",
+      "event": "F-001 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR04.2",
+      "event": "F-041 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR04.2",
+      "event": "F-022 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR04.2",
+      "event": "F-023 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR04.2",
+      "event": "F-024 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR04.2",
+      "event": "F-041 in_progress to done by agent"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR04.2",
+      "event": "F-022 in_progress to partial by agent"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR04.2",
+      "event": "F-023 in_progress to partial by agent"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR04.2",
+      "event": "F-024 in_progress to blocked by agent: needs T2 lockfile scanner (OSV-Scanner on gradle.lockfile); no security verb defined in T1 (Q3)"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR04.2",
+      "event": "F-001 in_progress to partial by agent"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR04.2",
+      "event": "F-004 partial to in_progress by agent"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR04.2",
+      "event": "F-004 in_progress to done by agent"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR04.2",
+      "event": "theme T1 not_started to pr_open: branch agentic-readiness/ir04-command-surface, PR #111"
     }
   ]
 }

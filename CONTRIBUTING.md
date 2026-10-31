@@ -33,8 +33,14 @@ Following these guidelines helps to communicate that you respect the time of the
     ```
 4.  **Lint and format:** Make sure your code adheres to the project's coding standards.
     ```bash
-    # Add linting and formatting commands here if available
+    ./gradlew formatCheck   # read-only: changed files must be formatted (Spotless, ratchet against origin/dev)
+    ./gradlew format        # rewrites the changed Java files in place
+    ./gradlew lint          # read-only: PMD bug-oriented ruleset
+    ./gradlew typecheck     # compiles main and test code
+    ./gradlew check         # the pre-merge gate: formatCheck, typecheck, test (needs the local stack), PMD
     ```
+    The formatter only touches files you changed, so the rest of the tree stays as it is. Run `git fetch origin`
+    first so `origin/dev` is current.
 
 ## Pull Request Process
 
