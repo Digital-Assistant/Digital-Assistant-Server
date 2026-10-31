@@ -84,8 +84,12 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 
+  # Report-only: OSV-Scanner over gradle.lockfile (`./gradlew security`). The existing findings are recorded debt,
+  # so the job is outside `gate.needs` and never blocks a merge; it still fails on a scanner error. The count is
+  # written to the job summary. Switch to blocking with SCAN_MODE=block once the count is zero or an ignore list
+  # with a reason and expiry per entry exists, and then add the job to `gate.needs`.
   scan:
-    name: Dependency Scan
+    name: Dependency Scan (report-only)
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -94,8 +98,7 @@ jobs:
         with:
           persist-credentials: false
 
-      # Placeholder: no scanner is chosen yet (no NVD). See docs/TODO.md.
-      - name: Scan
+      - name: Scan lockfile (report-only)
         run: scripts/ci/scan.sh
 
   secrets:
@@ -219,7 +222,7 @@ jobs:
   # failed or cancelled jobs fail the gate.
   gate:
     name: CI Gate
-    needs: [build-test, scan, secrets, codeql, workflow-lint]
+    needs: [build-test, secrets, codeql, workflow-lint]
     if: ${{ always() }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
