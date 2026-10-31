@@ -23,9 +23,18 @@ This repo is only the Quarkus server (Gradle, Java, port **11081**). MariaDB, El
 *   **View infrastructure logs:** `docker logs -f <container>` (e.g. `keycloak-local`, `mariadb-local`)
 
 #### **Build & Validation**
+Gradle is the one runner. Gradle task names cannot contain `:`, so the framework verb `format:check` is `formatCheck`. Run `git fetch origin` first: the formatter checks only files changed since `origin/dev`.
+*   **Setup (non-interactive, resolves locked dependencies):** `./gradlew assemble` (needs JDK 21 on `JAVA_HOME`)
 *   **Build (compile + package):** `./gradlew build`
-*   **Dependency vulnerability scan (OWASP):** `./gradlew dependencyCheckAnalyze`
-*   There is no separate linter or formatter task; follow `CONVENTIONS.md` (tabs, LF, 120 columns).
+*   **format** (writes files): `./gradlew format`
+*   **format:check** (read-only): `./gradlew formatCheck`
+*   **lint** (read-only, PMD): `./gradlew lint`
+*   **typecheck** (compile main and test): `./gradlew typecheck`
+*   **test:** `./gradlew test` (needs the local stack)
+*   **check** (pre-merge gate: formatCheck, typecheck, test, PMD): `./gradlew check`
+*   **security:** no verb yet. It waits for a lockfile scanner (OSV-Scanner on `gradle.lockfile`). `./gradlew dependencyCheckAnalyze` is the old OWASP scan, not the verb: it needs an NVD key that is not set up.
+*   Style follows `CONVENTIONS.md` (tabs, LF, 120 columns); Spotless enforces it on changed files, PMD baselines old violations in `config/pmd/ruleset.xml`.
+*   After changing a dependency or plugin, regenerate the lock: `./gradlew dependencies --write-locks`.
 
 #### **Testing**
 *   **Run all tests:** `./gradlew test`
