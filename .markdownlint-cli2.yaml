@@ -1,0 +1,13 @@
+# Markdown lint rules for docs. Run through scripts/ci/docs-lint.sh (pinned markdownlint-cli2).
+# Line length follows CONVENTIONS.md (120). Tables and code blocks are exempt from the length rule.
+config:
+  default: true
+  MD013:
+    line_length: 120
+    code_blocks: false
+    tables: false
+  MD060: false
+  MD024:
+    siblings_only: true
+  MD033: false
+gitignore: true
