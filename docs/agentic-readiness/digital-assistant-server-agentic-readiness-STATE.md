@@ -83,7 +83,7 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | T1 | Command surface and quality tools | pr_open | 5 | 3 | IR04.2 | `agentic-readiness/ir04-command-surface` | #111 | - |
 | T2 | Execution determinism | pr_open | 2 | 0 | IR05.2 | `agentic-readiness/ir05-determinism` | #110 | - |
 | T3 | Secrets and env | pr_open | 2 | 0 | IR06.2 | `agentic-readiness/ir06-secrets-env` | #112 | - |
-| T4 | CI parity, hooks, commits | branch_open | 3 | 2 | IR07.2 | `agentic-readiness/ir07-ci-hooks` | - | - |
+| T4 | CI parity, hooks, commits | pr_open | 3 | 2 | IR07.2 | `agentic-readiness/ir07-ci-hooks` | #116 | - |
 | T5 | Tests and baselines | not_started | 5 | 5 | - | - | - | - |
 | T6 | Docs and navigation | pr_open | 4 | 0 | IR09.2 | `agentic-readiness/ir09-docs` | #113 | - |
 | T7 | AGENTS.md and governance | not_started | 11 | 10 | - | - | - | - |
@@ -327,3 +327,4 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | 2026-11-01 | IR07.2 | F-025 in_progress to partial by agent: format hook dropped per owner Q4 time budget |
 | 2026-11-01 | IR07.2 | F-040 in_progress to partial by agent: image scan debt (Q3 option 1); dependency scan report-only 101 advisories |
 | 2026-11-01 | IR07.2 | theme T4 not_started to branch_open: branch agentic-readiness/ir07-ci-hooks |
+| 2026-11-01 | IR07.2 | theme T4 branch_open to pr_open: branch agentic-readiness/ir07-ci-hooks, PR #116 |

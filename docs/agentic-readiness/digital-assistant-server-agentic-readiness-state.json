@@ -401,10 +401,10 @@
     {
       "id": "T4",
       "title": "CI parity, hooks, commits",
-      "status": "branch_open",
+      "status": "pr_open",
       "phase": "IR07.2",
       "branch": "agentic-readiness/ir07-ci-hooks",
-      "pr": null,
+      "pr": 116,
       "merged_sha": null
     },
     {
@@ -1633,6 +1633,11 @@
       "date": "2026-11-01",
       "phase": "IR07.2",
       "event": "theme T4 not_started to branch_open: branch agentic-readiness/ir07-ci-hooks"
+    },
+    {
+      "date": "2026-11-01",
+      "phase": "IR07.2",
+      "event": "theme T4 branch_open to pr_open: branch agentic-readiness/ir07-ci-hooks, PR #116"
     }
   ]
 }
