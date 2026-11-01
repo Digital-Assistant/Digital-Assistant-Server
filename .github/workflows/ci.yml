@@ -84,8 +84,12 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 
+  # Report-only: OSV-Scanner over gradle.lockfile (`./gradlew security`). The existing findings are recorded debt,
+  # so the job is outside `gate.needs` and never blocks a merge; it still fails on a scanner error. The count is
+  # written to the job summary. Switch to blocking with SCAN_MODE=block once the count is zero or an ignore list
+  # with a reason and expiry per entry exists, and then add the job to `gate.needs`.
   scan:
-    name: Dependency Scan
+    name: Dependency Scan (report-only)
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -94,8 +98,7 @@ jobs:
         with:
           persist-credentials: false
 
-      # Placeholder: no scanner is chosen yet (no NVD). See docs/TODO.md.
-      - name: Scan
+      - name: Scan lockfile (report-only)
         run: scripts/ci/scan.sh
 
   secrets:
@@ -185,8 +188,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     # Advisory: not part of `gate` yet (owner decision). Runs only when Markdown or its lint wiring changes.
-    # Uses the Node 22+ preinstalled on ubuntu-latest; setup-node and an npm/Puppeteer cache are left out until
-    # their pinned SHAs are verified (the CI theme can add them).
     steps:
       - name: Checkout Code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -211,6 +212,22 @@ jobs:
             echo "run=true" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Setup Node 22
+        if: ${{ steps.changes.outputs.run == 'true' }}
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+
+      # The cache key follows the pinned tool versions in the script.
+      - name: Cache npm and Puppeteer downloads
+        if: ${{ steps.changes.outputs.run == 'true' }}
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.npm
+            ~/.cache/puppeteer
+          key: docs-lint-${{ runner.os }}-${{ hashFiles('scripts/ci/docs-lint.sh') }}
+
       - name: Lint docs
         if: ${{ steps.changes.outputs.run == 'true' }}
         run: scripts/ci/docs-lint.sh
@@ -219,7 +236,7 @@ jobs:
   # failed or cancelled jobs fail the gate.
   gate:
     name: CI Gate
-    needs: [build-test, scan, secrets, codeql, workflow-lint]
+    needs: [build-test, secrets, codeql, workflow-lint]
     if: ${{ always() }}
     runs-on: ubuntu-latest
     timeout-minutes: 5

@@ -40,11 +40,11 @@ flowchart LR
 
 | Script | What it does |
 |---|---|
-| `build.sh` | Builds the jar. Skips tests. |
+| `build.sh` | Builds the jar. Skips tests. Runs `./gradlew clean build -x test`, which includes `formatCheck`, PMD and `typecheck`. With `test.sh` it equals `./gradlew check`. |
 | `test.sh` | Runs the tests (Java 21). Needs MariaDB and Elasticsearch on `127.0.0.1` (start the local stack first). CI points the JDBC URL at its own MariaDB without SSL through `QUARKUS_DATASOURCE_JDBC_URL`, because the packaged URL asks for SSL. The step is blocking. |
-| `scan.sh` | Does nothing for now and prints that the scan is skipped. The NVD-based scan is not used. |
+| `scan.sh` | The `security` verb (`./gradlew security`). Scans `gradle.lockfile` with a pinned OSV-Scanner (SHA-256 checked) and prints the advisory count; also writes it to the job summary. Report-only by default (`ci.yml`, job `Dependency Scan (report-only)`, outside `CI Gate`); `SCAN_MODE=block` fails on any finding. Needs network access to osv.dev. |
 | `image.sh` | Builds the Docker image `udan-server:local`. Does not push. Change the name with `IMAGE_NAME` and `IMAGE_TAG`. With `IMAGE_TAR` set it writes the image to a tar file instead (used by CI). |
-| `image-scan.sh` | Scans an image tar with Trivy (run from a pinned container) and writes a CycloneDX SBOM. Fails on fixable HIGH/CRITICAL findings. Needs Docker. |
+| `image-scan.sh` | Scans an image tar with Trivy (run from a pinned container) and writes a CycloneDX SBOM. Fails on fixable HIGH/CRITICAL findings and writes their count to the job summary; `image.yml` runs it as `Scan image and SBOM (report-only)` (non-blocking, 38 accepted on 2026-10-22). Needs Docker. |
 | `image-push.sh` | Loads an image tar and pushes it under the tags you give. Needs a prior `docker login`. Refuses `latest`. Used by `image.yml` only. |
 | `secrets.sh` | Scans a commit range for secrets with a pinned gitleaks (`ci.yml`, job `Secret Scan`). Old history is not scanned. |
 | `lint-workflows.sh` | Lints the workflows with pinned actionlint and zizmor (`ci.yml`, job `Workflow Lint`). |

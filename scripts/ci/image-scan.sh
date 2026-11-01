@@ -3,6 +3,8 @@
 # Usage: image-scan.sh <image.tar> [sbom-output-path]
 # Fails (exit 1) on any HIGH or CRITICAL vulnerability that has a fix. Unfixable ones are
 # printed in the report but do not fail the build.
+# image.yml runs this step as report-only (continue-on-error): the fixable count goes to the job summary
+# ($GITHUB_STEP_SUMMARY) so a rise is visible. The accepted debt is 38 fixable HIGH/CRITICAL (2026-10-22).
 # Trivy runs from a container pinned by digest, so no third-party GitHub Action is needed.
 set -euo pipefail
 
@@ -28,6 +30,20 @@ run_trivy() {
 
 echo "==> SBOM (CycloneDX)"
 run_trivy image --input /image.tar --format cyclonedx --output "/out/$(basename "${sbom_out}")" --quiet
+
+echo "==> Vulnerability count (fixable HIGH/CRITICAL)"
+json_name="trivy-image.json"
+run_trivy image --input /image.tar --severity HIGH,CRITICAL --ignore-unfixed --format json --output "/out/${json_name}" --quiet
+fixable="$(python3 -I -c 'import json,sys; d=json.load(open(sys.argv[1])); print(sum(len(r.get("Vulnerabilities") or []) for r in d.get("Results") or []))' "${out_dir}/${json_name}")"
+echo "==> ${fixable} fixable HIGH/CRITICAL findings"
+if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
+  {
+    echo "### Image scan (Trivy, report-only)"
+    echo
+    echo "- Fixable HIGH/CRITICAL findings: **${fixable}** (accepted debt: 38 on 2026-10-22; the number may only shrink)"
+    echo "- The step does not block the image push or the deploy."
+  } >> "${GITHUB_STEP_SUMMARY}"
+fi
 
 echo "==> Vulnerability scan (fail on fixable HIGH/CRITICAL)"
 run_trivy image --input /image.tar --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1 --quiet

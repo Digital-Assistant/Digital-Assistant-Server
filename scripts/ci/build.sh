@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Build the Server jar. Tests are skipped here; test.sh runs them.
+# build.sh + test.sh together equal `./gradlew check` (formatCheck, PMD and typecheck run inside `build`).
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 

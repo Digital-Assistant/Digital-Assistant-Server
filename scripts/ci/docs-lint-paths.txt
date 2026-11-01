@@ -8,3 +8,4 @@ docs/adr/0002-tenant-from-udan-realm-header.md
 docs/adr/0003-database-access-through-repositories.md
 docs/architecture/overview.md
 docs/agentic-readiness/README.md
+docs/branch-protection.md

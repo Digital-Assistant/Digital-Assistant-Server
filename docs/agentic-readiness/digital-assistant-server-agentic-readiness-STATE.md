@@ -16,12 +16,12 @@ A skipped finding is final until the owner unskips it, and every preference bind
 
 | Status | Items |
 |---|---|
-| queued | 22 |
+| queued | 20 |
 | in_progress | 0 |
-| done | 9 |
-| partial | 3 |
+| done | 10 |
+| partial | 5 |
 | failed | 0 |
-| blocked | 1 |
+| blocked | 0 |
 | deferred | 2 |
 | skipped | 3 |
 | total | 40 |
@@ -35,11 +35,16 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | `agents_md.release_tags` | never-tag-or-release | F-013: add a section 4 bullet: agents must not create, move or delete tags or releases; Release Please owns both (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
 | `agents_md.section6` | move-to-docs-stance-b | F-039: move section 6 intact to docs/workflow-profiles.md, link it from section 5 steps 3-4; EntityManager rule marked target state for new code, the 14 existing files tolerated and listed in the first ADR (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
 | `check.verify_without_stack` | yes | Q5 option 1: check -x test and --dry-run locally; CI proves the test leg | owner | 2026-10-31 | IR04.2 |
+| `ci.branch_protection_record` | docs/branch-protection.md | IR07.2 Q6 option 1: ruleset Protect dev id 25616141, confirmed 2026-10-31 | owner | 2026-11-01 | IR07.2 |
 | `ci.branch_protection_runbook` | admin-owner | F-040(c): runbook under docs/ after T6 names CI Gate as the required check; the admin is @kcramakrishna; the agent cannot read or set the GitHub setting (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
-| `ci.edits_authorised` | yes | The owner's go-with-the-recommendations answer is the explicit instruction AGENTS.md lines 56 and 59 ask for: T1 may add build plugins, T4 may edit ci.yml and image.yml, within the kept findings (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
+| `ci.commit_rule` | pr-title-doc-only | IR07.2 Q5 option 1: CONTRIBUTING names PR Title workflow; no commitlint; F-037 stays skipped | owner | 2026-11-01 | IR07.2 |
+| `ci.edits_authorised` | yes | restored: IR07.2 did not change this preference | owner | 2026-11-01 | IR07.2 |
 | `ci.image_scan_debt` | accept-38-with-ratchet | F-040(b): accept the 38 fixable HIGH/CRITICAL image findings as recorded debt with a list that may only shrink; do not make the scan blocking now; review date placeholder for the owner (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
+| `ci.scan_policy` | report-only-101-advisories | IR07.2 Q1: first run found 101 advisories in 29 packages, so stays report-only; out of gate.needs; review date placeholder for the owner | owner | 2026-11-01 | IR07.2 |
+| `ci.shape` | keep-wrappers | IR07.2 Q2 option 1: keep scripts/ci wrappers, build.sh + test.sh equal check | owner | 2026-11-01 | IR07.2 |
 | `ci.t1_minimum` | fetch-depth-only | Q4 option 1: only fetch-depth 0; report-only steps in IR07.2 | owner | 2026-10-31 | IR04.2 |
 | `ci.t2_edits` | none | IR05.2 Q4: no workflow or Dockerfile edit; all already name JDK 21 | owner | 2026-10-31 | IR05.2 |
+| `ci.t4_scope` | items-a-b-only | IR07.2 Q7: docs-lint pin/cache and AGENTS.md/ci.yml text only; OWASP dependency-check plugin left alone | owner | 2026-11-01 | IR07.2 |
 | `codeowners.default` | owner-owns-all | F-029: @kcramakrishna owns * and the areas in research/p4-owner-asks.md item 1; second reviewer left as a placeholder; do not enable required code-owner review with a single owner (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
 | `dependabot.header_names_lockfile` | yes | IR05.2 Q5: reword dependabot.yml header with gradle.lockfile and regenerate command (comment only) | owner | 2026-10-31 | IR05.2 |
 | `docs.adr_dir` | docs/adr | IR09.1 Q1/Q5 via Hermes 2026-10-30; IR09.2 Q3: three ADRs, status proposed until owner accepts | owner | 2026-10-31 | IR09.2 |
@@ -57,6 +62,7 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | `format.java_family` | decide-in-IR04.2 | Q3: tool chosen in IR04.2; constraint is CONVENTIONS.md style (tabs, LF, 120 columns); Spotless is the likely tool (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
 | `format.mass_reformat` | no | Q2: formatter in check-only/ratchet mode, violation count recorded as debt, never reformat the tree; other Server PRs are in flight (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
 | `github.owner_handle` | @kcramakrishna | Use for F-029 CODEOWNERS and F-040(c) branch protection: the repository owner's verified account (gh auth status). Any other person's handle stays a named placeholder for the owner to fill (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
+| `hooks.manager` | lefthook-2.2.2-secrets-only | IR07.2 Q4 option 1: lefthook v2.2.2, gitleaks 8.30.1 pre-commit; formatCheck dropped for cold-start time | owner | 2026-11-01 | IR07.2 |
 | `layout.env_example` | scripts/ci/env.example | Owner Q1 "Yes." (via Hermes 2026-10-30); IR06.2 Q1-Q5 recommended option each (via Hermes 2026-10-31): QUARKUS_*/UDAN_* overrides listed as optional names only | owner | 2026-10-31 | IR06.2 |
 | `lint.java` | pmd | Q2 recommended option | owner | 2026-10-31 | IR04.2 |
 | `lock.gradle_width` | lockAllConfigurations | IR05.1 Q1: dependencyLocking lockAllConfigurations + --write-locks, one gradle.lockfile | owner | 2026-10-31 | IR05.2 |
@@ -64,6 +70,7 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | `order.ir05_before_ir04` | yes | IR05.2 Q3: run ahead of IR04.2; IR04.2 regenerates the lock when it adds plugins | owner | 2026-10-31 | IR05.2 |
 | `overlap.section_b` | covered-by-findings | Q5 items 2, 3, 5, 6, 9 are not extra work: 2=F-003 (keep the dependabot comment true), 3=F-040(a)/F-024 (rename the no-op job first), 5=F-039/F-012/F-014, 6=F-001/F-022/F-023/F-024/F-041, 9=F-040(c) with F-035 deferred (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
 | `scanner.choice` | osv-scanner-on-lockfile | F-024: OSV-Scanner on gradle.lockfile (after F-003), no secret needed; rename the no-op Dependency Scan job and correct AGENTS.md line 27 first; drop or leave the OWASP plugin as decided in IR04.2 (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
+| `scanner.version` | osv-scanner-2.7.0 | IR07.2 Q1 option 1: pinned binary with SHA-256 check on gradle.lockfile | owner | 2026-11-01 | IR07.2 |
 | `security.disclosure` | github-private-vulnerability-reporting | F-032: SECURITY.md uses GitHub private vulnerability reporting plus the skeleton; the owner must enable the setting and fill any mailbox/response-time placeholder (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
 | `security.verb.deferred-to-t2` | yes | Q3 option 1: no security verb until OSV-Scanner on gradle.lockfile; OWASP plugin left in place | owner | 2026-10-31 | IR04.2 |
 | `tests.stack_dependent` | decide-in-IR08.2 | Q4: strategy decided in IR08.2; today tests need the live local stack through local-up.sh (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
@@ -73,10 +80,10 @@ A skipped finding is final until the owner unskips it, and every preference bind
 
 | Theme | Title | Status | Items | Open | Phase | Branch | PR | Merged |
 |---|---|---|---|---|---|---|---|---|
-| T1 | Command surface and quality tools | pr_open | 5 | 4 | IR04.2 | `agentic-readiness/ir04-command-surface` | #111 | - |
+| T1 | Command surface and quality tools | pr_open | 5 | 3 | IR04.2 | `agentic-readiness/ir04-command-surface` | #111 | - |
 | T2 | Execution determinism | pr_open | 2 | 0 | IR05.2 | `agentic-readiness/ir05-determinism` | #110 | - |
 | T3 | Secrets and env | pr_open | 2 | 0 | IR06.2 | `agentic-readiness/ir06-secrets-env` | #112 | - |
-| T4 | CI parity, hooks, commits | not_started | 3 | 2 | - | - | - | - |
+| T4 | CI parity, hooks, commits | pr_open | 3 | 2 | IR07.2 | `agentic-readiness/ir07-ci-hooks` | #116 | - |
 | T5 | Tests and baselines | not_started | 5 | 5 | - | - | - | - |
 | T6 | Docs and navigation | pr_open | 4 | 0 | IR09.2 | `agentic-readiness/ir09-docs` | #113 | - |
 | T7 | AGENTS.md and governance | not_started | 11 | 10 | - | - | - | - |
@@ -91,13 +98,13 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | F-001 | CMD-01 | BLOCKER | partial | agent | 2026-10-31 | An agent cannot run the standardized command surface literally because 5 of 7 framework verbs are not defined on any runner (format, format:check, lint, typecheck, security). |
 | F-022 | TOOL-01 | DEGRADER | partial | agent | 2026-10-31 | An agent cannot format a change set the same way every time because no formatter is configured and no format verb is defined. |
 | F-023 | TOOL-02 | DEGRADER | partial | agent | 2026-10-31 | An agent cannot catch lint regressions before they land because no linter is configured and no lint verb is defined. |
-| F-024 | TOOL-04 | DEGRADER | blocked | agent | 2026-10-31 | An agent cannot know whether a dependency carries a known vulnerability because no resolvable verb runs a dependency-audit check. |
+| F-024 | TOOL-04 | DEGRADER | done | agent | 2026-11-01 | An agent cannot know whether a dependency carries a known vulnerability because no resolvable verb runs a dependency-audit check. |
 | F-041 | CMD-02 | DEGRADER | done | agent | 2026-10-31 | An agent cannot treat ./gradlew check as the pre-merge gate because it composes only test: no format-check or typecheck task exists (same root cause as the missing verbs in CMD-01). |
 
 - **F-001**: commits: `8a291b2`; verification: `./gradlew format formatCheck lint typecheck test check --dry-run` gave 6 of 7 verbs resolve; security does not
 - **F-022**: commits: `73eccae`; verification: `./gradlew formatCheck` gave exit 0 on changed files (ratchet vs origin/dev); ./gradlew spotlessCheck -PspotlessFull reports 51 of 89 files; a touched unformatted file fails formatCheck
 - **F-023**: commits: `73eccae`; verification: `./gradlew lint` gave exit 0 under the exclude list; 32 violations in 18 files before the list
-- **F-024**: reason: needs T2 lockfile scanner (OSV-Scanner on gradle.lockfile); no security verb defined in T1 (Q3); verification: `none` gave not run
+- **F-024**: notes: security verb defined; dependency findings recorded as debt, review date placeholder for the owner; commits: `09e783a`; verification: `./gradlew security --dry-run; scripts/ci/scan.sh` gave task resolves; first OSV-Scanner run: 101 advisories in 29 packages (report-only debt)
 - **F-041**: commits: `8a291b2`; verification: `./gradlew check --dry-run` gave order: formatCheck, typecheck, test; check -x test BUILD SUCCESSFUL
 
 ### T2 Execution determinism
@@ -124,11 +131,13 @@ A skipped finding is final until the owner unskips it, and every preference bind
 
 | Finding | Check | Severity | Status | By | Date | Statement |
 |---|---|---|---|---|---|---|
-| F-025 | TOOL-05 | DEGRADER | queued | agent | 2026-10-30 | An agent cannot rely on local hooks to run before a commit because no hook manager is configured. |
+| F-025 | TOOL-05 | DEGRADER | partial | agent | 2026-11-01 | An agent cannot rely on local hooks to run before a commit because no hook manager is configured. |
 | F-037 | TOOL-06 | COSMETIC | skipped | owner | 2026-10-30 | An agent cannot rely on a consistent commit-message convention because no commitlint config, commit-msg hook, or equivalent exists. |
-| F-040 | CI-04 | DEGRADER | queued | agent | 2026-10-30 | An agent cannot trust a green CI because the dependency scan job is a placeholder that always passes, the image scan is continue-on-error, and no committed evidence shows the CI Gate is a required status check. |
+| F-040 | CI-04 | DEGRADER | partial | agent | 2026-11-01 | An agent cannot trust a green CI because the dependency scan job is a placeholder that always passes, the image scan is continue-on-error, and no committed evidence shows the CI Gate is a required status check. |
 
+- **F-025**: commits: `bdc847b`; verification: `gitleaks hook timed; ./gradlew formatCheck timed` gave secret hook ~0.4 s; formatCheck 5.2 s cold (0.7-1.2 s warm)
 - **F-037**: reason: Commit format already enforced where it counts: pr-title.yml rejects non-Conventional-Commit PR titles and merges are squashed, so a local hook adds install friction for no change in dev history (owner answer via Hermes 2026-10-30)
+- **F-040**: commits: `09e783a`, `a3107ce`, `507ff84`, `bdc847b`; verification: `scripts/ci/lint-workflows.sh` gave actionlint/zizmor clean; branch protection recorded (ruleset Protect dev 25616141, CI Gate required, confirmed 2026-10-31)
 
 ### T5 Tests and baselines
 
@@ -211,6 +220,8 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | F-001 | CMD-01 | security verb missing (waits for lockfile scanner) | 1 | - |
 | F-022 | TOOL-01 | files not matching the Eclipse JDT profile (full tree) | 51 | `config/spotless/eclipse-formatter.xml` |
 | F-023 | TOOL-02 | files excluded from PMD (32 violations: 29 main, 3 test) | 18 | `config/pmd/ruleset.xml` |
+| F-025 | TOOL-05 | formatCheck not a hook (cold start over budget) | 1 | - |
+| F-040 | CI-04 | image scan fixable HIGH/CRITICAL findings (non-blocking; review date placeholder for the owner) | 38 | - |
 
 ## Not queued
 
@@ -299,3 +310,21 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | 2026-10-31 | IR09.2 | F-036 in_progress to done by agent |
 | 2026-10-31 | IR09.2 | theme T6 not_started to branch_open: branch agentic-readiness/ir09-docs |
 | 2026-10-31 | IR09.2 | theme T6 branch_open to pr_open: branch agentic-readiness/ir09-docs, PR #113 |
+| 2026-11-01 | IR07.2 | F-025 queued to in_progress by agent |
+| 2026-11-01 | IR07.2 | F-040 queued to in_progress by agent |
+| 2026-11-01 | IR07.2 | preference ci.shape set to keep-wrappers: IR07.2 Q2 option 1: keep scripts/ci wrappers, build.sh + test.sh equal check |
+| 2026-11-01 | IR07.2 | preference hooks.manager set to lefthook-2.2.2-secrets-only: IR07.2 Q4 option 1: lefthook v2.2.2, gitleaks 8.30.1 pre-commit; formatCheck dropped for cold-start time |
+| 2026-11-01 | IR07.2 | preference scanner.version set to osv-scanner-2.7.0: IR07.2 Q1 option 1: pinned binary with SHA-256 check on gradle.lockfile |
+| 2026-11-01 | IR07.2 | preference ci.scan_policy set to report-only-101-advisories: IR07.2 Q1: first run found 101 advisories in 29 packages, so stays report-only; out of gate.needs; review date placeholder for the owner |
+| 2026-11-01 | IR07.2 | preference ci.commit_rule set to pr-title-doc-only: IR07.2 Q5 option 1: CONTRIBUTING names PR Title workflow; no commitlint; F-037 stays skipped |
+| 2026-11-01 | IR07.2 | preference ci.branch_protection_record set to docs/branch-protection.md: IR07.2 Q6 option 1: ruleset Protect dev id 25616141, confirmed 2026-10-31 |
+| 2026-11-01 | IR07.2 | preference ci.t4_scope set to items-a-b-only: IR07.2 Q7: docs-lint pin/cache and AGENTS.md/ci.yml text only; OWASP dependency-check plugin left alone |
+| 2026-11-01 | IR07.2 | preference ci.edits_authorised changed from yes to no-until-IR07-done: T4 edits finished in IR07.2 (P20 answer) |
+| 2026-11-01 | IR07.2 | preference ci.edits_authorised changed from no-until-IR07-done to yes: restored: IR07.2 did not change this preference |
+| 2026-11-01 | IR07.2 | F-024 blocked to queued by agent |
+| 2026-11-01 | IR07.2 | F-024 queued to in_progress by agent |
+| 2026-11-01 | IR07.2 | F-024 in_progress to done by agent |
+| 2026-11-01 | IR07.2 | F-025 in_progress to partial by agent: format hook dropped per owner Q4 time budget |
+| 2026-11-01 | IR07.2 | F-040 in_progress to partial by agent: image scan debt (Q3 option 1); dependency scan report-only 101 advisories |
+| 2026-11-01 | IR07.2 | theme T4 not_started to branch_open: branch agentic-readiness/ir07-ci-hooks |
+| 2026-11-01 | IR07.2 | theme T4 branch_open to pr_open: branch agentic-readiness/ir07-ci-hooks, PR #116 |
