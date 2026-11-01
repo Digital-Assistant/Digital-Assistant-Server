@@ -148,10 +148,10 @@
     {
       "key": "ci.edits_authorised",
       "value": "yes",
-      "reason": "The owner's go-with-the-recommendations answer is the explicit instruction AGENTS.md lines 56 and 59 ask for: T1 may add build plugins, T4 may edit ci.yml and image.yml, within the kept findings (owner answer via Hermes 2026-10-30)",
+      "reason": "restored: IR07.2 did not change this preference",
       "by": "owner",
-      "date": "2026-10-30",
-      "phase": "IR03.1"
+      "date": "2026-11-01",
+      "phase": "IR07.2"
     },
     {
       "key": "tools.jdk_major",
@@ -312,6 +312,62 @@
       "by": "owner",
       "date": "2026-10-31",
       "phase": "IR09.2"
+    },
+    {
+      "key": "ci.shape",
+      "value": "keep-wrappers",
+      "reason": "IR07.2 Q2 option 1: keep scripts/ci wrappers, build.sh + test.sh equal check",
+      "by": "owner",
+      "date": "2026-11-01",
+      "phase": "IR07.2"
+    },
+    {
+      "key": "hooks.manager",
+      "value": "lefthook-2.2.2-secrets-only",
+      "reason": "IR07.2 Q4 option 1: lefthook v2.2.2, gitleaks 8.30.1 pre-commit; formatCheck dropped for cold-start time",
+      "by": "owner",
+      "date": "2026-11-01",
+      "phase": "IR07.2"
+    },
+    {
+      "key": "scanner.version",
+      "value": "osv-scanner-2.7.0",
+      "reason": "IR07.2 Q1 option 1: pinned binary with SHA-256 check on gradle.lockfile",
+      "by": "owner",
+      "date": "2026-11-01",
+      "phase": "IR07.2"
+    },
+    {
+      "key": "ci.scan_policy",
+      "value": "report-only-101-advisories",
+      "reason": "IR07.2 Q1: first run found 101 advisories in 29 packages, so stays report-only; out of gate.needs; review date placeholder for the owner",
+      "by": "owner",
+      "date": "2026-11-01",
+      "phase": "IR07.2"
+    },
+    {
+      "key": "ci.commit_rule",
+      "value": "pr-title-doc-only",
+      "reason": "IR07.2 Q5 option 1: CONTRIBUTING names PR Title workflow; no commitlint; F-037 stays skipped",
+      "by": "owner",
+      "date": "2026-11-01",
+      "phase": "IR07.2"
+    },
+    {
+      "key": "ci.branch_protection_record",
+      "value": "docs/branch-protection.md",
+      "reason": "IR07.2 Q6 option 1: ruleset Protect dev id 25616141, confirmed 2026-10-31",
+      "by": "owner",
+      "date": "2026-11-01",
+      "phase": "IR07.2"
+    },
+    {
+      "key": "ci.t4_scope",
+      "value": "items-a-b-only",
+      "reason": "IR07.2 Q7: docs-lint pin/cache and AGENTS.md/ci.yml text only; OWASP dependency-check plugin left alone",
+      "by": "owner",
+      "date": "2026-11-01",
+      "phase": "IR07.2"
     }
   ],
   "themes": [
@@ -345,9 +401,9 @@
     {
       "id": "T4",
       "title": "CI parity, hooks, commits",
-      "status": "not_started",
-      "phase": null,
-      "branch": null,
+      "status": "branch_open",
+      "phase": "IR07.2",
+      "branch": "agentic-readiness/ir07-ci-hooks",
       "pr": null,
       "merged_sha": null
     },
@@ -788,17 +844,19 @@
       "severity": "DEGRADER",
       "theme": "T1",
       "statement": "An agent cannot know whether a dependency carries a known vulnerability because no resolvable verb runs a dependency-audit check.",
-      "status": "blocked",
+      "status": "done",
       "by": "agent",
-      "date": "2026-10-31",
-      "reason": "needs T2 lockfile scanner (OSV-Scanner on gradle.lockfile); no security verb defined in T1 (Q3)",
-      "commits": [],
+      "date": "2026-11-01",
+      "reason": null,
+      "commits": [
+        "09e783a"
+      ],
       "verification": {
-        "command": "none",
-        "result": "not run"
+        "command": "./gradlew security --dry-run; scripts/ci/scan.sh",
+        "result": "task resolves; first OSV-Scanner run: 101 advisories in 29 packages (report-only debt)"
       },
       "debt": [],
-      "notes": ""
+      "notes": "security verb defined; dependency findings recorded as debt, review date placeholder for the owner"
     },
     {
       "finding": "F-025",
@@ -806,13 +864,24 @@
       "severity": "DEGRADER",
       "theme": "T4",
       "statement": "An agent cannot rely on local hooks to run before a commit because no hook manager is configured.",
-      "status": "queued",
+      "status": "partial",
       "by": "agent",
-      "date": "2026-10-30",
+      "date": "2026-11-01",
       "reason": null,
-      "commits": [],
-      "verification": null,
-      "debt": [],
+      "commits": [
+        "bdc847b"
+      ],
+      "verification": {
+        "command": "gitleaks hook timed; ./gradlew formatCheck timed",
+        "result": "secret hook ~0.4 s; formatCheck 5.2 s cold (0.7-1.2 s warm)"
+      },
+      "debt": [
+        {
+          "what": "formatCheck not a hook (cold start over budget)",
+          "count": 1,
+          "baseline_file": null
+        }
+      ],
       "notes": ""
     },
     {
@@ -1026,13 +1095,27 @@
       "severity": "DEGRADER",
       "theme": "T4",
       "statement": "An agent cannot trust a green CI because the dependency scan job is a placeholder that always passes, the image scan is continue-on-error, and no committed evidence shows the CI Gate is a required status check.",
-      "status": "queued",
+      "status": "partial",
       "by": "agent",
-      "date": "2026-10-30",
+      "date": "2026-11-01",
       "reason": null,
-      "commits": [],
-      "verification": null,
-      "debt": [],
+      "commits": [
+        "09e783a",
+        "a3107ce",
+        "507ff84",
+        "bdc847b"
+      ],
+      "verification": {
+        "command": "scripts/ci/lint-workflows.sh",
+        "result": "actionlint/zizmor clean; branch protection recorded (ruleset Protect dev 25616141, CI Gate required, confirmed 2026-10-31)"
+      },
+      "debt": [
+        {
+          "what": "image scan fixable HIGH/CRITICAL findings (non-blocking; review date placeholder for the owner)",
+          "count": 38,
+          "baseline_file": null
+        }
+      ],
       "notes": ""
     },
     {
@@ -1465,6 +1548,91 @@
       "date": "2026-10-31",
       "phase": "IR09.2",
       "event": "theme T6 branch_open to pr_open: branch agentic-readiness/ir09-docs, PR #113"
+    },
+    {
+      "date": "2026-11-01",
+      "phase": "IR07.2",
+      "event": "F-025 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-11-01",
+      "phase": "IR07.2",
+      "event": "F-040 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-11-01",
+      "phase": "IR07.2",
+      "event": "preference ci.shape set to keep-wrappers: IR07.2 Q2 option 1: keep scripts/ci wrappers, build.sh + test.sh equal check"
+    },
+    {
+      "date": "2026-11-01",
+      "phase": "IR07.2",
+      "event": "preference hooks.manager set to lefthook-2.2.2-secrets-only: IR07.2 Q4 option 1: lefthook v2.2.2, gitleaks 8.30.1 pre-commit; formatCheck dropped for cold-start time"
+    },
+    {
+      "date": "2026-11-01",
+      "phase": "IR07.2",
+      "event": "preference scanner.version set to osv-scanner-2.7.0: IR07.2 Q1 option 1: pinned binary with SHA-256 check on gradle.lockfile"
+    },
+    {
+      "date": "2026-11-01",
+      "phase": "IR07.2",
+      "event": "preference ci.scan_policy set to report-only-101-advisories: IR07.2 Q1: first run found 101 advisories in 29 packages, so stays report-only; out of gate.needs; review date placeholder for the owner"
+    },
+    {
+      "date": "2026-11-01",
+      "phase": "IR07.2",
+      "event": "preference ci.commit_rule set to pr-title-doc-only: IR07.2 Q5 option 1: CONTRIBUTING names PR Title workflow; no commitlint; F-037 stays skipped"
+    },
+    {
+      "date": "2026-11-01",
+      "phase": "IR07.2",
+      "event": "preference ci.branch_protection_record set to docs/branch-protection.md: IR07.2 Q6 option 1: ruleset Protect dev id 25616141, confirmed 2026-10-31"
+    },
+    {
+      "date": "2026-11-01",
+      "phase": "IR07.2",
+      "event": "preference ci.t4_scope set to items-a-b-only: IR07.2 Q7: docs-lint pin/cache and AGENTS.md/ci.yml text only; OWASP dependency-check plugin left alone"
+    },
+    {
+      "date": "2026-11-01",
+      "phase": "IR07.2",
+      "event": "preference ci.edits_authorised changed from yes to no-until-IR07-done: T4 edits finished in IR07.2 (P20 answer)"
+    },
+    {
+      "date": "2026-11-01",
+      "phase": "IR07.2",
+      "event": "preference ci.edits_authorised changed from no-until-IR07-done to yes: restored: IR07.2 did not change this preference"
+    },
+    {
+      "date": "2026-11-01",
+      "phase": "IR07.2",
+      "event": "F-024 blocked to queued by agent"
+    },
+    {
+      "date": "2026-11-01",
+      "phase": "IR07.2",
+      "event": "F-024 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-11-01",
+      "phase": "IR07.2",
+      "event": "F-024 in_progress to done by agent"
+    },
+    {
+      "date": "2026-11-01",
+      "phase": "IR07.2",
+      "event": "F-025 in_progress to partial by agent: format hook dropped per owner Q4 time budget"
+    },
+    {
+      "date": "2026-11-01",
+      "phase": "IR07.2",
+      "event": "F-040 in_progress to partial by agent: image scan debt (Q3 option 1); dependency scan report-only 101 advisories"
+    },
+    {
+      "date": "2026-11-01",
+      "phase": "IR07.2",
+      "event": "theme T4 not_started to branch_open: branch agentic-readiness/ir07-ci-hooks"
     }
   ]
 }
