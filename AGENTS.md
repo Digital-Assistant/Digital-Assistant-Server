@@ -32,7 +32,8 @@ Gradle is the one runner. Gradle task names cannot contain `:`, so the framework
 *   **typecheck** (compile main and test): `./gradlew typecheck`
 *   **test:** `./gradlew test` (needs the local stack)
 *   **check** (pre-merge gate: formatCheck, typecheck, test, PMD): `./gradlew check`
-*   **security:** no verb yet. It waits for a lockfile scanner (OSV-Scanner on `gradle.lockfile`). `./gradlew dependencyCheckAnalyze` is the old OWASP scan, not the verb: it needs an NVD key that is not set up.
+*   **security** (read-only, needs network): `./gradlew security` runs OSV-Scanner on `gradle.lockfile` through `scripts/ci/scan.sh`. It is report-only: it prints the finding count and exits 0 on findings (existing findings are recorded debt); `SCAN_MODE=block` makes it fail. `./gradlew dependencyCheckAnalyze` is the old OWASP scan, not the verb: it needs an NVD key that is not set up.
+*   **Local hooks (optional, once per clone):** install the `lefthook` and `gitleaks` binaries (versions in `CONTRIBUTING.md`, "Local hooks"), then `lefthook install`. The `pre-commit` hook scans the staged change for secrets (`lefthook.yml`). CI is the real gate; do not use `--no-verify`.
 *   Style follows `CONVENTIONS.md` (tabs, LF, 120 columns); Spotless enforces it on changed files, PMD baselines old violations in `config/pmd/ruleset.xml`.
 *   After changing a dependency or plugin, regenerate the lock: `./gradlew dependencies --write-locks`.
 

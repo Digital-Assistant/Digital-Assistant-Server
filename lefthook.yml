@@ -1,0 +1,16 @@
+# Local git hooks (lefthook). One-time setup per clone: install the lefthook and gitleaks binaries
+# (see CONTRIBUTING.md "Local hooks"), then run `lefthook install`.
+#
+# The hook is a fast safety net, not the gate: CI (`CI Gate`) is the real gate. When a hook fails, fix the
+# cause; do not bypass it with --no-verify.
+#
+# Budget: a few seconds, no tests, no network. Measured 2026-10-31:
+#   secret scan on the staged change  ~0.4 s
+#   ./gradlew formatCheck             ~5.2 s with a cold Gradle daemon, ~0.7-1.2 s warm
+# The format check is therefore NOT a hook (a cold start is over budget). Run `./gradlew formatCheck`
+# (changed files only, ratchet against origin/dev) yourself before pushing; CI runs it in `build.sh`.
+pre-commit:
+  commands:
+    secrets:
+      # gitleaks 8.30.1, the version pinned in scripts/ci/secrets.sh. Scans the staged change only.
+      run: gitleaks git --pre-commit --staged --redact --no-banner

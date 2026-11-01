@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Run the Server tests.
+# build.sh + test.sh together equal `./gradlew check` (build.sh runs formatCheck, PMD and typecheck).
 # The tests need MariaDB and Elasticsearch reachable on 127.0.0.1 (see README.md).
 # The Flyway baseline settings below are needed when the database already has tables
 # (as in the local stack). Override them by exporting the variables before you run.
