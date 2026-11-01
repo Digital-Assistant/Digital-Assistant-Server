@@ -20,7 +20,7 @@ concurrency:
 jobs:
   build-test:
     name: Build and Test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     # Throwaway services for the tests. The password exists only inside this job.
     services:
@@ -90,7 +90,7 @@ jobs:
   # with a reason and expiry per entry exists, and then add the job to `gate.needs`.
   scan:
     name: Dependency Scan (report-only)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - name: Checkout Code
@@ -103,7 +103,7 @@ jobs:
 
   secrets:
     name: Secret Scan
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - name: Checkout Code
@@ -136,7 +136,7 @@ jobs:
     name: CodeQL (Java)
     # Fork PRs get a read-only token and cannot upload results, so they skip this job.
     if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     permissions:
       contents: read
@@ -172,7 +172,7 @@ jobs:
 
   workflow-lint:
     name: Workflow Lint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - name: Checkout Code
@@ -185,7 +185,7 @@ jobs:
 
   docs-lint:
     name: Docs Lint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     # Advisory: not part of `gate` yet (owner decision). Runs only when Markdown or its lint wiring changes.
     steps:
@@ -238,7 +238,7 @@ jobs:
     name: CI Gate
     needs: [build-test, secrets, codeql, workflow-lint]
     if: ${{ always() }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - name: Evaluate results
