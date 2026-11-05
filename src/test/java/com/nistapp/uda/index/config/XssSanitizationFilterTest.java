@@ -90,7 +90,7 @@ class XssSanitizationFilterTest {
 			this.method = method;
 			this.mediaType = mediaType;
 			this.stream = new XssSanitizationCountingStream(body);
-			UriInfo uriInfo = (UriInfo) Proxy.newProxyInstance(getClass().getClassLoader(),
+			UriInfo uriInfo = (UriInfo) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
 					new Class<?>[]{UriInfo.class},
 					(proxy, m, args) -> {
 						switch (m.getName()) {
@@ -102,7 +102,8 @@ class XssSanitizationFilterTest {
 								throw new UnsupportedOperationException(m.getName());
 						}
 					});
-			this.context = (ContainerRequestContext) Proxy.newProxyInstance(getClass().getClassLoader(),
+			this.context = (ContainerRequestContext) Proxy.newProxyInstance(
+					Thread.currentThread().getContextClassLoader(),
 					new Class<?>[]{ContainerRequestContext.class}, (proxy, m, args) -> {
 						switch (m.getName()) {
 							case "getMethod" :
