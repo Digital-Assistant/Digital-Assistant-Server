@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -17,158 +18,158 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-
 @Path("/sequence")
 @Authenticated
 public class SequenceListService {
 
-    private static final Logger logger = LoggerUtil.getLogger(SequenceList.class);
+	private static final Logger logger = LoggerUtil.getLogger(SequenceList.class);
 
-    @Inject
-    EntityManager em;
+	@Inject
+	EntityManager em;
 
-    @Inject
-    SequenceListDAO sequenceListDAO;
+	@Inject
+	SequenceListDAO sequenceListDAO;
 
-    @Inject
-    CurrentUser currentUser;
+	@Inject
+	CurrentUser currentUser;
 
-    /**
-     * Updates name, domain, node list and (merged) additional parameters of a recording. Only the recording's owner
-     * may change it; a body {@code usersessionid} is ignored.
-     *
-     * @return the updated recording
-     * @throws BadRequestException when the id is missing or the update fails
-     * @throws NotFoundException   when no recording has that id
-     * @throws ForbiddenException  when the caller does not own the recording
-     */
-    @POST
-    @Path("/update")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Transactional
-    public SequenceList updateSequenceData(SequenceList sequenceList) {
-        if (sequenceList == null || sequenceList.getId() == null) {
-            throw new BadRequestException("id is required");
-        }
-        try {
-            logger.info("Updating sequence data for ID: " + sequenceList.getId().toString());
+	/**
+	 * Updates name, domain, node list and (merged) additional parameters of a recording. Only the recording's owner
+	 * may change it; a body {@code usersessionid} is ignored.
+	 *
+	 * @return the updated recording
+	 * @throws BadRequestException when the id is missing or the update fails
+	 * @throws NotFoundException   when no recording has that id
+	 * @throws ForbiddenException  when the caller does not own the recording
+	 */
+	@POST
+	@Path("/update")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Transactional
+	public SequenceList updateSequenceData(@Valid SequenceList sequenceList) {
+		if (sequenceList == null || sequenceList.getId() == null) {
+			throw new BadRequestException("id is required");
+		}
+		try {
+			logger.info("Updating sequence data for ID: " + sequenceList.getId().toString());
 
-            // Fetch the existing entity from the database; only its owner may change it
-            SequenceList existingSequence = sequenceListDAO.findById(sequenceList.getId());
-            if (existingSequence == null) {
-                logger.warn("Sequence with ID: " + sequenceList.getId() + " not found");
-                throw new NotFoundException();
-            }
-            currentUser.requireOwner(existingSequence.getOwner());
+			// Fetch the existing entity from the database; only its owner may change it
+			SequenceList existingSequence = sequenceListDAO.findById(sequenceList.getId());
+			if (existingSequence == null) {
+				logger.warn("Sequence with ID: " + sequenceList.getId() + " not found");
+				throw new NotFoundException();
+			}
+			currentUser.requireOwner(existingSequence.getOwner());
 
-            boolean hasChanges = false;
+			boolean hasChanges = false;
 
-            // Check and update simple fields
-            if (sequenceList.getName() != null && !Objects.equals(existingSequence.getName(), sequenceList.getName())) {
-                logger.debug("Field 'name' changed from '" + existingSequence.getName() + "' to '" + sequenceList.getName() + "'");
-                existingSequence.setName(sequenceList.getName());
-                hasChanges = true;
-            }
+			// Check and update simple fields
+			if (sequenceList.getName() != null && !Objects.equals(existingSequence.getName(), sequenceList.getName())) {
+				logger.debug("Field 'name' changed from '" + existingSequence.getName() + "' to '"
+						+ sequenceList.getName() + "'");
+				existingSequence.setName(sequenceList.getName());
+				hasChanges = true;
+			}
 
-            if (sequenceList.getDomain() != null && !Objects.equals(existingSequence.getDomain(), sequenceList.getDomain())) {
-                logger.debug("Field 'domain' changed from '" + existingSequence.getDomain() + "' to '" + sequenceList.getDomain() + "'");
-                existingSequence.setDomain(sequenceList.getDomain());
-                hasChanges = true;
-            }
+			if (sequenceList.getDomain() != null
+					&& !Objects.equals(existingSequence.getDomain(), sequenceList.getDomain())) {
+				logger.debug("Field 'domain' changed from '" + existingSequence.getDomain() + "' to '"
+						+ sequenceList.getDomain() + "'");
+				existingSequence.setDomain(sequenceList.getDomain());
+				hasChanges = true;
+			}
 
-            if (sequenceList.getUserclicknodelist() != null && !Objects.equals(existingSequence.getUserclicknodelist(), sequenceList.getUserclicknodelist())) {
-                logger.debug("Field 'userclicknodelist' changed");
-                existingSequence.setUserclicknodelist(sequenceList.getUserclicknodelist());
-                hasChanges = true;
-            }
+			if (sequenceList.getUserclicknodelist() != null
+					&& !Objects.equals(existingSequence.getUserclicknodelist(), sequenceList.getUserclicknodelist())) {
+				logger.debug("Field 'userclicknodelist' changed");
+				existingSequence.setUserclicknodelist(sequenceList.getUserclicknodelist());
+				hasChanges = true;
+			}
 
-            // Handle additionalParams separately as it's a complex object
-            Map<String, Object> existingParams = existingSequence.getAdditionalParams();
-            Map<String, Object> newParams = sequenceList.getAdditionalParams();
+			// Handle additionalParams separately as it's a complex object
+			Map<String, Object> existingParams = existingSequence.getAdditionalParams();
+			Map<String, Object> newParams = sequenceList.getAdditionalParams();
 
-            if (newParams != null) {
-                Map<String, Object> mergedParams = new HashMap<>(existingParams != null ? existingParams : new HashMap<>());
+			if (newParams != null) {
+				Map<String, Object> mergedParams = new HashMap<>(
+						existingParams != null ? existingParams : new HashMap<>());
 
-                for (Map.Entry<String, Object> entry : newParams.entrySet()) {
-                    String key = entry.getKey();
-                    Object newValue = entry.getValue();
-                    Object existingValue = existingParams != null ? existingParams.get(key) : null;
+				for (Map.Entry<String, Object> entry : newParams.entrySet()) {
+					String key = entry.getKey();
+					Object newValue = entry.getValue();
+					Object existingValue = existingParams != null ? existingParams.get(key) : null;
 
-                    // Check if the value has changed
-                    if (!Objects.equals(newValue, existingValue)) {
-                        logger.debug("AdditionalParam '" + key + "' changed from '" + existingValue + "' to '" + newValue + "'");
-                        mergedParams.put(key, newValue);
-                        hasChanges = true;
-                    }
-                }
+					// Check if the value has changed
+					if (!Objects.equals(newValue, existingValue)) {
+						logger.debug("AdditionalParam '" + key + "' changed from '" + existingValue + "' to '"
+								+ newValue + "'");
+						mergedParams.put(key, newValue);
+						hasChanges = true;
+					}
+				}
 
-                // Only update additionalParams if there are changes
-                if (hasChanges) {
-                    existingSequence.setAdditionalParams(mergedParams);
-                }
-            }
+				// Only update additionalParams if there are changes
+				if (hasChanges) {
+					existingSequence.setAdditionalParams(mergedParams);
+				}
+			}
 
-            // Only persist if there are actual changes
-            if (hasChanges) {
-                em.persist(existingSequence);
-                logger.info("Updated sequence with ID: " + existingSequence.getId() + " - changes detected");
-            } else {
-                logger.info("No changes detected for sequence with ID: " + existingSequence.getId());
-            }
+			// Only persist if there are actual changes
+			if (hasChanges) {
+				em.persist(existingSequence);
+				logger.info("Updated sequence with ID: " + existingSequence.getId() + " - changes detected");
+			} else {
+				logger.info("No changes detected for sequence with ID: " + existingSequence.getId());
+			}
 
-            return existingSequence;
-        } catch (WebApplicationException e) {
-            throw e;
-        } catch (Exception e) {
-            logger.error("Error updating sequence data", e);
-            throw new WebApplicationException(Response.Status.BAD_REQUEST);
-        }
-    }
+			return existingSequence;
+		} catch (WebApplicationException e) {
+			throw e;
+		} catch (Exception e) {
+			logger.error("Error updating sequence data", e);
+			throw new WebApplicationException(Response.Status.BAD_REQUEST);
+		}
+	}
 
+	@POST
+	@Path("/reindex/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Transactional
+	public Response reindexSequence(@PathParam("id") Long id) {
+		try {
+			logger.info("Reindexing sequence data for ID: " + id);
 
-    @POST
-    @Path("/reindex/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Transactional
-    public Response reindexSequence(@PathParam("id") Long id) {
-        try {
-            logger.info("Reindexing sequence data for ID: " + id);
+			// Fetch the existing entity from the database
+			SequenceList sequenceToReindex = sequenceListDAO.findById(id);
 
-            // Fetch the existing entity from the database
-            SequenceList sequenceToReindex = sequenceListDAO.findById(id);
+			if (sequenceToReindex != null) {
+				// Reindex the specific entity using Hibernate Search
+				org.hibernate.search.mapper.orm.Search.session(em)
+						.indexingPlan()
+						.addOrUpdate(sequenceToReindex);
 
-            if (sequenceToReindex != null) {
-                // Reindex the specific entity using Hibernate Search
-                org.hibernate.search.mapper.orm.Search.session(em)
-                        .indexingPlan()
-                        .addOrUpdate(sequenceToReindex);
+				logger.info("Successfully reindexed sequence with ID: " + id);
 
-                logger.info("Successfully reindexed sequence with ID: " + id);
-
-                return Response.ok(Map.of(
-                        "success", true,
-                        "message", "Sequence reindexed successfully"
-                )).build();
-            } else {
-                logger.warn("Sequence with ID: " + id + " not found for reindexing");
-                return Response.status(Response.Status.NOT_FOUND)
-                        .entity(Map.of(
-                                "success", false,
-                                "message", "Sequence not found"
-                        ))
-                        .build();
-            }
-        } catch (Exception e) {
-            logger.error("Error reindexing sequence data", e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(Map.of(
-                            "success", false,
-                            "message", "Error reindexing sequence: " + e.getMessage()
-                    ))
-                    .build();
-        }
-    }
-
+				return Response.ok(Map.of(
+						"success", true,
+						"message", "Sequence reindexed successfully")).build();
+			} else {
+				logger.warn("Sequence with ID: " + id + " not found for reindexing");
+				return Response.status(Response.Status.NOT_FOUND)
+						.entity(Map.of(
+								"success", false,
+								"message", "Sequence not found"))
+						.build();
+			}
+		} catch (Exception e) {
+			logger.error("Error reindexing sequence data", e);
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.entity(Map.of(
+							"success", false,
+							"message", "Error reindexing sequence: " + e.getMessage()))
+					.build();
+		}
+	}
 
 }

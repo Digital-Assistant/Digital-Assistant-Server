@@ -47,10 +47,12 @@ public class ClickTrack extends PanacheEntityBase {
 	@Column(length = 200, name = "event_name")
 	// @FullTextField(analyzer = "english")
 	@KeywordField
+	@Size(max = 200, message = "Click type must not exceed 200 characters")
 	private String clicktype; // store the event name
 
 	@GenericField
 	@Column(length = 2000, name = "event_value")
+	@Size(max = 2000, message = "Clicked name must not exceed 2000 characters")
 	private String clickedname; // store the event value
 
 	@GenericField
