@@ -14,6 +14,7 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.*;
 import jakarta.inject.Inject;
 import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,245 +30,249 @@ import java.util.Set;
 @Indexed(index = "sequencelist")
 public class SequenceList {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false, unique = true, length = 11)
-    @GenericField
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", nullable = false, unique = true, length = 11)
+	@GenericField
+	private Long id;
 
-    @FullTextField(analyzer = "english")
-    @Column(length = 5000)
-    private String name;
+	@FullTextField(analyzer = "english")
+	@Column(length = 5000)
+	@Size(max = 5000, message = "Name must not exceed 5000 characters")
+	private String name;
 
-    @GenericField
-    @Column(length = 500)
-    private String usersessionid;
+	@GenericField
+	@Column(length = 500)
+	@Size(max = 500, message = "User session ID must not exceed 500 characters")
+	private String usersessionid;
 
-    @Column(length = 5000)
-    private String userclicknodelist;
+	@Column(length = 5000)
+	@Size(max = 5000, message = "User click node list must not exceed 5000 characters")
+	private String userclicknodelist;
 
-    // @FullTextField(analyzer = "english")
-    @KeywordField
-    @Column(length = 500)
-    private String domain;
+	// @FullTextField(analyzer = "english")
+	@KeywordField
+	@Column(length = 500)
+	@Size(max = 500, message = "Domain must not exceed 500 characters")
+	private String domain;
 
-    @Column(name = "createdat", nullable = false)
-    @GenericField(name = "createdat_sort", sortable = Sortable.YES)
-    private long createdat;
+	@Column(name = "createdat", nullable = false)
+	@GenericField(name = "createdat_sort", sortable = Sortable.YES)
+	private long createdat;
 
-    @OneToMany(mappedBy = "sequenceList", fetch = FetchType.EAGER)
-    @OrderBy("id ASC")
-    @IndexedEmbedded
-    private Set<Userclicknodes> userclicknodesSet;
+	@OneToMany(mappedBy = "sequenceList", fetch = FetchType.EAGER)
+	@OrderBy("id ASC")
+	@IndexedEmbedded
+	private Set<Userclicknodes> userclicknodesSet;
 
-    /**
-     * Declaring Sequence Votes variable
-     */
-    @OneToMany(mappedBy = "sequenceList", fetch = FetchType.EAGER)
-    @IndexedEmbedded
-    private Set<SequenceVotes> sequenceVotes;
+	/**
+	 * Declaring Sequence Votes variable
+	 */
+	@OneToMany(mappedBy = "sequenceList", fetch = FetchType.EAGER)
+	@IndexedEmbedded
+	private Set<SequenceVotes> sequenceVotes;
 
-    @GenericField
-    @Column(name = "deleted", columnDefinition = "integer default 0")
-    private Integer deleted = 0;
+	@GenericField
+	@Column(name = "deleted", columnDefinition = "integer default 0")
+	private Integer deleted = 0;
 
-    @GenericField
-    @Column(name = "isValid")
-    private Integer isValid;
+	@GenericField
+	@Column(name = "isValid")
+	private Integer isValid;
 
-    @GenericField
-    @Column(name = "isIgnored")
-    private Integer isIgnored;
+	@GenericField
+	@Column(name = "isIgnored")
+	private Integer isIgnored;
 
-    /***
-     * Saving additional info
-     */
-    @Column(name = "additionalParams", columnDefinition = "LONGTEXT")
-    @Basic
-    @Type(JsonType.class)
-    @PropertyBinding(binder = @PropertyBinderRef(type = AdditionalParamsBinder.class))
-    @IndexingDependency(
-            // TODO create appropriate dependencies check this stackoverflow
-            // https://stackoverflow.com/questions/68532341/index-hashmap-using-keys-as-fields-names-hibernatesearch
-            derivedFrom = {}, extraction = @ContainerExtraction(extract = ContainerExtract.NO))
-    private Map<String, Object> additionalParams;
+	/***
+	 * Saving additional info
+	 */
+	@Column(name = "additionalParams", columnDefinition = "LONGTEXT")
+	@Basic
+	@Type(JsonType.class)
+	@PropertyBinding(binder = @PropertyBinderRef(type = AdditionalParamsBinder.class))
+	@IndexingDependency(
+			// TODO create appropriate dependencies check this stackoverflow
+			// https://stackoverflow.com/questions/68532341/index-hashmap-using-keys-as-fields-names-hibernatesearch
+			derivedFrom = {}, extraction = @ContainerExtraction(extract = ContainerExtract.NO))
+	private Map<String, Object> additionalParams;
 
-    @PrePersist
-    public void preSave() {
-        // this.createdat = new Timestamp(System.currentTimeMillis());
-        this.createdat = Instant.now().toEpochMilli();
-    }
+	@PrePersist
+	public void preSave() {
+		// this.createdat = new Timestamp(System.currentTimeMillis());
+		this.createdat = Instant.now().toEpochMilli();
+	}
 
-    @Transient
-    public String SharableLink;
+	@Transient
+	public String SharableLink;
 
-    public String getSharableLink() {
-        List<Userclicknodes> userClickNodes = new ArrayList<>(this.getUserclicknodesSet());
-        String url = "";
-        if (!userClickNodes.isEmpty()) {
-            Userclicknodes userClickNode = userClickNodes.get(0);
-            url = "https://" + userClickNode.getDomain()
-                    + ((!userClickNode.getUrlpath().isEmpty()) ? userClickNode.getUrlpath() : '/');
-            if (url.indexOf('?') != -1) {
-                url = url + "&UDA_Sequence_id=" + this.id;
-            } else {
-                url = url + "?UDA_Sequence_id=" + this.id;
-            }
-        } else {
-            url = "https://" + this.domain + "?UDA_Sequence_id=" + this.id;
-        }
-        return url;
-    }
+	public String getSharableLink() {
+		List<Userclicknodes> userClickNodes = new ArrayList<>(this.getUserclicknodesSet());
+		String url = "";
+		if (!userClickNodes.isEmpty()) {
+			Userclicknodes userClickNode = userClickNodes.get(0);
+			url = "https://" + userClickNode.getDomain()
+					+ ((!userClickNode.getUrlpath().isEmpty()) ? userClickNode.getUrlpath() : '/');
+			if (url.indexOf('?') != -1) {
+				url = url + "&UDA_Sequence_id=" + this.id;
+			} else {
+				url = url + "?UDA_Sequence_id=" + this.id;
+			}
+		} else {
+			url = "https://" + this.domain + "?UDA_Sequence_id=" + this.id;
+		}
+		return url;
+	}
 
-    public Long getId() {
-        return id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    /**
-     * The owner as shown in responses: the stored value for the owner, {@code null} for anyone else. Server code
-     * that decides ownership must use {@link #getOwner()}.
-     */
-    public String getUsersessionid() {
-        return OwnerView.visibleTo(usersessionid);
-    }
+	/**
+	 * The owner as shown in responses: the stored value for the owner, {@code null} for anyone else. Server code
+	 * that decides ownership must use {@link #getOwner()}.
+	 */
+	public String getUsersessionid() {
+		return OwnerView.visibleTo(usersessionid);
+	}
 
-    /**
-     * The stored owner ({@code user_auth_data.authid}, or a numeric {@code user_auth_data.id} on old rows), never
-     * written to responses.
-     */
-    @JsonIgnore
-    @JsonbTransient
-    public String getOwner() {
-        return usersessionid;
-    }
+	/**
+	 * The stored owner ({@code user_auth_data.authid}, or a numeric {@code user_auth_data.id} on old rows), never
+	 * written to responses.
+	 */
+	@JsonIgnore
+	@JsonbTransient
+	public String getOwner() {
+		return usersessionid;
+	}
 
-    public void setUsersessionid(String usersessionid) {
-        this.usersessionid = usersessionid;
-    }
+	public void setUsersessionid(String usersessionid) {
+		this.usersessionid = usersessionid;
+	}
 
-    public String getUserclicknodelist() {
-        return userclicknodelist;
-    }
+	public String getUserclicknodelist() {
+		return userclicknodelist;
+	}
 
-    public void setUserclicknodelist(String userclicknodelist) {
-        this.userclicknodelist = userclicknodelist;
-    }
+	public void setUserclicknodelist(String userclicknodelist) {
+		this.userclicknodelist = userclicknodelist;
+	}
 
-    public String getDomain() {
-        return domain;
-    }
+	public String getDomain() {
+		return domain;
+	}
 
-    public void setDomain(String domain) {
-        this.domain = domain;
-    }
+	public void setDomain(String domain) {
+		this.domain = domain;
+	}
 
-    public long getCreatedat() {
-        return createdat;
-    }
+	public long getCreatedat() {
+		return createdat;
+	}
 
-    public void setCreatedat(long createdat) {
-        this.createdat = createdat;
-    }
+	public void setCreatedat(long createdat) {
+		this.createdat = createdat;
+	}
 
-    public Set<Userclicknodes> getUserclicknodesSet() {
-        return userclicknodesSet;
-    }
+	public Set<Userclicknodes> getUserclicknodesSet() {
+		return userclicknodesSet;
+	}
 
-    public void setUserclicknodesSet(Set<Userclicknodes> userclicknodesSet) {
-        this.userclicknodesSet = userclicknodesSet;
-    }
+	public void setUserclicknodesSet(Set<Userclicknodes> userclicknodesSet) {
+		this.userclicknodesSet = userclicknodesSet;
+	}
 
-    public Integer getDeleted() {
-        return deleted;
-    }
+	public Integer getDeleted() {
+		return deleted;
+	}
 
-    public void setDeleted(Integer deleted) {
-        this.deleted = deleted;
-    }
+	public void setDeleted(Integer deleted) {
+		this.deleted = deleted;
+	}
 
-    public Integer getIsValid() {
-        return isValid;
-    }
+	public Integer getIsValid() {
+		return isValid;
+	}
 
-    public void setIsValid(Integer isValid) {
-        this.isValid = isValid;
-    }
+	public void setIsValid(Integer isValid) {
+		this.isValid = isValid;
+	}
 
-    public Integer getIsIgnored() {
-        return isIgnored;
-    }
+	public Integer getIsIgnored() {
+		return isIgnored;
+	}
 
-    public void setIsIgnored(Integer isIgnored) {
-        this.isIgnored = isIgnored;
-    }
+	public void setIsIgnored(Integer isIgnored) {
+		this.isIgnored = isIgnored;
+	}
 
-    public Map<String, Object> getAdditionalParams() {
-        return additionalParams;
-    }
+	public Map<String, Object> getAdditionalParams() {
+		return additionalParams;
+	}
 
-    public void setAdditionalParams(Map<String, Object> additionalParams) {
-        this.additionalParams = additionalParams;
-    }
+	public void setAdditionalParams(Map<String, Object> additionalParams) {
+		this.additionalParams = additionalParams;
+	}
 
-    /**
-     * Getter for sequenceVote
-     * 
-     * @return
-     */
-    public Set<SequenceVotes> getSequenceVotes() {
-        return sequenceVotes;
-    }
+	/**
+	 * Getter for sequenceVote
+	 * 
+	 * @return
+	 */
+	public Set<SequenceVotes> getSequenceVotes() {
+		return sequenceVotes;
+	}
 
-    /**
-     * Setter for sequenceVote
-     * 
-     * @return
-     */
-    public void setSequenceVotes(Set<SequenceVotes> sequenceVotes) {
-        this.sequenceVotes = sequenceVotes;
-    }
+	/**
+	 * Setter for sequenceVote
+	 * 
+	 * @return
+	 */
+	public void setSequenceVotes(Set<SequenceVotes> sequenceVotes) {
+		this.sequenceVotes = sequenceVotes;
+	}
 
-    /**
-     * Declaration of upvote count and downvote count
-     */
-    @Transient
-    public Integer upVoteCount = 0;
+	/**
+	 * Declaration of upvote count and downvote count
+	 */
+	@Transient
+	public Integer upVoteCount = 0;
 
-    public Integer getUpVoteCount() {
-        Integer totalLikes = 0;
-        for (SequenceVotes sequenceVote : this.sequenceVotes) {
-            if (sequenceVote.getUpvote() == 1) {
-                totalLikes++;
-            }
-        }
+	public Integer getUpVoteCount() {
+		Integer totalLikes = 0;
+		for (SequenceVotes sequenceVote : this.sequenceVotes) {
+			if (sequenceVote.getUpvote() == 1) {
+				totalLikes++;
+			}
+		}
 
-        return totalLikes;
-    }
+		return totalLikes;
+	}
 
-    @Transient
-    public Integer downVoteCount;
+	@Transient
+	public Integer downVoteCount;
 
-    public Integer getDownVoteCount() {
-        Integer totalDisLikes = 0;
-        for (SequenceVotes sequenceVote : this.sequenceVotes) {
-            if (sequenceVote.getDownvote() == 1) {
-                totalDisLikes++;
-            }
-        }
+	public Integer getDownVoteCount() {
+		Integer totalDisLikes = 0;
+		for (SequenceVotes sequenceVote : this.sequenceVotes) {
+			if (sequenceVote.getDownvote() == 1) {
+				totalDisLikes++;
+			}
+		}
 
-        return totalDisLikes;
-    }
+		return totalDisLikes;
+	}
 
 }
