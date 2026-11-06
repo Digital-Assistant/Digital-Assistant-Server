@@ -1566,7 +1566,9 @@
       "remediation": {
         "summary": "Add a committed setup path (a devcontainer, compose file, or a documented install command in README.md) that runs with no prompts."
       },
-      "disposition": "pending"
+      "disposition": "edited",
+      "disposition_note": "README.md now names the setup command (./gradlew assemble) and AGENTS.md points to it, so people and agents read one source (commit 5779089 on the Server branch docs/readme-setup-command).",
+      "confirmed_via": "interactive"
     },
     {
       "id": "F-002",
@@ -1579,7 +1581,9 @@
       "remediation": {
         "summary": "Add the missing keys to .env.example (values redacted) so the environment can be provisioned without reading the source."
       },
-      "disposition": "pending"
+      "disposition": "rejected",
+      "disposition_note": "Documented in scripts/ci/env.example; the engine does not read that location (issue 52). SECONDS is a bash builtin.",
+      "confirmed_via": "interactive"
     },
     {
       "id": "F-003",
@@ -1592,7 +1596,9 @@
       "remediation": {
         "summary": "Register the server in a project config (for example `opencode.json`) or a user config (`~/.config/opencode/opencode.json`)."
       },
-      "disposition": "pending"
+      "disposition": "deferred",
+      "disposition_note": "True: no project-level MCP config is committed. Owner wants a tool-neutral file (for example .mcp.json), not a tool-specific one; decide with the maintainers.",
+      "confirmed_via": "interactive"
     },
     {
       "id": "F-004",
@@ -1615,7 +1621,9 @@
       "remediation": {
         "summary": "Remove the value from the file and its history, load it from the environment, and rotate the credential. The report never records the value itself."
       },
-      "disposition": "pending"
+      "disposition": "rejected",
+      "disposition_note": "Deliberate invalid sentinel token in the 401 smoke test; same as first-audit F-006.",
+      "confirmed_via": "interactive"
     },
     {
       "id": "F-005",
@@ -1643,7 +1651,9 @@
       "remediation": {
         "summary": "Reconcile the two files, or delete the shadowed one — a file nobody reads still gets edited."
       },
-      "disposition": "pending"
+      "disposition": "rejected",
+      "disposition_note": "CLAUDE.md is a one-line import of AGENTS.md, so both are read.",
+      "confirmed_via": "batch"
     },
     {
       "id": "F-006",
@@ -1671,7 +1681,9 @@
       "remediation": {
         "summary": "Keep AGENTS.md canonical; reduce each vendor file to a pointer at it, or delete it if the harness reads AGENTS.md natively."
       },
-      "disposition": "pending"
+      "disposition": "rejected",
+      "disposition_note": "CLAUDE.md is that same pointer; CONVENTIONS.md is the coding-style guide AGENTS.md refers to, not a vendor file.",
+      "confirmed_via": "batch"
     },
     {
       "id": "F-007",
@@ -1716,7 +1728,9 @@
       "remediation": {
         "summary": "Commit the count or configure a budget (`--max-warnings N`, `max-issues`, or a `violation budget`) so a regression has a baseline number to compare against."
       },
-      "disposition": "pending"
+      "disposition": "deferred",
+      "disposition_note": "True: PMD debt is a list of excluded files, no number is committed.",
+      "confirmed_via": "batch"
     },
     {
       "id": "F-008",
@@ -1744,7 +1758,9 @@
       "remediation": {
         "summary": "Move the threshold into test-runner configuration (`coverage.fail_under`, `--cov-fail-under`, `coverageThreshold`, or a vitest/jest `thresholds` block)."
       },
-      "disposition": "pending"
+      "disposition": "rejected",
+      "disposition_note": "Coverage floor is configured: jacocoTestCoverageVerification minimum 0.70 in build.gradle; the engine does not read Gradle.",
+      "confirmed_via": "batch"
     },
     {
       "id": "F-009",
@@ -1766,7 +1782,9 @@
       "remediation": {
         "summary": "Commit a formatter config (for example `.prettierrc.json`) so the tool's behaviour does not depend on defaults."
       },
-      "disposition": "pending"
+      "disposition": "rejected",
+      "disposition_note": "Spotless is configured in build.gradle; the engine does not read Gradle.",
+      "confirmed_via": "batch"
     },
     {
       "id": "F-010",
@@ -1788,7 +1806,9 @@
       "remediation": {
         "summary": "Commit a linter config (for example `.eslintrc.json` or `[tool.ruff]`) so the rule set does not depend on defaults."
       },
-      "disposition": "pending"
+      "disposition": "rejected",
+      "disposition_note": "PMD rules are in config/pmd/ruleset.xml; the engine does not read Gradle.",
+      "confirmed_via": "batch"
     },
     {
       "id": "F-011",
@@ -1810,7 +1830,9 @@
       "remediation": {
         "summary": "Make the security verb run a dependency audit (npm audit, pip-audit, osv-scanner, cargo audit, govulncheck, snyk)."
       },
-      "disposition": "pending"
+      "disposition": "rejected",
+      "disposition_note": "./gradlew security runs OSV-Scanner through scripts/ci/scan.sh (issue 52).",
+      "confirmed_via": "batch"
     },
     {
       "id": "F-012",
@@ -1831,7 +1853,9 @@
       "remediation": {
         "summary": "Replace the stub with a description, a quick-start, and a link to the documentation."
       },
-      "disposition": "pending"
+      "disposition": "rejected",
+      "disposition_note": "The word placeholder appears in one config table cell; the README is not a stub.",
+      "confirmed_via": "batch"
     },
     {
       "id": "F-013",
@@ -1844,7 +1868,9 @@
       "remediation": {
         "summary": "Add CHANGELOG.md and record notable changes under a version heading."
       },
-      "disposition": "pending"
+      "disposition": "deferred",
+      "disposition_note": "True: no CHANGELOG yet; release-please creates it at the first release.",
+      "confirmed_via": "batch"
     },
     {
       "id": "F-014",
@@ -1865,7 +1891,9 @@
       "remediation": {
         "summary": "Add a commitlint config or a commit-msg hook so commit messages follow one convention."
       },
-      "disposition": "pending"
+      "disposition": "rejected",
+      "disposition_note": "The Conventional Commit Title CI check enforces the convention at squash merge.",
+      "confirmed_via": "batch"
     },
     {
       "id": "F-015",
@@ -1907,7 +1935,9 @@
       "remediation": {
         "summary": "Confirm on the platform that CI Gate is the required status check; decide whether the report-only scan and docs lint should join the gate once their baselines are at zero."
       },
-      "disposition": "pending"
+      "disposition": "deferred",
+      "disposition_note": "True: dependency scan and docs lint run outside CI Gate; owner must confirm on GitHub that CI Gate is the required check.",
+      "confirmed_via": "batch"
     }
   ],
   "summary": {
@@ -1920,7 +1950,7 @@
       "unknown": 2
     },
     "unknown_scored_checks": 5,
-    "unconfirmed_agent_findings": 1
+    "unconfirmed_agent_findings": 0
   },
   "unattested": [
     {
