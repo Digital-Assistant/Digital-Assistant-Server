@@ -16,10 +16,10 @@ A skipped finding is final until the owner unskips it, and every preference bind
 
 | Status | Items |
 |---|---|
-| queued | 15 |
+| queued | 5 |
 | in_progress | 0 |
-| done | 10 |
-| partial | 10 |
+| done | 17 |
+| partial | 13 |
 | failed | 0 |
 | blocked | 0 |
 | deferred | 2 |
@@ -31,9 +31,15 @@ A skipped finding is final until the owner unskips it, and every preference bind
 
 | Key | Value | Reason | By | Date | Phase |
 |---|---|---|---|---|---|
+| `agents_md.contradicted_rules` | target-state | IR10.2 Q2=1: EntityManager rule becomes target state with exception count; no code edit (owner an... | owner | 2026-11-06 | IR10.2 |
+| `agents_md.deferral` | inline | IR10.2 Q3=1: must-always rules move into a Code conventions block, CONVENTIONS.md not edited (own... | owner | 2026-11-06 | IR10.2 |
+| `agents_md.generic_text` | move-to-docs | IR10.2 Q2=1: section 6 and persona lines move to docs/workflow-profiles.md (owner answer via Herm... | owner | 2026-11-06 | IR10.2 |
+| `agents_md.harness_files` | none | IR10.2 Q4=1: F-027 recorded partial with the six harnesses; no file created (owner answer via Her... | owner | 2026-11-06 | IR10.2 |
 | `agents_md.pointer_section` | section-5 | Q6: pointer line goes in AGENTS.md section 5 (Development & Contribution Workflow) (owner answer... | owner | 2026-10-30 | IR03.1 |
 | `agents_md.release_tags` | never-tag-or-release | F-013: add a section 4 bullet: agents must not create, move or delete tags or releases; Release P... | owner | 2026-10-30 | IR03.1 |
+| `agents_md.scratch_ignore` | artefacts/ | IR10.2 Q5=1: artefacts/ added to .gitignore in its own commit (owner answer via Hermes 2026-11-06) | owner | 2026-11-06 | IR10.2 |
 | `agents_md.section6` | move-to-docs-stance-b | F-039: move section 6 intact to docs/workflow-profiles.md, link it from section 5 steps 3-4; Enti... | owner | 2026-10-30 | IR03.1 |
+| `agents_md.stubs` | keep | IR10.2 Q3=1: CLAUDE.md stays the pointer stub; no new harness file (Q4=1) (owner answer via Herme... | owner | 2026-11-06 | IR10.2 |
 | `baseline.form` | counts-file-plus-native | IR08.2 Q4=1: native baselines kept; counts file compared in formatCheck for offline tools and in... | owner | 2026-11-06 | IR08.2 |
 | `check.verify_without_stack` | yes | Q5 option 1: check -x test and --dry-run locally; CI proves the test leg | owner | 2026-10-31 | IR04.2 |
 | `ci.branch_protection_record` | docs/branch-protection.md | IR07.2 Q6 option 1: ruleset Protect dev id 25616141, confirmed 2026-10-31 | owner | 2026-11-01 | IR07.2 |
@@ -81,6 +87,14 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | `tests.stack_dependent` | live-stack-with-offline-subset | IR08.2 Q1=1: measure with the live stack through the scripts; the 5 non-QuarkusTest classes are t... | owner | 2026-11-06 | IR08.2 |
 | `tools.jdk_major` | 21 | IR05.2 Q1: toolchain block only, JDK 21 (answered via Hermes 2026-10-31) | owner | 2026-10-31 | IR05.2 |
 
+- `agents_md.contradicted_rules`: value: target-state; reason: IR10.2 Q2=1: EntityManager rule becomes target
+  state with exception count; no code edit (owner answer via Hermes 2026-11-06)
+- `agents_md.deferral`: value: inline; reason: IR10.2 Q3=1: must-always rules move into a Code conventions
+  block, CONVENTIONS.md not edited (owner answer via Hermes 2026-11-06)
+- `agents_md.generic_text`: value: move-to-docs; reason: IR10.2 Q2=1: section 6 and persona lines move to
+  docs/workflow-profiles.md (owner answer via Hermes 2026-11-06)
+- `agents_md.harness_files`: value: none; reason: IR10.2 Q4=1: F-027 recorded partial with the six harnesses;
+  no file created (owner answer via Hermes 2026-11-06)
 - `agents_md.pointer_section`: value: section-5; reason: Q6: pointer line goes in AGENTS.md section 5
   (Development & Contribution Workflow) (owner answer via Hermes 2026-10-30)
 - `agents_md.release_tags`: value: never-tag-or-release; reason: F-013: add a section 4 bullet: agents must
@@ -88,6 +102,8 @@ A skipped finding is final until the owner unskips it, and every preference bind
 - `agents_md.section6`: value: move-to-docs-stance-b; reason: F-039: move section 6 intact to
   docs/workflow-profiles.md, link it from section 5 steps 3-4; EntityManager rule marked target state for new
   code, the 14 existing files tolerated and listed in the first ADR (owner answer via Hermes 2026-10-30)
+- `agents_md.stubs`: value: keep; reason: IR10.2 Q3=1: CLAUDE.md stays the pointer stub; no new harness file
+  (Q4=1) (owner answer via Hermes 2026-11-06)
 - `baseline.form`: value: counts-file-plus-native; reason: IR08.2 Q4=1: native baselines kept; counts file
   compared in formatCheck for offline tools and in the CI scan job for OSV (owner answer via Hermes
   2026-11-06)
@@ -162,9 +178,9 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | T2 | Execution determinism | merged | 2 | 0 | IR08.2 | `agentic-readiness/ir05-determinism` | #110 | `a5baa0980f9100e972300d33c76555c0bf4c746c` |
 | T3 | Secrets and env | merged | 2 | 0 | IR08.2 | `agentic-readiness/ir06-secrets-env` | #112 | `30007cbabca4ca973eea6ab68caf3d0b76f2e591` |
 | T4 | CI parity, hooks, commits | merged | 3 | 2 | IR08.2 | `agentic-readiness/ir07-ci-hooks` | #116 | `f246aab5b9b1c81ac32deedd90ab683da5a97114` |
-| T5 | Tests and baselines | pr_open | 5 | 5 | IR08.2 | `agentic-readiness/ir08-baselines` | #121 | - |
+| T5 | Tests and baselines | merged | 5 | 5 | IR10.2 | `agentic-readiness/ir08-baselines` | #121 | `57621d6b47c6981c7ef420fe8e73ee3a86d37848` |
 | T6 | Docs and navigation | merged | 4 | 0 | IR08.2 | `agentic-readiness/ir09-docs` | #113 | `d40cf99d70ed9688bc0b1940472b13057dc3f477` |
-| T7 | AGENTS.md and governance | not_started | 11 | 10 | - | - | - | - |
+| T7 | AGENTS.md and governance | pr_open | 11 | 3 | IR10.2 | `agentic-readiness/ir10-agents-md` | #122 | - |
 | T8 | Hygiene and index | not_started | 8 | 7 | - | - | - | - |
 
 ## Items by theme
@@ -288,20 +304,36 @@ A skipped finding is final until the owner unskips it, and every preference bind
 
 | Finding | Check | Severity | Status | By | Date | Statement |
 |---|---|---|---|---|---|---|
-| F-002 | CON-02 | BLOCKER | queued | agent | 2026-10-30 | An agent cannot trust that a failing test is not rewritten to pass because the prohibitions section of AGENTS.md does not name any test directory. |
-| F-007 | AGT-03 | DEGRADER | queued | agent | 2026-10-30 | An agent cannot know where permanent and scratch documentation live because AGENTS.md does not name docs/STYLE_GUIDE.md, artefacts/. |
-| F-008 | AGT-04 | DEGRADER | queued | agent | 2026-10-30 | An agent cannot keep code and its documentation in step because no definition-of-done sentence ties a documentation trigger to the same change set. |
-| F-009 | AGT-05 | DEGRADER | queued | agent | 2026-10-30 | An agent cannot use the project's own commands instead of inventing them because not named: format:check, lint, typecheck; not resolved: format, format:check, lint, typecheck, security. |
-| F-010 | AGT-07 | DEGRADER | queued | agent | 2026-10-30 | An agent cannot rely on an explicit do-not list because AGENTS.md does not prohibit edits to tests, generated files. |
+| F-002 | CON-02 | BLOCKER | done | agent | 2026-11-06 | An agent cannot trust that a failing test is not rewritten to pass because the prohibitions section of AGENTS.md does not name any test directory. |
+| F-007 | AGT-03 | DEGRADER | done | agent | 2026-11-06 | An agent cannot know where permanent and scratch documentation live because AGENTS.md does not name docs/STYLE_GUIDE.md, artefacts/. |
+| F-008 | AGT-04 | DEGRADER | done | agent | 2026-11-06 | An agent cannot keep code and its documentation in step because no definition-of-done sentence ties a documentation trigger to the same change set. |
+| F-009 | AGT-05 | DEGRADER | done | agent | 2026-11-06 | An agent cannot use the project's own commands instead of inventing them because not named: format:check, lint, typecheck; not resolved: format, format:check, lint, typecheck, security. |
+| F-010 | AGT-07 | DEGRADER | done | agent | 2026-11-06 | An agent cannot rely on an explicit do-not list because AGENTS.md does not prohibit edits to tests, generated files. |
 | F-011 | AGT-08 | DEGRADER | skipped | owner | 2026-10-30 | An agent cannot be sure that both files are read because CLAUDE.md shadows AGENTS.md for the harness that defines the pair, so only one of the two is ever loaded. |
-| F-012 | AGT-08 | DEGRADER | queued | agent | 2026-10-30 | An agent cannot know which instruction file is authoritative because 2 vendor-specific instruction files exist alongside the canonical one (CLAUDE.md, CONVENTIONS.md). |
-| F-013 | AGT-09 | DEGRADER | queued | agent | 2026-10-30 | An agent cannot know which branch to work on and whether it may cut a release because the branch model is stated but nothing says whether an agent may tag or release. |
-| F-014 | AGT-10 | DEGRADER | queued | agent | 2026-10-30 | An agent cannot trust that the referenced rules are actually loaded because the instruction file defers its content to CONVENTIONS.md and no harness configuration names that file, so loading depends on the agent choosing to follow the pointer. |
-| F-027 | AGT-08 | COSMETIC | queued | agent | 2026-10-30 | An agent cannot assume every harness on the team sees the project rules because 21 of 27 known harnesses reach an instruction file; Amazon Q Developer, Continue, Google Gemini CLI, Qwen Code, Replit Agent, Void reach nothing. |
-| F-039 | AGT-11 | DEGRADER | queued | agent | 2026-10-30 | An agent cannot rely on AGENTS.md being specific because about 62% of its rule lines are generic (section 6 role-play prompts, persona lines) and its EntityManager rule is contradicted by the code in several services. |
+| F-012 | AGT-08 | DEGRADER | partial | agent | 2026-11-06 | An agent cannot know which instruction file is authoritative because 2 vendor-specific instruction files exist alongside the canonical one (CLAUDE.md, CONVENTIONS.md). |
+| F-013 | AGT-09 | DEGRADER | done | agent | 2026-11-06 | An agent cannot know which branch to work on and whether it may cut a release because the branch model is stated but nothing says whether an agent may tag or release. |
+| F-014 | AGT-10 | DEGRADER | done | agent | 2026-11-06 | An agent cannot trust that the referenced rules are actually loaded because the instruction file defers its content to CONVENTIONS.md and no harness configuration names that file, so loading depends on the agent choosing to follow the pointer. |
+| F-027 | AGT-08 | COSMETIC | partial | agent | 2026-11-06 | An agent cannot assume every harness on the team sees the project rules because 21 of 27 known harnesses reach an instruction file; Amazon Q Developer, Continue, Google Gemini CLI, Qwen Code, Replit Agent, Void reach nothing. |
+| F-039 | AGT-11 | DEGRADER | partial | agent | 2026-11-06 | An agent cannot rely on AGENTS.md being specific because about 62% of its rule lines are generic (section 6 role-play prompts, persona lines) and its EntityManager rule is contradicted by the code in several services. |
 
+- **F-002**: commits: `93a56b7`; verification: `engine.py: CON-02` gave CON-02 PASS, src/test/ named
+- **F-007**: commits: `9b0eeca`, `e70df4b`; verification: `engine.py: AGT-03` gave AGT-03 PASS
+- **F-008**: commits: `8d68dcf`; verification: `engine.py: AGT-04` gave AGT-04 PASS
+- **F-009**: verification: `engine.py: AGT-05, EXEC-06` gave AGT-05 PASS 7 verbs, EXEC-06 PASS
+- **F-010**: notes: Harness permission review: no harness config present.; commits: `93a56b7`; verification:
+  `engine.py: AGT-07` gave AGT-07 PASS; harness permission review: none present
 - **F-011**: reason: CLAUDE.md is an @AGENTS.md import stub (11 bytes), not a shadowing file; the audit could
   not tell the pattern apart. Owner: go with the recommendations (owner answer via Hermes 2026-10-30)
+- **F-012**: notes: Owner Q3=1: stub kept, CONVENTIONS.md not edited; staleness reported in the PR; commits:
+  `a2dec46`; verification: `engine.py: AGT-08` gave reach line true; vendor-files check still FAIL: CLAUDE.md
+  stub and CONVENTIONS.md kept
+- **F-013**: commits: `400a9e6`; verification: `engine.py: AGT-09` gave AGT-09 PASS; master verified in
+  release.yml
+- **F-014**: commits: `191ff4d`; verification: `engine.py: AGT-10` gave AGT-10 PASS
+- **F-027**: notes: Owner Q4=1: no harness file created; unreached: Amazon Q Developer, Continue, Gemini CLI,
+  Qwen Code, Replit Agent, Void; verification: `engine.py: AGT-08` gave 22/28 harnesses reached
+- **F-039**: notes: EntityManager rule kept as target state (Q2=1); section 6 and persona moved; commits:
+  `64a2336`; verification: `grep -rln EntityManager src/main | wc -l` gave 14 files
 
 ### T8 Hygiene and index
 
@@ -356,6 +388,9 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | F-017 | BASE-03 | debt kinds guarded by the no-new-violations check (PMD exclude list / Spotless full run / OSV / skip markers) | 4 | `docs/agentic-readiness/digital-assistant-server-quality-baseline.json` |
 | F-018 | BASE-04 | coverage floor (line %) | 70 | `build.gradle` |
 | F-038 | TST-05 | test classes that need the live local stack (no offline path; 5 of 20 classes run without it) | 15 | `AGENTS.md` |
+| F-012 | AGT-08 | vendor instruction files beside AGENTS.md | 2 | - |
+| F-027 | AGT-08 | harnesses that reach no instruction file | 6 | - |
+| F-039 | AGT-11 | files that break the EntityManager rule | 14 | - |
 
 ## Not queued
 
@@ -490,3 +525,31 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | 2026-11-06 | IR08.2 | preference extra.t5 changed from offline-test-verb to offline-test-verb: done as 5 named classes plus fenced command in AGENTS.md; 15 of 20 classes need the live stack (debt on F-038); no Testcontainers: owner 2026-10-30 (via Hermes), applied in IR08.2; the state said three classes, there are now five |
 | 2026-11-06 | IR08.2 | theme T5 not_started to branch_open: branch agentic-readiness/ir08-baselines |
 | 2026-11-06 | IR08.2 | theme T5 branch_open to pr_open: branch agentic-readiness/ir08-baselines, PR #121 |
+| 2026-11-06 | IR10.2 | theme T5 pr_open to merged: branch agentic-readiness/ir08-baselines, PR #121, merged as 57621d6b47c6981c7ef420fe8e73ee3a86d37848 |
+| 2026-11-06 | IR10.2 | preference agents_md.stubs set to keep: IR10.2 Q3=1: CLAUDE.md stays the pointer stub; no new harness file (Q4=1) (owner answer via Hermes 2026-11-06) |
+| 2026-11-06 | IR10.2 | preference agents_md.deferral set to inline: IR10.2 Q3=1: must-always rules move into a Code conventions block, CONVENTIONS.md not edited (owner answer via Hermes 2026-11-06) |
+| 2026-11-06 | IR10.2 | preference agents_md.generic_text set to move-to-docs: IR10.2 Q2=1: section 6 and persona lines move to docs/workflow-profiles.md (owner answer via Hermes 2026-11-06) |
+| 2026-11-06 | IR10.2 | preference agents_md.contradicted_rules set to target-state: IR10.2 Q2=1: EntityManager rule becomes target state with exception count; no code edit (owner answer via Hermes 2026-11-06) |
+| 2026-11-06 | IR10.2 | preference agents_md.harness_files set to none: IR10.2 Q4=1: F-027 recorded partial with the six harnesses; no file created (owner answer via Hermes 2026-11-06) |
+| 2026-11-06 | IR10.2 | preference agents_md.scratch_ignore set to artefacts/: IR10.2 Q5=1: artefacts/ added to .gitignore in its own commit (owner answer via Hermes 2026-11-06) |
+| 2026-11-06 | IR10.2 | F-002 queued to in_progress by agent |
+| 2026-11-06 | IR10.2 | F-010 queued to in_progress by agent |
+| 2026-11-06 | IR10.2 | F-007 queued to in_progress by agent |
+| 2026-11-06 | IR10.2 | F-008 queued to in_progress by agent |
+| 2026-11-06 | IR10.2 | F-009 queued to in_progress by agent |
+| 2026-11-06 | IR10.2 | F-013 queued to in_progress by agent |
+| 2026-11-06 | IR10.2 | F-014 queued to in_progress by agent |
+| 2026-11-06 | IR10.2 | F-012 queued to in_progress by agent |
+| 2026-11-06 | IR10.2 | F-027 queued to in_progress by agent |
+| 2026-11-06 | IR10.2 | F-039 queued to in_progress by agent |
+| 2026-11-06 | IR10.2 | F-002 in_progress to done by agent |
+| 2026-11-06 | IR10.2 | F-010 in_progress to done by agent |
+| 2026-11-06 | IR10.2 | F-007 in_progress to done by agent |
+| 2026-11-06 | IR10.2 | F-008 in_progress to done by agent |
+| 2026-11-06 | IR10.2 | F-009 in_progress to done by agent: Resolved by drift: T1 named and resolved all seven verbs |
+| 2026-11-06 | IR10.2 | F-013 in_progress to done by agent |
+| 2026-11-06 | IR10.2 | F-014 in_progress to done by agent |
+| 2026-11-06 | IR10.2 | F-012 in_progress to partial by agent |
+| 2026-11-06 | IR10.2 | F-027 in_progress to partial by agent |
+| 2026-11-06 | IR10.2 | F-039 in_progress to partial by agent |
+| 2026-11-06 | IR10.2 | theme T7 not_started to pr_open: branch agentic-readiness/ir10-agents-md, PR #122 |
