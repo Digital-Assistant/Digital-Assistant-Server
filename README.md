@@ -11,6 +11,17 @@ Discord: https://discord.gg/92NqDEUbxV
 
 Before starting the Quarkus server, ensure that all background microservices and databases are running in the `Digital_Assistant_microServices` project.
 
+### Setup (non-interactive)
+
+Needs JDK 21 on `JAVA_HOME`. This resolves the locked dependencies (`gradle.lockfile`) and compiles the project.
+It asks no questions and needs no running services:
+
+```bash
+./gradlew assemble
+```
+
+This is the one setup command for people and for coding agents. `AGENTS.md` points here and does not repeat it.
+
 ### 1. Synchronize Credentials
 If you are setting up for the first time or if the central credentials in `Digital_Assistant_microServices/DOCKER-MAP.md` have changed, synchronize your local configuration:
 

@@ -24,7 +24,7 @@ This repo is only the Quarkus server (Gradle, Java, port **11081**). MariaDB, El
 
 #### **Build & Validation**
 Gradle is the one runner. Gradle task names cannot contain `:`, so the framework verb `format:check` is `formatCheck`. Run `git fetch origin` first: the formatter checks only files changed since `origin/dev`.
-*   **Setup (non-interactive, resolves locked dependencies):** `./gradlew assemble` (needs JDK 21 on `JAVA_HOME`)
+*   **Setup (non-interactive):** see `README.md`, "Setup (non-interactive)" (`./gradlew assemble`, JDK 21)
 *   **Build (compile + package):** `./gradlew build`
 *   **format** (writes files): `./gradlew format`
 *   **format:check** (read-only): `./gradlew formatCheck`
