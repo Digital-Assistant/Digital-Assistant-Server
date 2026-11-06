@@ -95,6 +95,8 @@ Agentic-readiness work: read `docs/agentic-readiness/digital-assistant-server-ag
 Documentation: `docs/README.md` indexes `docs/`; follow `docs/STYLE_GUIDE.md`, record decisions in `docs/adr/`, and
 read `docs/architecture/` for the map of the code.
 
+`artefacts/` is scratch: never commit it and never treat it as a source of truth.
+
 ## 6. Quality Assurance Workflow Profiles & Prompts
 
 This section defines the different levels of quality assurance required for different types of tasks. The agent **must** use the profile that matches the `workflow:` label on the assigned issue.
