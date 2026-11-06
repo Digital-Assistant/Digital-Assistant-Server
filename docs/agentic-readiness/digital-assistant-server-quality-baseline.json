@@ -1,0 +1,54 @@
+{
+  "schema": 1,
+  "measured": "2026-11-06",
+  "rule": "A count only goes down and the coverage floor only goes up. Raising a count or lowering the floor needs the owner. scripts/ci/check-baseline.sh compares these numbers and never rewrites this file.",
+  "entries": {
+    "pmd_exclude_patterns": {
+      "count": 18,
+      "what": "files excluded from the PMD ruleset (the lint baseline; only shrinks)",
+      "source": "config/pmd/ruleset.xml",
+      "command": "grep -c '<exclude-pattern>' config/pmd/ruleset.xml",
+      "guard": "scripts/ci/check-baseline.sh, run by ./gradlew formatCheck"
+    },
+    "pmd_violations": {
+      "count": 34,
+      "files": 18,
+      "what": "PMD violations in those files with the exclude list removed (informational, not compared; 31 main, 3 test)",
+      "command": "./gradlew pmdMain pmdTest --continue with the exclude-pattern lines removed from the ruleset",
+      "guard": "none; the exclude list is the guard"
+    },
+    "spotless_unformatted_files": {
+      "count": 45,
+      "of": 73,
+      "what": "Java files a full format run would change (the ratchet vs origin/dev guards changed files only)",
+      "command": "./gradlew spotlessApply -PspotlessFull in a scratch copy, count changed files",
+      "guard": "scripts/ci/check-baseline.sh, run by ./gradlew formatCheck"
+    },
+    "osv_advisories": {
+      "count": 101,
+      "packages": 29,
+      "what": "OSV-Scanner advisories over gradle.lockfile (report-only scan; review date is the owner's)",
+      "command": "scripts/ci/scan.sh",
+      "guard": "scripts/ci/scan.sh calls check-baseline.sh osv in the CI job Dependency Scan (fails when the count goes up)"
+    },
+    "image_scan_findings": {
+      "count": 38,
+      "what": "fixable HIGH or CRITICAL image findings accepted as debt on 2026-10-22 (informational here)",
+      "command": "scripts/ci/image-scan.sh",
+      "guard": "none here; image.yml reports the count and the accepted list only shrinks"
+    },
+    "skip_markers": {
+      "count": 0,
+      "what": "@Disabled, @Ignore, conditional-enable and assume markers in src/test",
+      "command": "grep -rE '@Disabled|@Ignore|@EnabledIf|@DisabledIf|assumeTrue|assumeFalse' src/test",
+      "guard": "scripts/ci/check-baseline.sh, run by ./gradlew formatCheck"
+    },
+    "coverage_floor_line_percent": {
+      "count": 70,
+      "what": "line coverage floor, measured 70.6 percent (951 of 1347 lines) on 2026-11-06 with the local stack, rounded down; only goes up",
+      "source": "build.gradle (jacocoTestCoverageVerification)",
+      "command": "./gradlew coverage (needs the local stack)",
+      "guard": "check-baseline.sh refuses a lower floor; the CI step scripts/ci/coverage.sh enforces it against a real run"
+    }
+  }
+}

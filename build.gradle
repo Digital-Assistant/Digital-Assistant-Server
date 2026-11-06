@@ -64,10 +64,15 @@ tasks.register('format') {
     description = 'Format changed Java files in place (ratchet against origin/dev).'
     dependsOn 'spotlessApply'
 }
+tasks.register('baselineCheck', Exec) {
+    group = 'verification'
+    description = 'Fail if a violation count went up or the coverage floor went down (docs/agentic-readiness/digital-assistant-server-quality-baseline.json).'
+    commandLine 'scripts/ci/check-baseline.sh'
+}
 tasks.register('formatCheck') {
     group = 'verification'
-    description = 'Fail if changed Java files are not formatted (read-only).'
-    dependsOn 'spotlessCheck'
+    description = 'Fail if changed Java files are not formatted or a baseline count went up (read-only).'
+    dependsOn 'spotlessCheck', 'baselineCheck'
 }
 tasks.register('lint') {
     group = 'verification'

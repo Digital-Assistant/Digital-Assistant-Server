@@ -8,6 +8,8 @@
 #   report  (default) prints the finding count, writes it to the job summary and exits 0 on findings.
 #           The existing findings are recorded debt; CI shows this job as report-only.
 #   block   exits 1 when there is any finding.
+# In both modes the count is compared with docs/agentic-readiness/digital-assistant-server-quality-baseline.json
+# (scripts/ci/check-baseline.sh osv): the script fails when the count goes up, never when it goes down.
 # A scanner failure (network, parse, no lockfile) always fails the script: it is never a silent pass.
 set -euo pipefail
 cd "$(dirname "$0")/../.."
@@ -61,6 +63,9 @@ if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
     [[ "$MODE" == "report" ]] && echo "- Report-only: existing findings are recorded debt and do not block the merge. A rise in this number is a regression."
   } >> "$GITHUB_STEP_SUMMARY"
 fi
+
+# No new advisories: the count may fall but never rise above the committed quality baseline.
+scripts/ci/check-baseline.sh osv "$ADVISORIES" "$PACKAGES"
 
 if [[ "$MODE" == "block" && "$ADVISORIES" != "0" ]]; then
   echo "::error::${ADVISORIES} known advisories in ${LOCKFILE}" >&2
