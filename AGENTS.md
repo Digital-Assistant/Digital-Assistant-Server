@@ -78,6 +78,10 @@ These are strict, non-negotiable rules.
 *   **Authentication & Authorization:** You **must not** alter or add any logic related to user authentication or role-based access control.
 *   **Dependency Vetting:** You **must not** introduce new third-party libraries or dependencies unless it is an explicit requirement of the assigned task.
 *   **Out-of-Scope Changes:** You **must not** refactor or modify code in files not directly related to the assigned issue, even if you identify potential improvements. All changes must be directly related to fulfilling the issue's requirements.
+*   **Tests:** You **must not** edit, skip or delete a test in `src/test/` to make a failing test pass; change a test only together with the code change that needs it.
+*   **Generated Output & Scratch:** You **must not** edit generated output by hand (`build/`, `.gradle/`); regenerate it with `./gradlew build`. `artefacts/` is scratch: never commit it, never treat it as a source of truth.
+*   **Default Branch & Releases:** You **must not** push to, merge into or force-push `dev` or `master`, and you **must not** tag or publish a release.
+*   **Secret Stores:** You **must not** open, print or commit a secret store (`.env`, `*.jks`, `local-secrets.properties`); `local.properties` is tracked on purpose and may hold local-stack settings only.
 
 ## 5. Development & Contribution Workflow
 
