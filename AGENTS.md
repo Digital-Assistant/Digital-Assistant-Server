@@ -31,17 +31,26 @@ Gradle is the one runner. Gradle task names cannot contain `:`, so the framework
 *   **lint** (read-only, PMD): `./gradlew lint`
 *   **typecheck** (compile main and test): `./gradlew typecheck`
 *   **test:** `./gradlew test` (needs the local stack)
+*   **coverage** (needs the local stack): `./gradlew coverage` runs the tests, writes the JaCoCo line-coverage report to `build/reports/jacoco/test/` and fails below the floor. CI runs the same check in the `Coverage floor` step (`scripts/ci/coverage.sh`); `check` does not, so it stays stack-free.
 *   **check** (pre-merge gate: formatCheck, typecheck, test, PMD): `./gradlew check`
 *   **security** (read-only, needs network): `./gradlew security` runs OSV-Scanner on `gradle.lockfile` through `scripts/ci/scan.sh`. It is report-only: it prints the finding count and exits 0 on findings (existing findings are recorded debt); `SCAN_MODE=block` makes it fail. `./gradlew dependencyCheckAnalyze` is the old OWASP scan, not the verb: it needs an NVD key that is not set up.
 *   **Local hooks (optional, once per clone):** install the `lefthook` and `gitleaks` binaries (versions in `CONTRIBUTING.md`, "Local hooks"), then `lefthook install`. The `pre-commit` hook scans the staged change for secrets (`lefthook.yml`). CI is the real gate; do not use `--no-verify`.
 *   Style follows `CONVENTIONS.md` (tabs, LF, 120 columns); Spotless enforces it on changed files, PMD baselines old violations in `config/pmd/ruleset.xml`.
 *   After changing a dependency or plugin, regenerate the lock: `./gradlew dependencies --write-locks`.
 
+#### **Baselines and floors**
+Existing debt is counted and cannot grow. `./gradlew formatCheck` runs `scripts/ci/check-baseline.sh` (no new violations: it fails when a count goes up) against the quality baseline `docs/agentic-readiness/digital-assistant-server-quality-baseline.json`. The baselines are: the PMD exclude list in `config/pmd/ruleset.xml`, the Spotless `ratchetFrom 'origin/dev'` (changed files only) with the full-tree count in the baseline file, the OSV-Scanner advisory count (compared by `scripts/ci/scan.sh` in the CI scan job), the image-scan count and the skip-marker count (0), all in the baseline file. Coverage floor: 70% line coverage, enforced by `jacocoTestCoverageVerification` in `build.gradle` and run by the CI `Coverage floor` step. **A baseline only goes down and a coverage floor only goes up; raising a count or lowering the floor needs the owner.** Lower a count (or raise the floor) in the baseline file and `build.gradle` in the same change that earns it.
+
 #### **Testing**
 *   **Run all tests:** `./gradlew test`
 *   **Run a single test class:** `./gradlew test --tests 'com.nistapp.uda.index.StatusResourceTest'`
 *   Tests live in `src/test/java/com/nistapp/uda/index/` (Quarkus JUnit5 + RestAssured).
 *   No known failures; the CI test step is blocking. Tests need MariaDB and Elasticsearch on `127.0.0.1`.
+*   **Unit-test subset (no stack needed):** 5 of the 20 test classes are not `@QuarkusTest` (`FieldLimitValidationTest`, `PrefixIndexLayoutStrategyTest`, `CurrentUserTest`, `InputSanitizerTest`, `XssSanitizationFilterTest`). The other 15 need the live MariaDB and Elasticsearch from the local stack; there is no Testcontainers profile (recorded as debt):
+    ```bash
+    ./gradlew test --tests '*FieldLimitValidationTest' --tests '*PrefixIndexLayoutStrategyTest' --tests '*CurrentUserTest' --tests '*InputSanitizerTest' --tests '*XssSanitizationFilterTest'
+    ```
+*   **Last full run (2026-11-06, local stack):** 167 tests, 0 failures, 0 skipped; no `@Disabled`/`@Ignore` markers.
 *   Merge method: squash into `dev` (the PR title becomes the commit, so it must be a Conventional Commit). Default branch is `dev`; GitHub runs manual (`workflow_dispatch`) workflows only from the default branch.
 
 #### **Dependency Management**

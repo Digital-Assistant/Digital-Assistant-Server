@@ -35,11 +35,11 @@
     },
     {
       "key": "tests.stack_dependent",
-      "value": "decide-in-IR08.2",
-      "reason": "Q4: strategy decided in IR08.2; today tests need the live local stack through local-up.sh (owner answer via Hermes 2026-10-30)",
+      "value": "live-stack-with-offline-subset",
+      "reason": "IR08.2 Q1=1: measure with the live stack through the scripts; the 5 non-QuarkusTest classes are the offline subset (owner answer via Hermes 2026-11-06)",
       "by": "owner",
-      "date": "2026-10-30",
-      "phase": "IR03.1"
+      "date": "2026-11-06",
+      "phase": "IR08.2"
     },
     {
       "key": "agents_md.pointer_section",
@@ -67,11 +67,11 @@
     },
     {
       "key": "extra.t5",
-      "value": "offline-test-verb",
-      "reason": "Q5 item 7, offline half only: name the three non-QuarkusTest classes as a unit-test subset and state the stack prerequisite in AGENTS.md and the command table. No Testcontainers; record it as debt (owner answer via Hermes 2026-10-30)",
+      "value": "offline-test-verb: done as 5 named classes plus fenced command in AGENTS.md; 15 of 20 classes need the live stack (debt on F-038); no Testcontainers",
+      "reason": "owner 2026-10-30 (via Hermes), applied in IR08.2; the state said three classes, there are now five",
       "by": "owner",
-      "date": "2026-10-30",
-      "phase": "IR03.1"
+      "date": "2026-11-06",
+      "phase": "IR08.2"
     },
     {
       "key": "overlap.section_b",
@@ -368,62 +368,102 @@
       "by": "owner",
       "date": "2026-11-01",
       "phase": "IR07.2"
+    },
+    {
+      "key": "tests.coverage_gate",
+      "value": "ci",
+      "reason": "IR08.2 Q2=2: floor in build.gradle, run by a CI step only; check stays stack-free (owner answer via Hermes 2026-11-06)",
+      "by": "owner",
+      "date": "2026-11-06",
+      "phase": "IR08.2"
+    },
+    {
+      "key": "tests.coverage_tool",
+      "value": "quarkus-jacoco-plus-core-jacoco",
+      "reason": "IR08.2 Q3=1: add io.quarkus:quarkus-jacoco as a test dependency (owner approves, rule 7) plus the core jacoco plugin (owner answer via Hermes 2026-11-06)",
+      "by": "owner",
+      "date": "2026-11-06",
+      "phase": "IR08.2"
+    },
+    {
+      "key": "baseline.form",
+      "value": "counts-file-plus-native",
+      "reason": "IR08.2 Q4=1: native baselines kept; counts file compared in formatCheck for offline tools and in the CI scan job for OSV (owner answer via Hermes 2026-11-06)",
+      "by": "owner",
+      "date": "2026-11-06",
+      "phase": "IR08.2"
+    },
+    {
+      "key": "tests.coverage_metric",
+      "value": "line-only",
+      "reason": "IR08.2 Q5=1: line coverage only (owner answer via Hermes 2026-11-06)",
+      "by": "owner",
+      "date": "2026-11-06",
+      "phase": "IR08.2"
+    },
+    {
+      "key": "ci.pr_by_agent",
+      "value": "yes",
+      "reason": "STATE.md Q1 default 3: UDAN repositories record yes (D5/D11); sessions open the PR, never merge",
+      "by": "owner",
+      "date": "2026-11-06",
+      "phase": "IR08.2"
     }
   ],
   "themes": [
     {
       "id": "T1",
       "title": "Command surface and quality tools",
-      "status": "pr_open",
-      "phase": "IR04.2",
+      "status": "merged",
+      "phase": "IR08.2",
       "branch": "agentic-readiness/ir04-command-surface",
       "pr": 111,
-      "merged_sha": null
+      "merged_sha": "eb134b78fef966a1aa94d807b4f2536fa433fd06"
     },
     {
       "id": "T2",
       "title": "Execution determinism",
-      "status": "pr_open",
-      "phase": "IR05.2",
+      "status": "merged",
+      "phase": "IR08.2",
       "branch": "agentic-readiness/ir05-determinism",
       "pr": 110,
-      "merged_sha": null
+      "merged_sha": "a5baa0980f9100e972300d33c76555c0bf4c746c"
     },
     {
       "id": "T3",
       "title": "Secrets and env",
-      "status": "pr_open",
-      "phase": "IR06.2",
+      "status": "merged",
+      "phase": "IR08.2",
       "branch": "agentic-readiness/ir06-secrets-env",
       "pr": 112,
-      "merged_sha": null
+      "merged_sha": "30007cbabca4ca973eea6ab68caf3d0b76f2e591"
     },
     {
       "id": "T4",
       "title": "CI parity, hooks, commits",
-      "status": "pr_open",
-      "phase": "IR07.2",
+      "status": "merged",
+      "phase": "IR08.2",
       "branch": "agentic-readiness/ir07-ci-hooks",
       "pr": 116,
-      "merged_sha": null
+      "merged_sha": "f246aab5b9b1c81ac32deedd90ab683da5a97114"
     },
     {
       "id": "T5",
       "title": "Tests and baselines",
-      "status": "not_started",
-      "phase": null,
-      "branch": null,
-      "pr": null,
+      "status": "pr_open",
+      "phase": "IR08.2",
+      "branch": "agentic-readiness/ir08-baselines",
+      "pr": 121,
       "merged_sha": null
     },
     {
       "id": "T6",
       "title": "Docs and navigation",
-      "status": "pr_open",
-      "phase": "IR09.2",
+      "status": "merged",
+      "phase": "IR08.2",
       "branch": "agentic-readiness/ir09-docs",
       "pr": 113,
-      "merged_sha": null
+      "merged_sha": "d40cf99d70ed9688bc0b1940472b13057dc3f477"
     },
     {
       "id": "T7",
@@ -672,13 +712,40 @@
       "severity": "DEGRADER",
       "theme": "T5",
       "statement": "An agent cannot distinguish pre-existing debt from new debt because no baseline or suppression artifact is committed.",
-      "status": "queued",
+      "status": "partial",
       "by": "agent",
-      "date": "2026-10-30",
+      "date": "2026-11-06",
       "reason": null,
-      "commits": [],
-      "verification": null,
-      "debt": [],
+      "commits": [
+        "02b3460",
+        "b98c4f8"
+      ],
+      "verification": {
+        "command": "ls docs/agentic-readiness/digital-assistant-server-quality-baseline.json config/pmd/ruleset.xml; grep -n 'quality baseline' AGENTS.md",
+        "result": "counts file and native baselines exist; AGENTS.md Baselines and floors names each"
+      },
+      "debt": [
+        {
+          "what": "PMD violations in excluded files (exclude list)",
+          "count": 34,
+          "baseline_file": "config/pmd/ruleset.xml"
+        },
+        {
+          "what": "Spotless unformatted files (full run)",
+          "count": 45,
+          "baseline_file": "docs/agentic-readiness/digital-assistant-server-quality-baseline.json"
+        },
+        {
+          "what": "OSV advisories",
+          "count": 101,
+          "baseline_file": "docs/agentic-readiness/digital-assistant-server-quality-baseline.json"
+        },
+        {
+          "what": "image scan fixable HIGH or CRITICAL",
+          "count": 38,
+          "baseline_file": "docs/agentic-readiness/digital-assistant-server-quality-baseline.json"
+        }
+      ],
       "notes": ""
     },
     {
@@ -687,13 +754,24 @@
       "severity": "DEGRADER",
       "theme": "T5",
       "statement": "An agent cannot state how many violations exist today because no violation-counting tooling, budget or artifact is configured.",
-      "status": "queued",
+      "status": "partial",
       "by": "agent",
-      "date": "2026-10-30",
+      "date": "2026-11-06",
       "reason": null,
-      "commits": [],
-      "verification": null,
-      "debt": [],
+      "commits": [
+        "02b3460"
+      ],
+      "verification": {
+        "command": "scripts/ci/check-baseline.sh; scripts/ci/scan.sh",
+        "result": "each count matches a fresh run"
+      },
+      "debt": [
+        {
+          "what": "debt kinds counted in the quality baseline (PMD 34 in 18 files / Spotless 45 of 73 / OSV 101 in 29 packages / image scan 38 / skip markers 0)",
+          "count": 5,
+          "baseline_file": "docs/agentic-readiness/digital-assistant-server-quality-baseline.json"
+        }
+      ],
       "notes": ""
     },
     {
@@ -702,13 +780,24 @@
       "severity": "DEGRADER",
       "theme": "T5",
       "statement": "An agent cannot stop the violation count from growing because no baseline, budget or comparison step exists, so the count is not guarded.",
-      "status": "queued",
+      "status": "partial",
       "by": "agent",
-      "date": "2026-10-30",
+      "date": "2026-11-06",
       "reason": null,
-      "commits": [],
-      "verification": null,
-      "debt": [],
+      "commits": [
+        "02b3460"
+      ],
+      "verification": {
+        "command": "./gradlew formatCheck; raise each count by one",
+        "result": "real tree exit 0; each raised count exits 1 naming the tool; scan.sh osv 102 exits 1"
+      },
+      "debt": [
+        {
+          "what": "debt kinds guarded by the no-new-violations check (PMD exclude list / Spotless full run / OSV / skip markers)",
+          "count": 4,
+          "baseline_file": "docs/agentic-readiness/digital-assistant-server-quality-baseline.json"
+        }
+      ],
       "notes": ""
     },
     {
@@ -717,13 +806,24 @@
       "severity": "DEGRADER",
       "theme": "T5",
       "statement": "An agent cannot know when coverage drops below an agreed floor because no coverage threshold is configured in the test runner.",
-      "status": "queued",
+      "status": "partial",
       "by": "agent",
-      "date": "2026-10-30",
+      "date": "2026-11-06",
       "reason": null,
-      "commits": [],
-      "verification": null,
-      "debt": [],
+      "commits": [
+        "eaf8fab"
+      ],
+      "verification": {
+        "command": "./gradlew jacocoTestCoverageVerification -x test (minimum 0.70 then 0.71)",
+        "result": "0.70 passes (70.6 percent measured, two identical runs); 0.71 fails Rule violated"
+      },
+      "debt": [
+        {
+          "what": "coverage floor (line %)",
+          "count": 70,
+          "baseline_file": "build.gradle"
+        }
+      ],
       "notes": ""
     },
     {
@@ -1065,13 +1165,25 @@
       "severity": "COSMETIC",
       "theme": "T5",
       "statement": "An agent cannot see how much of the code the suite actually covers because no coverage configuration or coverage-invoking command is present.",
-      "status": "queued",
+      "status": "partial",
       "by": "agent",
-      "date": "2026-10-30",
+      "date": "2026-11-06",
       "reason": null,
-      "commits": [],
-      "verification": null,
-      "debt": [],
+      "commits": [
+        "eaf8fab",
+        "b98c4f8"
+      ],
+      "verification": {
+        "command": "./gradlew test jacocoTestReport (local stack up, flock /tmp/udan-stack.lock)",
+        "result": "167 tests 0 failures 0 skipped; report build/reports/jacoco/test; Quarkus own report agrees (396 missed 951 covered lines)"
+      },
+      "debt": [
+        {
+          "what": "test classes that need the live local stack (no offline path; 5 of 20 classes run without it)",
+          "count": 15,
+          "baseline_file": "AGENTS.md"
+        }
+      ],
       "notes": ""
     },
     {
@@ -1638,6 +1750,146 @@
       "date": "2026-11-01",
       "phase": "IR07.2",
       "event": "theme T4 branch_open to pr_open: branch agentic-readiness/ir07-ci-hooks, PR #116"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR08.2",
+      "event": "preference tests.stack_dependent changed from decide-in-IR08.2 to live-stack-with-offline-subset: IR08.2 Q1=1: measure with the live stack through the scripts; the 5 non-QuarkusTest classes are the offline subset (owner answer via Hermes 2026-11-06)"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR08.2",
+      "event": "preference tests.coverage_gate set to ci: IR08.2 Q2=2: floor in build.gradle, run by a CI step only; check stays stack-free (owner answer via Hermes 2026-11-06)"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR08.2",
+      "event": "preference tests.coverage_tool set to quarkus-jacoco-plus-core-jacoco: IR08.2 Q3=1: add io.quarkus:quarkus-jacoco as a test dependency (owner approves, rule 7) plus the core jacoco plugin (owner answer via Hermes 2026-11-06)"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR08.2",
+      "event": "preference baseline.form set to counts-file-plus-native: IR08.2 Q4=1: native baselines kept; counts file compared in formatCheck for offline tools and in the CI scan job for OSV (owner answer via Hermes 2026-11-06)"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR08.2",
+      "event": "preference tests.coverage_metric set to line-only: IR08.2 Q5=1: line coverage only (owner answer via Hermes 2026-11-06)"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR08.2",
+      "event": "preference ci.pr_by_agent set to yes: STATE.md Q1 default 3: UDAN repositories record yes (D5/D11); sessions open the PR, never merge"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR08.2",
+      "event": "F-015 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR08.2",
+      "event": "F-016 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR08.2",
+      "event": "F-017 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR08.2",
+      "event": "F-018 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR08.2",
+      "event": "F-038 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR08.2",
+      "event": "theme T1 pr_open to merged: branch agentic-readiness/ir04-command-surface, PR #111, merged as eb134b78fef966a1aa94d807b4f2536fa433fd06"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR08.2",
+      "event": "theme T2 pr_open to merged: branch agentic-readiness/ir05-determinism, PR #110, merged as a5baa0980f9100e972300d33c76555c0bf4c746c"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR08.2",
+      "event": "theme T3 pr_open to merged: branch agentic-readiness/ir06-secrets-env, PR #112, merged as 30007cbabca4ca973eea6ab68caf3d0b76f2e591"
+    },
+    {
+      "date": "2026-11-01",
+      "phase": "IR08.2",
+      "event": "theme T4 pr_open to merged: branch agentic-readiness/ir07-ci-hooks, PR #116, merged as f246aab5b9b1c81ac32deedd90ab683da5a97114"
+    },
+    {
+      "date": "2026-10-31",
+      "phase": "IR08.2",
+      "event": "theme T6 pr_open to merged: branch agentic-readiness/ir09-docs, PR #113, merged as d40cf99d70ed9688bc0b1940472b13057dc3f477"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR08.2",
+      "event": "F-015 in_progress to partial by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR08.2",
+      "event": "F-016 in_progress to partial by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR08.2",
+      "event": "F-017 in_progress to partial by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR08.2",
+      "event": "F-018 in_progress to partial by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR08.2",
+      "event": "F-038 in_progress to partial by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR08.2",
+      "event": "F-016 partial to in_progress by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR08.2",
+      "event": "F-017 partial to in_progress by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR08.2",
+      "event": "F-016 in_progress to partial by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR08.2",
+      "event": "F-017 in_progress to partial by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR08.2",
+      "event": "preference extra.t5 changed from offline-test-verb to offline-test-verb: done as 5 named classes plus fenced command in AGENTS.md; 15 of 20 classes need the live stack (debt on F-038); no Testcontainers: owner 2026-10-30 (via Hermes), applied in IR08.2; the state said three classes, there are now five"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR08.2",
+      "event": "theme T5 not_started to branch_open: branch agentic-readiness/ir08-baselines"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR08.2",
+      "event": "theme T5 branch_open to pr_open: branch agentic-readiness/ir08-baselines, PR #121"
     }
   ]
 }

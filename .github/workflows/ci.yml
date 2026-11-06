@@ -73,6 +73,11 @@ jobs:
           QUARKUS_DATASOURCE_PASSWORD: ci-test-only
         run: scripts/ci/test.sh
 
+      # The floor lives in build.gradle (jacocoTestCoverageVerification); it only goes up. The step reads the data
+      # file the Test step wrote. Counts and floor: docs/agentic-readiness/digital-assistant-server-quality-baseline.json.
+      - name: Coverage floor
+        run: scripts/ci/coverage.sh
+
       - name: Upload test reports
         if: ${{ always() }}
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -81,6 +86,7 @@ jobs:
           path: |
             build/reports/tests/
             build/test-results/
+            build/reports/jacoco/
           if-no-files-found: ignore
           retention-days: 7
 
