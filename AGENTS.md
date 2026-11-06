@@ -92,6 +92,8 @@ All contributions must follow this comprehensive, sequential lifecycle:
 
 **Definition of done:** When a change alters a public interface, observable behaviour, the architecture or a decision, update the affected documentation and the decision records (`docs/adr/`) in the same change set.
 
+**Branches and releases:** Branch from `dev` and open pull requests into `dev`; `master` receives releases only, cut by release-please. An agent may push its branch and open a pull request; it never merges, tags, publishes a release or pushes to `dev` or `master`.
+
 Agentic-readiness work: read `docs/agentic-readiness/digital-assistant-server-agentic-readiness-STATE.md` before changing tooling, CI, docs or this file; skipped findings in it are final.
 
 Documentation: `docs/README.md` indexes `docs/`; follow `docs/STYLE_GUIDE.md`, record decisions in `docs/adr/`, and
