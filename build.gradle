@@ -3,6 +3,7 @@ plugins {
     id 'io.quarkus' version '3.2.10.Final'
     id "org.owasp.dependencycheck" version "9.0.9"
     id 'pmd'
+    id 'jacoco'
     id 'com.diffplug.spotless' version '8.10.4'
 }
 
@@ -86,6 +87,48 @@ tasks.register('security', Exec) {
     commandLine 'scripts/ci/scan.sh'
 }
 
+// Coverage (line, JaCoCo). @QuarkusTest classes run inside Quarkus's own class loader, so the core JaCoCo agent skips
+// that loader and io.quarkus:quarkus-jacoco writes the data file instead (Quarkus test-coverage guide); both land in
+// build/jacoco-quarkus.exec. A plain core-JaCoCo run reports @QuarkusTest classes far too low, so never measure without it.
+// The floor below is today's measured line coverage rounded down. A floor only goes up: raising it is a deliberate commit,
+// lowering it needs the owner (AGENTS.md, "Baselines and floors"). The tests need the local stack, so the floor is
+// enforced by a CI step (scripts/ci/coverage.sh), not by `check`.
+jacoco {
+    toolVersion = '0.8.12'
+}
+tasks.named('test') {
+    jacoco {
+        excludeClassLoaders = ['*QuarkusClassLoader']
+        destinationFile = layout.buildDirectory.file('jacoco-quarkus.exec').get().asFile
+    }
+}
+tasks.named('jacocoTestReport') {
+    description = 'Write the line-coverage report from the last test run (build/reports/jacoco/test).'
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
+tasks.named('jacocoTestCoverageVerification') {
+    description = 'Fail if line coverage from the last test run is below the floor.'
+    violationRules {
+        rule {
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.70 // measured 70.6 percent (951 of 1347 lines) on 2026-11-06, rounded down
+            }
+        }
+    }
+}
+tasks.register('coverage') {
+    group = 'verification'
+    description = 'Run the tests with the local stack up, write the coverage report and enforce the floor.'
+    dependsOn 'test', 'jacocoTestReport', 'jacocoTestCoverageVerification'
+}
+tasks.named('jacocoTestReport') { mustRunAfter 'test' }
+tasks.named('jacocoTestCoverageVerification') { mustRunAfter 'jacocoTestReport' }
+
 check.dependsOn 'formatCheck', 'typecheck'
 tasks.named('typecheck') { mustRunAfter 'formatCheck' }
 tasks.named('test') { mustRunAfter 'typecheck' }
@@ -125,5 +168,6 @@ dependencies {
     testImplementation 'io.rest-assured:rest-assured'
     testImplementation 'io.quarkus:quarkus-test-security'
     testImplementation 'io.quarkus:quarkus-test-security-oidc' // @OidcSecurity: token claims (azp, sub) in tests
+    testImplementation 'io.quarkus:quarkus-jacoco' // line coverage for @QuarkusTest classes (version from the Quarkus BOM)
 }
 
