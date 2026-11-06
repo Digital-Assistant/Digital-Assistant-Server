@@ -116,3 +116,6 @@ udan-test.sh
 
 # Local credentials, filled by sync-credentials.sh
 local-secrets.properties
+
+# Scratch notes and plans are not tracked
+artefacts/
