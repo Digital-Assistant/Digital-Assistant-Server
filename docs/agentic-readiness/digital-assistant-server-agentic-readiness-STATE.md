@@ -162,7 +162,7 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | T2 | Execution determinism | merged | 2 | 0 | IR08.2 | `agentic-readiness/ir05-determinism` | #110 | `a5baa0980f9100e972300d33c76555c0bf4c746c` |
 | T3 | Secrets and env | merged | 2 | 0 | IR08.2 | `agentic-readiness/ir06-secrets-env` | #112 | `30007cbabca4ca973eea6ab68caf3d0b76f2e591` |
 | T4 | CI parity, hooks, commits | merged | 3 | 2 | IR08.2 | `agentic-readiness/ir07-ci-hooks` | #116 | `f246aab5b9b1c81ac32deedd90ab683da5a97114` |
-| T5 | Tests and baselines | branch_open | 5 | 5 | IR08.2 | `agentic-readiness/ir08-baselines` | - | - |
+| T5 | Tests and baselines | pr_open | 5 | 5 | IR08.2 | `agentic-readiness/ir08-baselines` | #121 | - |
 | T6 | Docs and navigation | merged | 4 | 0 | IR08.2 | `agentic-readiness/ir09-docs` | #113 | `d40cf99d70ed9688bc0b1940472b13057dc3f477` |
 | T7 | AGENTS.md and governance | not_started | 11 | 10 | - | - | - | - |
 | T8 | Hygiene and index | not_started | 8 | 7 | - | - | - | - |
@@ -489,3 +489,4 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | 2026-11-06 | IR08.2 | F-017 in_progress to partial by agent |
 | 2026-11-06 | IR08.2 | preference extra.t5 changed from offline-test-verb to offline-test-verb: done as 5 named classes plus fenced command in AGENTS.md; 15 of 20 classes need the live stack (debt on F-038); no Testcontainers: owner 2026-10-30 (via Hermes), applied in IR08.2; the state said three classes, there are now five |
 | 2026-11-06 | IR08.2 | theme T5 not_started to branch_open: branch agentic-readiness/ir08-baselines |
+| 2026-11-06 | IR08.2 | theme T5 branch_open to pr_open: branch agentic-readiness/ir08-baselines, PR #121 |

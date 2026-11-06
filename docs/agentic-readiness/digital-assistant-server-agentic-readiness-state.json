@@ -450,10 +450,10 @@
     {
       "id": "T5",
       "title": "Tests and baselines",
-      "status": "branch_open",
+      "status": "pr_open",
       "phase": "IR08.2",
       "branch": "agentic-readiness/ir08-baselines",
-      "pr": null,
+      "pr": 121,
       "merged_sha": null
     },
     {
@@ -1885,6 +1885,11 @@
       "date": "2026-11-06",
       "phase": "IR08.2",
       "event": "theme T5 not_started to branch_open: branch agentic-readiness/ir08-baselines"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR08.2",
+      "event": "theme T5 branch_open to pr_open: branch agentic-readiness/ir08-baselines, PR #121"
     }
   ]
 }
