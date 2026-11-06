@@ -1,0 +1,4 @@
+# Audit report provenance fields (git_sha, framework_revision) are git commit hashes, not credentials.
+# gitleaks 8.30.1 matches them with the sourcegraph-access-token rule. Each entry is one exact finding.
+3d7b14124c4d21cd83951fe17a0713ad55e9439f:docs/agentic-readiness-report/digital-assistant-server-second-audit-20261106T091756Z.json:sourcegraph-access-token:9
+3d7b14124c4d21cd83951fe17a0713ad55e9439f:docs/agentic-readiness-report/digital-assistant-server-second-audit-20261106T091756Z.json:sourcegraph-access-token:25
