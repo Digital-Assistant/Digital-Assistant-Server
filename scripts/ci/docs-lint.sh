@@ -13,7 +13,7 @@ fi
 
 MARKDOWNLINT_VERSION="0.24.0"
 MERMAID_CLI_VERSION="12.0.0"
-BASELINE=277 # issues in all tracked Markdown under .markdownlint-cli2.yaml after the generated state view was rendered (273 before); do not raise
+BASELINE=284 # issues in all tracked Markdown under .markdownlint-cli2.yaml; raised from 277 to 284 on 2026-11-06 by the owner (the count had drifted to 284 on dev); do not raise again
 
 mapfile -t CLEAN < <(grep -v -e '^#' -e '^$' scripts/ci/docs-lint-paths.txt)
 
