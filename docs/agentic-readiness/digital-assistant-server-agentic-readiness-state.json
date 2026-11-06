@@ -533,10 +533,10 @@
     {
       "id": "T8",
       "title": "Hygiene and index",
-      "status": "not_started",
-      "phase": null,
-      "branch": null,
-      "pr": null,
+      "status": "pr_open",
+      "phase": "IR11.2",
+      "branch": "agentic-readiness/ir11-hygiene",
+      "pr": 123,
       "merged_sha": null
     }
   ],
@@ -2231,6 +2231,11 @@
       "date": "2026-11-06",
       "phase": "IR11.2",
       "event": "preference security.contact set to TODO(owner) placeholders: Owner answer 2026-11-06 (IR11.2 Q1=2): SECURITY.md keeps TODO(owner) placeholders for the mailbox and response time; the owner fills them before a release is announced"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR11.2",
+      "event": "theme T8 not_started to pr_open: branch agentic-readiness/ir11-hygiene, PR #123"
     }
   ]
 }

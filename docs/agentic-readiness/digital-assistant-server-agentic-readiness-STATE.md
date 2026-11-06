@@ -185,7 +185,7 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | T5 | Tests and baselines | merged | 5 | 5 | IR10.2 | `agentic-readiness/ir08-baselines` | #121 | `57621d6b47c6981c7ef420fe8e73ee3a86d37848` |
 | T6 | Docs and navigation | merged | 4 | 0 | IR08.2 | `agentic-readiness/ir09-docs` | #113 | `d40cf99d70ed9688bc0b1940472b13057dc3f477` |
 | T7 | AGENTS.md and governance | pr_open | 11 | 3 | IR10.2 | `agentic-readiness/ir10-agents-md` | #122 | - |
-| T8 | Hygiene and index | not_started | 8 | 2 | - | - | - | - |
+| T8 | Hygiene and index | pr_open | 8 | 2 | IR11.2 | `agentic-readiness/ir11-hygiene` | #123 | - |
 
 ## Items by theme
 
@@ -580,3 +580,4 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | 2026-11-06 | IR11.2 | F-032 in_progress to done by agent |
 | 2026-11-06 | IR11.2 | F-034 in_progress to done by agent |
 | 2026-11-06 | IR11.2 | preference security.contact set to TODO(owner) placeholders: Owner answer 2026-11-06 (IR11.2 Q1=2): SECURITY.md keeps TODO(owner) placeholders for the mailbox and response time; the owner fills them before a release is announced |
+| 2026-11-06 | IR11.2 | theme T8 not_started to pr_open: branch agentic-readiness/ir11-hygiene, PR #123 |
