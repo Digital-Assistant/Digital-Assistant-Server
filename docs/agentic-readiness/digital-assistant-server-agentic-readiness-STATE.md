@@ -16,10 +16,10 @@ A skipped finding is final until the owner unskips it, and every preference bind
 
 | Status | Items |
 |---|---|
-| queued | 20 |
+| queued | 15 |
 | in_progress | 0 |
 | done | 10 |
-| partial | 5 |
+| partial | 10 |
 | failed | 0 |
 | blocked | 0 |
 | deferred | 2 |
@@ -31,61 +31,139 @@ A skipped finding is final until the owner unskips it, and every preference bind
 
 | Key | Value | Reason | By | Date | Phase |
 |---|---|---|---|---|---|
-| `agents_md.pointer_section` | section-5 | Q6: pointer line goes in AGENTS.md section 5 (Development & Contribution Workflow) (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
-| `agents_md.release_tags` | never-tag-or-release | F-013: add a section 4 bullet: agents must not create, move or delete tags or releases; Release Please owns both (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
-| `agents_md.section6` | move-to-docs-stance-b | F-039: move section 6 intact to docs/workflow-profiles.md, link it from section 5 steps 3-4; EntityManager rule marked target state for new code, the 14 existing files tolerated and listed in the first ADR (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
+| `agents_md.pointer_section` | section-5 | Q6: pointer line goes in AGENTS.md section 5 (Development & Contribution Workflow) (owner answer... | owner | 2026-10-30 | IR03.1 |
+| `agents_md.release_tags` | never-tag-or-release | F-013: add a section 4 bullet: agents must not create, move or delete tags or releases; Release P... | owner | 2026-10-30 | IR03.1 |
+| `agents_md.section6` | move-to-docs-stance-b | F-039: move section 6 intact to docs/workflow-profiles.md, link it from section 5 steps 3-4; Enti... | owner | 2026-10-30 | IR03.1 |
+| `baseline.form` | counts-file-plus-native | IR08.2 Q4=1: native baselines kept; counts file compared in formatCheck for offline tools and in... | owner | 2026-11-06 | IR08.2 |
 | `check.verify_without_stack` | yes | Q5 option 1: check -x test and --dry-run locally; CI proves the test leg | owner | 2026-10-31 | IR04.2 |
 | `ci.branch_protection_record` | docs/branch-protection.md | IR07.2 Q6 option 1: ruleset Protect dev id 25616141, confirmed 2026-10-31 | owner | 2026-11-01 | IR07.2 |
-| `ci.branch_protection_runbook` | admin-owner | F-040(c): runbook under docs/ after T6 names CI Gate as the required check; the admin is @kcramakrishna; the agent cannot read or set the GitHub setting (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
+| `ci.branch_protection_runbook` | admin-owner | F-040(c): runbook under docs/ after T6 names CI Gate as the required check; the admin is @kcramak... | owner | 2026-10-30 | IR03.1 |
 | `ci.commit_rule` | pr-title-doc-only | IR07.2 Q5 option 1: CONTRIBUTING names PR Title workflow; no commitlint; F-037 stays skipped | owner | 2026-11-01 | IR07.2 |
 | `ci.edits_authorised` | yes | restored: IR07.2 did not change this preference | owner | 2026-11-01 | IR07.2 |
-| `ci.image_scan_debt` | accept-38-with-ratchet | F-040(b): accept the 38 fixable HIGH/CRITICAL image findings as recorded debt with a list that may only shrink; do not make the scan blocking now; review date placeholder for the owner (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
-| `ci.scan_policy` | report-only-101-advisories | IR07.2 Q1: first run found 101 advisories in 29 packages, so stays report-only; out of gate.needs; review date placeholder for the owner | owner | 2026-11-01 | IR07.2 |
+| `ci.image_scan_debt` | accept-38-with-ratchet | F-040(b): accept the 38 fixable HIGH/CRITICAL image findings as recorded debt with a list that ma... | owner | 2026-10-30 | IR03.1 |
+| `ci.pr_by_agent` | yes | STATE.md Q1 default 3: UDAN repositories record yes (D5/D11); sessions open the PR, never merge | owner | 2026-11-06 | IR08.2 |
+| `ci.scan_policy` | report-only-101-advisories | IR07.2 Q1: first run found 101 advisories in 29 packages, so stays report-only; out of gate.needs... | owner | 2026-11-01 | IR07.2 |
 | `ci.shape` | keep-wrappers | IR07.2 Q2 option 1: keep scripts/ci wrappers, build.sh + test.sh equal check | owner | 2026-11-01 | IR07.2 |
 | `ci.t1_minimum` | fetch-depth-only | Q4 option 1: only fetch-depth 0; report-only steps in IR07.2 | owner | 2026-10-31 | IR04.2 |
 | `ci.t2_edits` | none | IR05.2 Q4: no workflow or Dockerfile edit; all already name JDK 21 | owner | 2026-10-31 | IR05.2 |
-| `ci.t4_scope` | items-a-b-only | IR07.2 Q7: docs-lint pin/cache and AGENTS.md/ci.yml text only; OWASP dependency-check plugin left alone | owner | 2026-11-01 | IR07.2 |
-| `codeowners.default` | owner-owns-all | F-029: @kcramakrishna owns * and the areas in research/p4-owner-asks.md item 1; second reviewer left as a placeholder; do not enable required code-owner review with a single owner (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
+| `ci.t4_scope` | items-a-b-only | IR07.2 Q7: docs-lint pin/cache and AGENTS.md/ci.yml text only; OWASP dependency-check plugin left... | owner | 2026-11-01 | IR07.2 |
+| `codeowners.default` | owner-owns-all | F-029: @kcramakrishna owns * and the areas in research/p4-owner-asks.md item 1; second reviewer l... | owner | 2026-10-30 | IR03.1 |
 | `dependabot.header_names_lockfile` | yes | IR05.2 Q5: reword dependabot.yml header with gradle.lockfile and regenerate command (comment only) | owner | 2026-10-31 | IR05.2 |
 | `docs.adr_dir` | docs/adr | IR09.1 Q1/Q5 via Hermes 2026-10-30; IR09.2 Q3: three ADRs, status proposed until owner accepts | owner | 2026-10-31 | IR09.2 |
-| `docs.agents_line` | yes | IR09.1 Q4 / IR09.2 Q6 via Hermes: one AGENTS.md line in section 5 naming style guide, ADR and architecture dirs | owner | 2026-10-31 | IR09.2 |
-| `docs.lint_ratchet` | growing-path-list | IR09.2 Q2 via Hermes 2026-10-31: gating list that only grows plus report-only run over all Markdown; no mass reformat | owner | 2026-10-31 | IR09.2 |
-| `docs.lint_tools` | markdownlint-cli2+mmdc | Owner approved Node-based docs lint twice in IR09.1; IR09.2 Q1 via Hermes 2026-10-31: separate advisory CI job, not in gate | owner | 2026-10-31 | IR09.2 |
-| `docs.lychee` | skip | IR09.2 Q7 via Hermes 2026-10-31: accept recommendation, skip link checker for Server; revisit if docs grow | owner | 2026-10-31 | IR09.2 |
+| `docs.agents_line` | yes | IR09.1 Q4 / IR09.2 Q6 via Hermes: one AGENTS.md line in section 5 naming style guide, ADR and arc... | owner | 2026-10-31 | IR09.2 |
+| `docs.lint_ratchet` | growing-path-list | IR09.2 Q2 via Hermes 2026-10-31: gating list that only grows plus report-only run over all Markdo... | owner | 2026-10-31 | IR09.2 |
+| `docs.lint_tools` | markdownlint-cli2+mmdc | Owner approved Node-based docs lint twice in IR09.1; IR09.2 Q1 via Hermes 2026-10-31: separate ad... | owner | 2026-10-31 | IR09.2 |
+| `docs.lychee` | skip | IR09.2 Q7 via Hermes 2026-10-31: accept recommendation, skip link checker for Server; revisit if... | owner | 2026-10-31 | IR09.2 |
 | `docs.nav03` | document-only | IR09.2 Q5 via Hermes 2026-10-31: document census, move nothing | owner | 2026-10-31 | IR09.2 |
 | `docs.style_guide_source` | framework-diataxis | IR09.2 Q4 via Hermes 2026-10-31: adapt framework STYLE_GUIDE.md to one page | owner | 2026-10-31 | IR09.2 |
 | `exec03.owner` | define-command-surface | IR05.1 Q2: F-004 owned by define-command-surface; IR05.2 only verifies | owner | 2026-10-31 | IR05.2 |
-| `extra.t2` | jdk-toolchain-pin-and-readme-rename | Q5 items 4 and 8: add a java toolchain block (JDK 21) to build.gradle; rename README to README.md and fix the .dockerignore, CONVENTIONS.md and scripts/ci/test.sh references (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
-| `extra.t3` | keystore-untrack | Q5 item 1: git rm --cached config/keycloak-keystore.jks (keep the file locally if useful), fix the CONVENTIONS.md tree line; no key rotation; git history left as is. Consequence of the owner's statement that nothing tracked holds a live secret and all secrets come from the AWS store; recorded as a preference, executed in IR06.2 (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
-| `extra.t5` | offline-test-verb | Q5 item 7, offline half only: name the three non-QuarkusTest classes as a unit-test subset and state the stack prerequisite in AGENTS.md and the command table. No Testcontainers; record it as debt (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
+| `extra.t2` | jdk-toolchain-pin-and-readme-rename | Q5 items 4 and 8: add a java toolchain block (JDK 21) to build.gradle; rename README to README.md... | owner | 2026-10-30 | IR03.1 |
+| `extra.t3` | keystore-untrack | Q5 item 1: git rm --cached config/keycloak-keystore.jks (keep the file locally if useful), fix th... | owner | 2026-10-30 | IR03.1 |
+| `extra.t5` | offline-test-verb: done as 5 named classes plus fenced command in AGENTS.md; 15 of 20 classes nee... | owner 2026-10-30 (via Hermes), applied in IR08.2; the state said three classes, there are now five | owner | 2026-11-06 | IR08.2 |
 | `format.java` | spotless-eclipse-jdt | owner via Hermes 2026-10-31: accept all recommendations (Q1) | owner | 2026-10-31 | IR04.2 |
-| `format.java_family` | decide-in-IR04.2 | Q3: tool chosen in IR04.2; constraint is CONVENTIONS.md style (tabs, LF, 120 columns); Spotless is the likely tool (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
-| `format.mass_reformat` | no | Q2: formatter in check-only/ratchet mode, violation count recorded as debt, never reformat the tree; other Server PRs are in flight (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
-| `github.owner_handle` | @kcramakrishna | Use for F-029 CODEOWNERS and F-040(c) branch protection: the repository owner's verified account (gh auth status). Any other person's handle stays a named placeholder for the owner to fill (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
-| `hooks.manager` | lefthook-2.2.2-secrets-only | IR07.2 Q4 option 1: lefthook v2.2.2, gitleaks 8.30.1 pre-commit; formatCheck dropped for cold-start time | owner | 2026-11-01 | IR07.2 |
-| `layout.env_example` | scripts/ci/env.example | Owner Q1 "Yes." (via Hermes 2026-10-30); IR06.2 Q1-Q5 recommended option each (via Hermes 2026-10-31): QUARKUS_*/UDAN_* overrides listed as optional names only | owner | 2026-10-31 | IR06.2 |
+| `format.java_family` | decide-in-IR04.2 | Q3: tool chosen in IR04.2; constraint is CONVENTIONS.md style (tabs, LF, 120 columns); Spotless i... | owner | 2026-10-30 | IR03.1 |
+| `format.mass_reformat` | no | Q2: formatter in check-only/ratchet mode, violation count recorded as debt, never reformat the tr... | owner | 2026-10-30 | IR03.1 |
+| `github.owner_handle` | @kcramakrishna | Use for F-029 CODEOWNERS and F-040(c) branch protection: the repository owner's verified account... | owner | 2026-10-30 | IR03.1 |
+| `hooks.manager` | lefthook-2.2.2-secrets-only | IR07.2 Q4 option 1: lefthook v2.2.2, gitleaks 8.30.1 pre-commit; formatCheck dropped for cold-sta... | owner | 2026-11-01 | IR07.2 |
+| `layout.env_example` | scripts/ci/env.example | Owner Q1 "Yes." (via Hermes 2026-10-30); IR06.2 Q1-Q5 recommended option each (via Hermes 2026-10... | owner | 2026-10-31 | IR06.2 |
 | `lint.java` | pmd | Q2 recommended option | owner | 2026-10-31 | IR04.2 |
 | `lock.gradle_width` | lockAllConfigurations | IR05.1 Q1: dependencyLocking lockAllConfigurations + --write-locks, one gradle.lockfile | owner | 2026-10-31 | IR05.2 |
 | `lock.verify_configurations` | all-resolvable | IR05.2 Q2: before/after compare over all resolvable configurations | owner | 2026-10-31 | IR05.2 |
 | `order.ir05_before_ir04` | yes | IR05.2 Q3: run ahead of IR04.2; IR04.2 regenerates the lock when it adds plugins | owner | 2026-10-31 | IR05.2 |
-| `overlap.section_b` | covered-by-findings | Q5 items 2, 3, 5, 6, 9 are not extra work: 2=F-003 (keep the dependabot comment true), 3=F-040(a)/F-024 (rename the no-op job first), 5=F-039/F-012/F-014, 6=F-001/F-022/F-023/F-024/F-041, 9=F-040(c) with F-035 deferred (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
-| `scanner.choice` | osv-scanner-on-lockfile | F-024: OSV-Scanner on gradle.lockfile (after F-003), no secret needed; rename the no-op Dependency Scan job and correct AGENTS.md line 27 first; drop or leave the OWASP plugin as decided in IR04.2 (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
+| `overlap.section_b` | covered-by-findings | Q5 items 2, 3, 5, 6, 9 are not extra work: 2=F-003 (keep the dependabot comment true), 3=F-040(a)... | owner | 2026-10-30 | IR03.1 |
+| `scanner.choice` | osv-scanner-on-lockfile | F-024: OSV-Scanner on gradle.lockfile (after F-003), no secret needed; rename the no-op Dependenc... | owner | 2026-10-30 | IR03.1 |
 | `scanner.version` | osv-scanner-2.7.0 | IR07.2 Q1 option 1: pinned binary with SHA-256 check on gradle.lockfile | owner | 2026-11-01 | IR07.2 |
-| `security.disclosure` | github-private-vulnerability-reporting | F-032: SECURITY.md uses GitHub private vulnerability reporting plus the skeleton; the owner must enable the setting and fill any mailbox/response-time placeholder (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
+| `security.disclosure` | github-private-vulnerability-reporting | F-032: SECURITY.md uses GitHub private vulnerability reporting plus the skeleton; the owner must... | owner | 2026-10-30 | IR03.1 |
 | `security.verb.deferred-to-t2` | yes | Q3 option 1: no security verb until OSV-Scanner on gradle.lockfile; OWASP plugin left in place | owner | 2026-10-31 | IR04.2 |
-| `tests.stack_dependent` | decide-in-IR08.2 | Q4: strategy decided in IR08.2; today tests need the live local stack through local-up.sh (owner answer via Hermes 2026-10-30) | owner | 2026-10-30 | IR03.1 |
+| `tests.coverage_gate` | ci | IR08.2 Q2=2: floor in build.gradle, run by a CI step only; check stays stack-free (owner answer v... | owner | 2026-11-06 | IR08.2 |
+| `tests.coverage_metric` | line-only | IR08.2 Q5=1: line coverage only (owner answer via Hermes 2026-11-06) | owner | 2026-11-06 | IR08.2 |
+| `tests.coverage_tool` | quarkus-jacoco-plus-core-jacoco | IR08.2 Q3=1: add io.quarkus:quarkus-jacoco as a test dependency (owner approves, rule 7) plus the... | owner | 2026-11-06 | IR08.2 |
+| `tests.stack_dependent` | live-stack-with-offline-subset | IR08.2 Q1=1: measure with the live stack through the scripts; the 5 non-QuarkusTest classes are t... | owner | 2026-11-06 | IR08.2 |
 | `tools.jdk_major` | 21 | IR05.2 Q1: toolchain block only, JDK 21 (answered via Hermes 2026-10-31) | owner | 2026-10-31 | IR05.2 |
+
+- `agents_md.pointer_section`: value: section-5; reason: Q6: pointer line goes in AGENTS.md section 5
+  (Development & Contribution Workflow) (owner answer via Hermes 2026-10-30)
+- `agents_md.release_tags`: value: never-tag-or-release; reason: F-013: add a section 4 bullet: agents must
+  not create, move or delete tags or releases; Release Please owns both (owner answer via Hermes 2026-10-30)
+- `agents_md.section6`: value: move-to-docs-stance-b; reason: F-039: move section 6 intact to
+  docs/workflow-profiles.md, link it from section 5 steps 3-4; EntityManager rule marked target state for new
+  code, the 14 existing files tolerated and listed in the first ADR (owner answer via Hermes 2026-10-30)
+- `baseline.form`: value: counts-file-plus-native; reason: IR08.2 Q4=1: native baselines kept; counts file
+  compared in formatCheck for offline tools and in the CI scan job for OSV (owner answer via Hermes
+  2026-11-06)
+- `ci.branch_protection_runbook`: value: admin-owner; reason: F-040(c): runbook under docs/ after T6 names CI
+  Gate as the required check; the admin is @kcramakrishna; the agent cannot read or set the GitHub setting
+  (owner answer via Hermes 2026-10-30)
+- `ci.image_scan_debt`: value: accept-38-with-ratchet; reason: F-040(b): accept the 38 fixable HIGH/CRITICAL
+  image findings as recorded debt with a list that may only shrink; do not make the scan blocking now; review
+  date placeholder for the owner (owner answer via Hermes 2026-10-30)
+- `ci.scan_policy`: value: report-only-101-advisories; reason: IR07.2 Q1: first run found 101 advisories in 29
+  packages, so stays report-only; out of gate.needs; review date placeholder for the owner
+- `ci.t4_scope`: value: items-a-b-only; reason: IR07.2 Q7: docs-lint pin/cache and AGENTS.md/ci.yml text only;
+  OWASP dependency-check plugin left alone
+- `codeowners.default`: value: owner-owns-all; reason: F-029: @kcramakrishna owns * and the areas in
+  research/p4-owner-asks.md item 1; second reviewer left as a placeholder; do not enable required code-owner
+  review with a single owner (owner answer via Hermes 2026-10-30)
+- `docs.agents_line`: value: yes; reason: IR09.1 Q4 / IR09.2 Q6 via Hermes: one AGENTS.md line in section 5
+  naming style guide, ADR and architecture dirs
+- `docs.lint_ratchet`: value: growing-path-list; reason: IR09.2 Q2 via Hermes 2026-10-31: gating list that
+  only grows plus report-only run over all Markdown; no mass reformat
+- `docs.lint_tools`: value: markdownlint-cli2+mmdc; reason: Owner approved Node-based docs lint twice in
+  IR09.1; IR09.2 Q1 via Hermes 2026-10-31: separate advisory CI job, not in gate
+- `docs.lychee`: value: skip; reason: IR09.2 Q7 via Hermes 2026-10-31: accept recommendation, skip link
+  checker for Server; revisit if docs grow
+- `extra.t2`: value: jdk-toolchain-pin-and-readme-rename; reason: Q5 items 4 and 8: add a java toolchain block
+  (JDK 21) to build.gradle; rename README to README.md and fix the .dockerignore, CONVENTIONS.md and
+  scripts/ci/test.sh references (owner answer via Hermes 2026-10-30)
+- `extra.t3`: value: keystore-untrack; reason: Q5 item 1: git rm --cached config/keycloak-keystore.jks (keep
+  the file locally if useful), fix the CONVENTIONS.md tree line; no key rotation; git history left as is.
+  Consequence of the owner's statement that nothing tracked holds a live secret and all secrets come from the
+  AWS store; recorded as a preference, executed in IR06.2 (owner answer via Hermes 2026-10-30)
+- `extra.t5`: value: offline-test-verb: done as 5 named classes plus fenced command in AGENTS.md; 15 of 20
+  classes need the live stack (debt on F-038); no Testcontainers; reason: owner 2026-10-30 (via Hermes),
+  applied in IR08.2; the state said three classes, there are now five
+- `format.java_family`: value: decide-in-IR04.2; reason: Q3: tool chosen in IR04.2; constraint is
+  CONVENTIONS.md style (tabs, LF, 120 columns); Spotless is the likely tool (owner answer via Hermes
+  2026-10-30)
+- `format.mass_reformat`: value: no; reason: Q2: formatter in check-only/ratchet mode, violation count
+  recorded as debt, never reformat the tree; other Server PRs are in flight (owner answer via Hermes
+  2026-10-30)
+- `github.owner_handle`: value: @kcramakrishna; reason: Use for F-029 CODEOWNERS and F-040(c) branch
+  protection: the repository owner's verified account (gh auth status). Any other person's handle stays a
+  named placeholder for the owner to fill (owner answer via Hermes 2026-10-30)
+- `hooks.manager`: value: lefthook-2.2.2-secrets-only; reason: IR07.2 Q4 option 1: lefthook v2.2.2, gitleaks
+  8.30.1 pre-commit; formatCheck dropped for cold-start time
+- `layout.env_example`: value: scripts/ci/env.example; reason: Owner Q1 "Yes." (via Hermes 2026-10-30); IR06.2
+  Q1-Q5 recommended option each (via Hermes 2026-10-31): QUARKUS_*/UDAN_* overrides listed as optional names
+  only
+- `overlap.section_b`: value: covered-by-findings; reason: Q5 items 2, 3, 5, 6, 9 are not extra work: 2=F-003
+  (keep the dependabot comment true), 3=F-040(a)/F-024 (rename the no-op job first), 5=F-039/F-012/F-014,
+  6=F-001/F-022/F-023/F-024/F-041, 9=F-040(c) with F-035 deferred (owner answer via Hermes 2026-10-30)
+- `scanner.choice`: value: osv-scanner-on-lockfile; reason: F-024: OSV-Scanner on gradle.lockfile (after
+  F-003), no secret needed; rename the no-op Dependency Scan job and correct AGENTS.md line 27 first; drop or
+  leave the OWASP plugin as decided in IR04.2 (owner answer via Hermes 2026-10-30)
+- `security.disclosure`: value: github-private-vulnerability-reporting; reason: F-032: SECURITY.md uses GitHub
+  private vulnerability reporting plus the skeleton; the owner must enable the setting and fill any
+  mailbox/response-time placeholder (owner answer via Hermes 2026-10-30)
+- `tests.coverage_gate`: value: ci; reason: IR08.2 Q2=2: floor in build.gradle, run by a CI step only; check
+  stays stack-free (owner answer via Hermes 2026-11-06)
+- `tests.coverage_tool`: value: quarkus-jacoco-plus-core-jacoco; reason: IR08.2 Q3=1: add
+  io.quarkus:quarkus-jacoco as a test dependency (owner approves, rule 7) plus the core jacoco plugin (owner
+  answer via Hermes 2026-11-06)
+- `tests.stack_dependent`: value: live-stack-with-offline-subset; reason: IR08.2 Q1=1: measure with the live
+  stack through the scripts; the 5 non-QuarkusTest classes are the offline subset (owner answer via Hermes
+  2026-11-06)
 
 ## Themes
 
 | Theme | Title | Status | Items | Open | Phase | Branch | PR | Merged |
 |---|---|---|---|---|---|---|---|---|
-| T1 | Command surface and quality tools | pr_open | 5 | 3 | IR04.2 | `agentic-readiness/ir04-command-surface` | #111 | - |
-| T2 | Execution determinism | pr_open | 2 | 0 | IR05.2 | `agentic-readiness/ir05-determinism` | #110 | - |
-| T3 | Secrets and env | pr_open | 2 | 0 | IR06.2 | `agentic-readiness/ir06-secrets-env` | #112 | - |
-| T4 | CI parity, hooks, commits | pr_open | 3 | 2 | IR07.2 | `agentic-readiness/ir07-ci-hooks` | #116 | - |
-| T5 | Tests and baselines | not_started | 5 | 5 | - | - | - | - |
-| T6 | Docs and navigation | pr_open | 4 | 0 | IR09.2 | `agentic-readiness/ir09-docs` | #113 | - |
+| T1 | Command surface and quality tools | merged | 5 | 3 | IR08.2 | `agentic-readiness/ir04-command-surface` | #111 | `eb134b78fef966a1aa94d807b4f2536fa433fd06` |
+| T2 | Execution determinism | merged | 2 | 0 | IR08.2 | `agentic-readiness/ir05-determinism` | #110 | `a5baa0980f9100e972300d33c76555c0bf4c746c` |
+| T3 | Secrets and env | merged | 2 | 0 | IR08.2 | `agentic-readiness/ir06-secrets-env` | #112 | `30007cbabca4ca973eea6ab68caf3d0b76f2e591` |
+| T4 | CI parity, hooks, commits | merged | 3 | 2 | IR08.2 | `agentic-readiness/ir07-ci-hooks` | #116 | `f246aab5b9b1c81ac32deedd90ab683da5a97114` |
+| T5 | Tests and baselines | branch_open | 5 | 5 | IR08.2 | `agentic-readiness/ir08-baselines` | - | - |
+| T6 | Docs and navigation | merged | 4 | 0 | IR08.2 | `agentic-readiness/ir09-docs` | #113 | `d40cf99d70ed9688bc0b1940472b13057dc3f477` |
 | T7 | AGENTS.md and governance | not_started | 11 | 10 | - | - | - | - |
 | T8 | Hygiene and index | not_started | 8 | 7 | - | - | - | - |
 
@@ -101,11 +179,18 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | F-024 | TOOL-04 | DEGRADER | done | agent | 2026-11-01 | An agent cannot know whether a dependency carries a known vulnerability because no resolvable verb runs a dependency-audit check. |
 | F-041 | CMD-02 | DEGRADER | done | agent | 2026-10-31 | An agent cannot treat ./gradlew check as the pre-merge gate because it composes only test: no format-check or typecheck task exists (same root cause as the missing verbs in CMD-01). |
 
-- **F-001**: commits: `8a291b2`; verification: `./gradlew format formatCheck lint typecheck test check --dry-run` gave 6 of 7 verbs resolve; security does not
-- **F-022**: commits: `73eccae`; verification: `./gradlew formatCheck` gave exit 0 on changed files (ratchet vs origin/dev); ./gradlew spotlessCheck -PspotlessFull reports 51 of 89 files; a touched unformatted file fails formatCheck
-- **F-023**: commits: `73eccae`; verification: `./gradlew lint` gave exit 0 under the exclude list; 32 violations in 18 files before the list
-- **F-024**: notes: security verb defined; dependency findings recorded as debt, review date placeholder for the owner; commits: `09e783a`; verification: `./gradlew security --dry-run; scripts/ci/scan.sh` gave task resolves; first OSV-Scanner run: 101 advisories in 29 packages (report-only debt)
-- **F-041**: commits: `8a291b2`; verification: `./gradlew check --dry-run` gave order: formatCheck, typecheck, test; check -x test BUILD SUCCESSFUL
+- **F-001**: commits: `8a291b2`; verification: `./gradlew format formatCheck lint typecheck test check
+  --dry-run` gave 6 of 7 verbs resolve; security does not
+- **F-022**: commits: `73eccae`; verification: `./gradlew formatCheck` gave exit 0 on changed files (ratchet
+  vs origin/dev); ./gradlew spotlessCheck -PspotlessFull reports 51 of 89 files; a touched unformatted file
+  fails formatCheck
+- **F-023**: commits: `73eccae`; verification: `./gradlew lint` gave exit 0 under the exclude list; 32
+  violations in 18 files before the list
+- **F-024**: notes: security verb defined; dependency findings recorded as debt, review date placeholder for
+  the owner; commits: `09e783a`; verification: `./gradlew security --dry-run; scripts/ci/scan.sh` gave task
+  resolves; first OSV-Scanner run: 101 advisories in 29 packages (report-only debt)
+- **F-041**: commits: `8a291b2`; verification: `./gradlew check --dry-run` gave order: formatCheck, typecheck,
+  test; check -x test BUILD SUCCESSFUL
 
 ### T2 Execution determinism
 
@@ -114,8 +199,18 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | F-003 | EXEC-02 | BLOCKER | done | agent | 2026-10-31 | An agent cannot install identical dependencies on every run because the jvm project has no lockfile (gradle.lockfile), so a fresh install resolves whatever versions are current. |
 | F-004 | EXEC-03 | BLOCKER | done | agent | 2026-10-31 | An agent cannot prepare the environment non-interactively because no devcontainer, compose file, Dockerfile, setup target/script, or documented install command exists. |
 
-- **F-003**: notes: Regenerate with ./gradlew dependencies --write-locks whenever IR04.2 adds plugins.; commits: `dc0c8dd`; verification: `resolved-version report over all resolvable configurations (+buildscript), before vs after; ./gradlew build -x test on JDK 21` gave 5674 lines identical before/after; gradle.lockfile tracked, unchanged by build; lock regenerated under JDK 21 equals JDK 17 run. Engine cannot see dependencyLocking: re-audit may read EXEC-02 UNKNOWN (engine limit). gradle.lockfile now exists: unblocks the security verb (osv-scanner) in configure-quality-tools/IR04.2. Toolchain pin ed0b169; dependabot header bde7928. Quarkus-generated configurations are in the lock; none left unlocked.
-- **F-004**: notes: Check only (owner: define-command-surface owns the fix, IR05.1 Q2). README.md and AGENTS.md document ./sync-credentials.sh then ./start-server.sh (neither prompts), but there is no single build/install setup command and the stack must already be up. Added no script. Engine may now PASS EXEC-03 on the README.md rename alone (engine limit).; commits: `5296eb3`; verification: `./gradlew assemble` gave BUILD SUCCESSFUL on JDK 21; documented in AGENTS.md Build & Validation
+- **F-003**: notes: Regenerate with ./gradlew dependencies --write-locks whenever IR04.2 adds plugins.;
+  commits: `dc0c8dd`; verification: `resolved-version report over all resolvable configurations
+  (+buildscript), before vs after; ./gradlew build -x test on JDK 21` gave 5674 lines identical before/after;
+  gradle.lockfile tracked, unchanged by build; lock regenerated under JDK 21 equals JDK 17 run. Engine cannot
+  see dependencyLocking: re-audit may read EXEC-02 UNKNOWN (engine limit). gradle.lockfile now exists:
+  unblocks the security verb (osv-scanner) in configure-quality-tools/IR04.2. Toolchain pin ed0b169;
+  dependabot header bde7928. Quarkus-generated configurations are in the lock; none left unlocked.
+- **F-004**: notes: Check only (owner: define-command-surface owns the fix, IR05.1 Q2). README.md and
+  AGENTS.md document ./sync-credentials.sh then ./start-server.sh (neither prompts), but there is no single
+  build/install setup command and the stack must already be up. Added no script. Engine may now PASS EXEC-03
+  on the README.md rename alone (engine limit).; commits: `5296eb3`; verification: `./gradlew assemble` gave
+  BUILD SUCCESSFUL on JDK 21; documented in AGENTS.md Build & Validation
 
 ### T3 Secrets and env
 
@@ -124,8 +219,10 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | F-005 | EXEC-04 | BLOCKER | done | agent | 2026-10-31 | An agent cannot know the CI variables the scripts need because AWS_ROLE_ARN, INSTANCE_ID, SSM_DOCUMENT (repository variables), IMAGE_TAR and CACHE_DIR (optional script inputs) are documented only in scripts/ci/README.md and script headers, not in a committed example file (SECONDS, also reported by the engine, is a bash builtin and is not a gap). |
 | F-021 | SEC-03 | DEGRADER | done | agent | 2026-10-31 | An agent cannot trust that secret shapes cannot be committed because ignore rules do not cover ssh private key, PFX, keystore, certificate (.crt), certificate (.cer), AWS credentials. |
 
-- **F-005**: commits: `2fb9426`; verification: `compare inventory with scripts/ci/env.example` gave every read name declared or on the header's not-inventory list; no values
-- **F-021**: commits: `3631fea`; verification: `git ls-files -ci --exclude-standard` gave empty after untracking config/keycloak-keystore.jks (c0a9735); all eleven shapes covered
+- **F-005**: commits: `2fb9426`; verification: `compare inventory with scripts/ci/env.example` gave every read
+  name declared or on the header's not-inventory list; no values
+- **F-021**: commits: `3631fea`; verification: `git ls-files -ci --exclude-standard` gave empty after
+  untracking config/keycloak-keystore.jks (c0a9735); all eleven shapes covered
 
 ### T4 CI parity, hooks, commits
 
@@ -135,19 +232,38 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | F-037 | TOOL-06 | COSMETIC | skipped | owner | 2026-10-30 | An agent cannot rely on a consistent commit-message convention because no commitlint config, commit-msg hook, or equivalent exists. |
 | F-040 | CI-04 | DEGRADER | partial | agent | 2026-11-01 | An agent cannot trust a green CI because the dependency scan job is a placeholder that always passes, the image scan is continue-on-error, and no committed evidence shows the CI Gate is a required status check. |
 
-- **F-025**: commits: `bdc847b`; verification: `gitleaks hook timed; ./gradlew formatCheck timed` gave secret hook ~0.4 s; formatCheck 5.2 s cold (0.7-1.2 s warm)
-- **F-037**: reason: Commit format already enforced where it counts: pr-title.yml rejects non-Conventional-Commit PR titles and merges are squashed, so a local hook adds install friction for no change in dev history (owner answer via Hermes 2026-10-30)
-- **F-040**: commits: `09e783a`, `a3107ce`, `507ff84`, `bdc847b`; verification: `scripts/ci/lint-workflows.sh` gave actionlint/zizmor clean; branch protection recorded (ruleset Protect dev 25616141, CI Gate required, confirmed 2026-10-31)
+- **F-025**: commits: `bdc847b`; verification: `gitleaks hook timed; ./gradlew formatCheck timed` gave secret
+  hook ~0.4 s; formatCheck 5.2 s cold (0.7-1.2 s warm)
+- **F-037**: reason: Commit format already enforced where it counts: pr-title.yml rejects
+  non-Conventional-Commit PR titles and merges are squashed, so a local hook adds install friction for no
+  change in dev history (owner answer via Hermes 2026-10-30)
+- **F-040**: commits: `09e783a`, `a3107ce`, `507ff84`, `bdc847b`; verification: `scripts/ci/lint-workflows.sh`
+  gave actionlint/zizmor clean; branch protection recorded (ruleset Protect dev 25616141, CI Gate required,
+  confirmed 2026-10-31)
 
 ### T5 Tests and baselines
 
 | Finding | Check | Severity | Status | By | Date | Statement |
 |---|---|---|---|---|---|---|
-| F-015 | BASE-01 | DEGRADER | queued | agent | 2026-10-30 | An agent cannot distinguish pre-existing debt from new debt because no baseline or suppression artifact is committed. |
-| F-016 | BASE-02 | DEGRADER | queued | agent | 2026-10-30 | An agent cannot state how many violations exist today because no violation-counting tooling, budget or artifact is configured. |
-| F-017 | BASE-03 | DEGRADER | queued | agent | 2026-10-30 | An agent cannot stop the violation count from growing because no baseline, budget or comparison step exists, so the count is not guarded. |
-| F-018 | BASE-04 | DEGRADER | queued | agent | 2026-10-30 | An agent cannot know when coverage drops below an agreed floor because no coverage threshold is configured in the test runner. |
-| F-038 | TST-05 | COSMETIC | queued | agent | 2026-10-30 | An agent cannot see how much of the code the suite actually covers because no coverage configuration or coverage-invoking command is present. |
+| F-015 | BASE-01 | DEGRADER | partial | agent | 2026-11-06 | An agent cannot distinguish pre-existing debt from new debt because no baseline or suppression artifact is committed. |
+| F-016 | BASE-02 | DEGRADER | partial | agent | 2026-11-06 | An agent cannot state how many violations exist today because no violation-counting tooling, budget or artifact is configured. |
+| F-017 | BASE-03 | DEGRADER | partial | agent | 2026-11-06 | An agent cannot stop the violation count from growing because no baseline, budget or comparison step exists, so the count is not guarded. |
+| F-018 | BASE-04 | DEGRADER | partial | agent | 2026-11-06 | An agent cannot know when coverage drops below an agreed floor because no coverage threshold is configured in the test runner. |
+| F-038 | TST-05 | COSMETIC | partial | agent | 2026-11-06 | An agent cannot see how much of the code the suite actually covers because no coverage configuration or coverage-invoking command is present. |
+
+- **F-015**: commits: `02b3460`, `b98c4f8`; verification: `ls
+  docs/agentic-readiness/digital-assistant-server-quality-baseline.json config/pmd/ruleset.xml; grep -n
+  'quality baseline' AGENTS.md` gave counts file and native baselines exist; AGENTS.md Baselines and floors
+  names each
+- **F-016**: commits: `02b3460`; verification: `scripts/ci/check-baseline.sh; scripts/ci/scan.sh` gave each
+  count matches a fresh run
+- **F-017**: commits: `02b3460`; verification: `./gradlew formatCheck; raise each count by one` gave real tree
+  exit 0; each raised count exits 1 naming the tool; scan.sh osv 102 exits 1
+- **F-018**: commits: `eaf8fab`; verification: `./gradlew jacocoTestCoverageVerification -x test (minimum 0.70
+  then 0.71)` gave 0.70 passes (70.6 percent measured, two identical runs); 0.71 fails Rule violated
+- **F-038**: commits: `eaf8fab`, `b98c4f8`; verification: `./gradlew test jacocoTestReport (local stack up,
+  flock /tmp/udan-stack.lock)` gave 167 tests 0 failures 0 skipped; report build/reports/jacoco/test; Quarkus
+  own report agrees (396 missed 951 covered lines)
 
 ### T6 Docs and navigation
 
@@ -158,10 +274,15 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | F-028 | DOC-04 | COSMETIC | done | agent | 2026-10-31 | An agent cannot find the decisions of record because no ADR directory (docs/architecture/adrs/ or docs/adr/) exists. |
 | F-036 | NAV-04 | COSMETIC | done | agent | 2026-10-31 | An agent cannot orient itself from a map instead of exploring blindly because no docs/architecture/, ADR directory or diagram exists. |
 
-- **F-019**: notes: Stale finding: docs/ existed at head e8b3728 (drift); index added to the existing folder, no second docs/; commits: `312a8e3`; verification: `git ls-files 'docs/*.md'` gave docs/ already existed (report folders); docs/README.md index added
-- **F-020**: notes: one-page guide adapted from the framework guide; commits: `312a8e3`; verification: `test -f docs/STYLE_GUIDE.md && grep -n STYLE_GUIDE.md AGENTS.md` gave present; named in AGENTS.md
-- **F-028**: notes: ADRs wait for owner acceptance; commits: `4299ae6`; verification: `ls docs/adr` gave template, index, 3 ADRs (proposed)
-- **F-036**: notes: census in Repository notes; commits: `824e2cf`; verification: `test -f docs/architecture/overview.md` gave present; Mermaid diagram validated (MCP and mmdc 12.0.0)
+- **F-019**: notes: Stale finding: docs/ existed at head e8b3728 (drift); index added to the existing folder,
+  no second docs/; commits: `312a8e3`; verification: `git ls-files 'docs/*.md'` gave docs/ already existed
+  (report folders); docs/README.md index added
+- **F-020**: notes: one-page guide adapted from the framework guide; commits: `312a8e3`; verification: `test
+  -f docs/STYLE_GUIDE.md && grep -n STYLE_GUIDE.md AGENTS.md` gave present; named in AGENTS.md
+- **F-028**: notes: ADRs wait for owner acceptance; commits: `4299ae6`; verification: `ls docs/adr` gave
+  template, index, 3 ADRs (proposed)
+- **F-036**: notes: census in Repository notes; commits: `824e2cf`; verification: `test -f
+  docs/architecture/overview.md` gave present; Mermaid diagram validated (MCP and mmdc 12.0.0)
 
 ### T7 AGENTS.md and governance
 
@@ -179,7 +300,8 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | F-027 | AGT-08 | COSMETIC | queued | agent | 2026-10-30 | An agent cannot assume every harness on the team sees the project rules because 21 of 27 known harnesses reach an instruction file; Amazon Q Developer, Continue, Google Gemini CLI, Qwen Code, Replit Agent, Void reach nothing. |
 | F-039 | AGT-11 | DEGRADER | queued | agent | 2026-10-30 | An agent cannot rely on AGENTS.md being specific because about 62% of its rule lines are generic (section 6 role-play prompts, persona lines) and its EntityManager rule is contradicted by the code in several services. |
 
-- **F-011**: reason: CLAUDE.md is an @AGENTS.md import stub (11 bytes), not a shadowing file; the audit could not tell the pattern apart. Owner: go with the recommendations (owner answer via Hermes 2026-10-30)
+- **F-011**: reason: CLAUDE.md is an @AGENTS.md import stub (11 bytes), not a shadowing file; the audit could
+  not tell the pattern apart. Owner: go with the recommendations (owner answer via Hermes 2026-10-30)
 
 ### T8 Hygiene and index
 
@@ -194,9 +316,13 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | F-035 | HYG-11 | COSMETIC | deferred | owner | 2026-10-30 | An agent cannot reproduce the protected-branch rules as code because the github provider is detected but no branch-protection configuration exists. |
 | F-042 | IDX-03 | COSMETIC | skipped | owner | 2026-10-30 | An agent cannot be sure the index matches HEAD because the index predates the HEAD commit by one commit (CI files only, no indexed symbols affected). |
 
-- **F-033**: reason: Release Please (release-type simple) creates and maintains CHANGELOG.md at the first release; a hand-written file would fight it. Revisit after the first release PR (owner answer via Hermes 2026-10-30)
-- **F-035**: reason: Branch protection as code needs repo-admin access and an infra repo outside this track; the runbook half is covered by F-040(c) (owner answer via Hermes 2026-10-30)
-- **F-042**: reason: Moment-in-time observation (index one commit behind HEAD at audit time), not a repository artefact; re-indexing before agent work is the remedy (owner answer via Hermes 2026-10-30)
+- **F-033**: reason: Release Please (release-type simple) creates and maintains CHANGELOG.md at the first
+  release; a hand-written file would fight it. Revisit after the first release PR (owner answer via Hermes
+  2026-10-30)
+- **F-035**: reason: Branch protection as code needs repo-admin access and an infra repo outside this track;
+  the runbook half is covered by F-040(c) (owner answer via Hermes 2026-10-30)
+- **F-042**: reason: Moment-in-time observation (index one commit behind HEAD at audit time), not a repository
+  artefact; re-indexing before agent work is the remedy (owner answer via Hermes 2026-10-30)
 
 ## Skipped
 
@@ -222,6 +348,14 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | F-023 | TOOL-02 | files excluded from PMD (32 violations: 29 main, 3 test) | 18 | `config/pmd/ruleset.xml` |
 | F-025 | TOOL-05 | formatCheck not a hook (cold start over budget) | 1 | - |
 | F-040 | CI-04 | image scan fixable HIGH/CRITICAL findings (non-blocking; review date placeholder for the owner) | 38 | - |
+| F-015 | BASE-01 | PMD violations in excluded files (exclude list) | 34 | `config/pmd/ruleset.xml` |
+| F-015 | BASE-01 | Spotless unformatted files (full run) | 45 | `docs/agentic-readiness/digital-assistant-server-quality-baseline.json` |
+| F-015 | BASE-01 | OSV advisories | 101 | `docs/agentic-readiness/digital-assistant-server-quality-baseline.json` |
+| F-015 | BASE-01 | image scan fixable HIGH or CRITICAL | 38 | `docs/agentic-readiness/digital-assistant-server-quality-baseline.json` |
+| F-016 | BASE-02 | debt kinds counted in the quality baseline (PMD 34 in 18 files / Spotless 45 of 73 / OSV 101 in 29 packages / image scan 38 / skip markers 0) | 5 | `docs/agentic-readiness/digital-assistant-server-quality-baseline.json` |
+| F-017 | BASE-03 | debt kinds guarded by the no-new-violations check (PMD exclude list / Spotless full run / OSV / skip markers) | 4 | `docs/agentic-readiness/digital-assistant-server-quality-baseline.json` |
+| F-018 | BASE-04 | coverage floor (line %) | 70 | `build.gradle` |
+| F-038 | TST-05 | test classes that need the live local stack (no offline path; 5 of 20 classes run without it) | 15 | `AGENTS.md` |
 
 ## Not queued
 
@@ -328,3 +462,30 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | 2026-11-01 | IR07.2 | F-040 in_progress to partial by agent: image scan debt (Q3 option 1); dependency scan report-only 101 advisories |
 | 2026-11-01 | IR07.2 | theme T4 not_started to branch_open: branch agentic-readiness/ir07-ci-hooks |
 | 2026-11-01 | IR07.2 | theme T4 branch_open to pr_open: branch agentic-readiness/ir07-ci-hooks, PR #116 |
+| 2026-11-06 | IR08.2 | preference tests.stack_dependent changed from decide-in-IR08.2 to live-stack-with-offline-subset: IR08.2 Q1=1: measure with the live stack through the scripts; the 5 non-QuarkusTest classes are the offline subset (owner answer via Hermes 2026-11-06) |
+| 2026-11-06 | IR08.2 | preference tests.coverage_gate set to ci: IR08.2 Q2=2: floor in build.gradle, run by a CI step only; check stays stack-free (owner answer via Hermes 2026-11-06) |
+| 2026-11-06 | IR08.2 | preference tests.coverage_tool set to quarkus-jacoco-plus-core-jacoco: IR08.2 Q3=1: add io.quarkus:quarkus-jacoco as a test dependency (owner approves, rule 7) plus the core jacoco plugin (owner answer via Hermes 2026-11-06) |
+| 2026-11-06 | IR08.2 | preference baseline.form set to counts-file-plus-native: IR08.2 Q4=1: native baselines kept; counts file compared in formatCheck for offline tools and in the CI scan job for OSV (owner answer via Hermes 2026-11-06) |
+| 2026-11-06 | IR08.2 | preference tests.coverage_metric set to line-only: IR08.2 Q5=1: line coverage only (owner answer via Hermes 2026-11-06) |
+| 2026-11-06 | IR08.2 | preference ci.pr_by_agent set to yes: STATE.md Q1 default 3: UDAN repositories record yes (D5/D11); sessions open the PR, never merge |
+| 2026-11-06 | IR08.2 | F-015 queued to in_progress by agent |
+| 2026-11-06 | IR08.2 | F-016 queued to in_progress by agent |
+| 2026-11-06 | IR08.2 | F-017 queued to in_progress by agent |
+| 2026-11-06 | IR08.2 | F-018 queued to in_progress by agent |
+| 2026-11-06 | IR08.2 | F-038 queued to in_progress by agent |
+| 2026-10-31 | IR08.2 | theme T1 pr_open to merged: branch agentic-readiness/ir04-command-surface, PR #111, merged as eb134b78fef966a1aa94d807b4f2536fa433fd06 |
+| 2026-10-31 | IR08.2 | theme T2 pr_open to merged: branch agentic-readiness/ir05-determinism, PR #110, merged as a5baa0980f9100e972300d33c76555c0bf4c746c |
+| 2026-10-31 | IR08.2 | theme T3 pr_open to merged: branch agentic-readiness/ir06-secrets-env, PR #112, merged as 30007cbabca4ca973eea6ab68caf3d0b76f2e591 |
+| 2026-11-01 | IR08.2 | theme T4 pr_open to merged: branch agentic-readiness/ir07-ci-hooks, PR #116, merged as f246aab5b9b1c81ac32deedd90ab683da5a97114 |
+| 2026-10-31 | IR08.2 | theme T6 pr_open to merged: branch agentic-readiness/ir09-docs, PR #113, merged as d40cf99d70ed9688bc0b1940472b13057dc3f477 |
+| 2026-11-06 | IR08.2 | F-015 in_progress to partial by agent |
+| 2026-11-06 | IR08.2 | F-016 in_progress to partial by agent |
+| 2026-11-06 | IR08.2 | F-017 in_progress to partial by agent |
+| 2026-11-06 | IR08.2 | F-018 in_progress to partial by agent |
+| 2026-11-06 | IR08.2 | F-038 in_progress to partial by agent |
+| 2026-11-06 | IR08.2 | F-016 partial to in_progress by agent |
+| 2026-11-06 | IR08.2 | F-017 partial to in_progress by agent |
+| 2026-11-06 | IR08.2 | F-016 in_progress to partial by agent |
+| 2026-11-06 | IR08.2 | F-017 in_progress to partial by agent |
+| 2026-11-06 | IR08.2 | preference extra.t5 changed from offline-test-verb to offline-test-verb: done as 5 named classes plus fenced command in AGENTS.md; 15 of 20 classes need the live stack (debt on F-038); no Testcontainers: owner 2026-10-30 (via Hermes), applied in IR08.2; the state said three classes, there are now five |
+| 2026-11-06 | IR08.2 | theme T5 not_started to branch_open: branch agentic-readiness/ir08-baselines |
