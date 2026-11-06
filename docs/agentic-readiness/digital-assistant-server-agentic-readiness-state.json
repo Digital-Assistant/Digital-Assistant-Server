@@ -456,6 +456,14 @@
       "by": "owner",
       "date": "2026-11-06",
       "phase": "IR10.2"
+    },
+    {
+      "key": "security.contact",
+      "value": "TODO(owner) placeholders",
+      "reason": "Owner answer 2026-11-06 (IR11.2 Q1=2): SECURITY.md keeps TODO(owner) placeholders for the mailbox and response time; the owner fills them before a release is announced",
+      "by": "owner",
+      "date": "2026-11-06",
+      "phase": "IR11.2"
     }
   ],
   "themes": [
@@ -1127,14 +1135,19 @@
       "severity": "COSMETIC",
       "theme": "T8",
       "statement": "An agent cannot know who owns a path before changing it because no CODEOWNERS file exists at the root, under .github/, or under docs/.",
-      "status": "queued",
+      "status": "done",
       "by": "agent",
-      "date": "2026-10-30",
+      "date": "2026-11-06",
       "reason": null,
-      "commits": [],
-      "verification": null,
+      "commits": [
+        "d3ca037"
+      ],
+      "verification": {
+        "command": "test -e .github/CODEOWNERS && grep -n '^\\*' .github/CODEOWNERS",
+        "result": "default * line present; /.github/ and /scripts/ci/ rules kept"
+      },
       "debt": [],
-      "notes": ""
+      "notes": "owner (2026-11-06): confirm @kcramakrishna for the default line; required code-owner review stays off"
     },
     {
       "finding": "F-030",
@@ -1142,12 +1155,17 @@
       "severity": "COSMETIC",
       "theme": "T8",
       "statement": "An agent cannot file a change with the information reviewers need because no .github/pull_request_template file exists.",
-      "status": "queued",
+      "status": "done",
       "by": "agent",
-      "date": "2026-10-30",
+      "date": "2026-11-06",
       "reason": null,
-      "commits": [],
-      "verification": null,
+      "commits": [
+        "1f80b72"
+      ],
+      "verification": {
+        "command": "test -e .github/pull_request_template.md",
+        "result": "present"
+      },
       "debt": [],
       "notes": ""
     },
@@ -1157,12 +1175,17 @@
       "severity": "COSMETIC",
       "theme": "T8",
       "statement": "An agent cannot report a bug or request in a structured way because no .github/ISSUE_TEMPLATE entry exists.",
-      "status": "queued",
+      "status": "done",
       "by": "agent",
-      "date": "2026-10-30",
+      "date": "2026-11-06",
       "reason": null,
-      "commits": [],
-      "verification": null,
+      "commits": [
+        "5c023c6"
+      ],
+      "verification": {
+        "command": "ls .github/ISSUE_TEMPLATE/",
+        "result": "bug_report.md, feature_request.md"
+      },
       "debt": [],
       "notes": ""
     },
@@ -1172,14 +1195,19 @@
       "severity": "COSMETIC",
       "theme": "T8",
       "statement": "An agent cannot report a vulnerability responsibly because no SECURITY document exists at the root, under .github/, or under docs/.",
-      "status": "queued",
+      "status": "done",
       "by": "agent",
-      "date": "2026-10-30",
+      "date": "2026-11-06",
       "reason": null,
-      "commits": [],
-      "verification": null,
+      "commits": [
+        "d2c8787"
+      ],
+      "verification": {
+        "command": "ls SECURITY.md",
+        "result": "present; TODO(owner) placeholders for mailbox and response time"
+      },
       "debt": [],
-      "notes": ""
+      "notes": "owner action: enable private vulnerability reporting in the repository settings; fill the TODO(owner) mailbox and response time before a release is announced (owner answer 2026-11-06, Q1=2)"
     },
     {
       "finding": "F-033",
@@ -1202,12 +1230,17 @@
       "severity": "COSMETIC",
       "theme": "T8",
       "statement": "An agent cannot know how a release is cut because no text or markdown document describing the release process exists.",
-      "status": "queued",
+      "status": "done",
       "by": "agent",
-      "date": "2026-10-30",
+      "date": "2026-11-06",
       "reason": null,
-      "commits": [],
-      "verification": null,
+      "commits": [
+        "37f0bef"
+      ],
+      "verification": {
+        "command": "ls docs/release-process.md",
+        "result": "present; linked from docs/README.md"
+      },
       "debt": [],
       "notes": ""
     },
@@ -2143,6 +2176,61 @@
       "date": "2026-11-06",
       "phase": "IR10.2",
       "event": "theme T7 not_started to pr_open: branch agentic-readiness/ir10-agents-md, PR #122"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR11.2",
+      "event": "F-029 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR11.2",
+      "event": "F-030 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR11.2",
+      "event": "F-031 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR11.2",
+      "event": "F-032 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR11.2",
+      "event": "F-034 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR11.2",
+      "event": "F-029 in_progress to done by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR11.2",
+      "event": "F-030 in_progress to done by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR11.2",
+      "event": "F-031 in_progress to done by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR11.2",
+      "event": "F-032 in_progress to done by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR11.2",
+      "event": "F-034 in_progress to done by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR11.2",
+      "event": "preference security.contact set to TODO(owner) placeholders: Owner answer 2026-11-06 (IR11.2 Q1=2): SECURITY.md keeps TODO(owner) placeholders for the mailbox and response time; the owner fills them before a release is announced"
     }
   ]
 }

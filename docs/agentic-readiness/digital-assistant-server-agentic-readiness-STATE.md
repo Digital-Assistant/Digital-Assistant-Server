@@ -16,9 +16,9 @@ A skipped finding is final until the owner unskips it, and every preference bind
 
 | Status | Items |
 |---|---|
-| queued | 5 |
+| queued | 0 |
 | in_progress | 0 |
-| done | 17 |
+| done | 22 |
 | partial | 13 |
 | failed | 0 |
 | blocked | 0 |
@@ -79,6 +79,7 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | `overlap.section_b` | covered-by-findings | Q5 items 2, 3, 5, 6, 9 are not extra work: 2=F-003 (keep the dependabot comment true), 3=F-040(a)... | owner | 2026-10-30 | IR03.1 |
 | `scanner.choice` | osv-scanner-on-lockfile | F-024: OSV-Scanner on gradle.lockfile (after F-003), no secret needed; rename the no-op Dependenc... | owner | 2026-10-30 | IR03.1 |
 | `scanner.version` | osv-scanner-2.7.0 | IR07.2 Q1 option 1: pinned binary with SHA-256 check on gradle.lockfile | owner | 2026-11-01 | IR07.2 |
+| `security.contact` | TODO(owner) placeholders | Owner answer 2026-11-06 (IR11.2 Q1=2): SECURITY.md keeps TODO(owner) placeholders for the mailbox... | owner | 2026-11-06 | IR11.2 |
 | `security.disclosure` | github-private-vulnerability-reporting | F-032: SECURITY.md uses GitHub private vulnerability reporting plus the skeleton; the owner must... | owner | 2026-10-30 | IR03.1 |
 | `security.verb.deferred-to-t2` | yes | Q3 option 1: no security verb until OSV-Scanner on gradle.lockfile; OWASP plugin left in place | owner | 2026-10-31 | IR04.2 |
 | `tests.coverage_gate` | ci | IR08.2 Q2=2: floor in build.gradle, run by a CI step only; check stays stack-free (owner answer v... | owner | 2026-11-06 | IR08.2 |
@@ -158,6 +159,9 @@ A skipped finding is final until the owner unskips it, and every preference bind
 - `scanner.choice`: value: osv-scanner-on-lockfile; reason: F-024: OSV-Scanner on gradle.lockfile (after
   F-003), no secret needed; rename the no-op Dependency Scan job and correct AGENTS.md line 27 first; drop or
   leave the OWASP plugin as decided in IR04.2 (owner answer via Hermes 2026-10-30)
+- `security.contact`: value: TODO(owner) placeholders; reason: Owner answer 2026-11-06 (IR11.2 Q1=2):
+  SECURITY.md keeps TODO(owner) placeholders for the mailbox and response time; the owner fills them before a
+  release is announced
 - `security.disclosure`: value: github-private-vulnerability-reporting; reason: F-032: SECURITY.md uses GitHub
   private vulnerability reporting plus the skeleton; the owner must enable the setting and fill any
   mailbox/response-time placeholder (owner answer via Hermes 2026-10-30)
@@ -181,7 +185,7 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | T5 | Tests and baselines | merged | 5 | 5 | IR10.2 | `agentic-readiness/ir08-baselines` | #121 | `57621d6b47c6981c7ef420fe8e73ee3a86d37848` |
 | T6 | Docs and navigation | merged | 4 | 0 | IR08.2 | `agentic-readiness/ir09-docs` | #113 | `d40cf99d70ed9688bc0b1940472b13057dc3f477` |
 | T7 | AGENTS.md and governance | pr_open | 11 | 3 | IR10.2 | `agentic-readiness/ir10-agents-md` | #122 | - |
-| T8 | Hygiene and index | not_started | 8 | 7 | - | - | - | - |
+| T8 | Hygiene and index | not_started | 8 | 2 | - | - | - | - |
 
 ## Items by theme
 
@@ -339,18 +343,30 @@ A skipped finding is final until the owner unskips it, and every preference bind
 
 | Finding | Check | Severity | Status | By | Date | Statement |
 |---|---|---|---|---|---|---|
-| F-029 | HYG-02 | COSMETIC | queued | agent | 2026-10-30 | An agent cannot know who owns a path before changing it because no CODEOWNERS file exists at the root, under .github/, or under docs/. |
-| F-030 | HYG-03 | COSMETIC | queued | agent | 2026-10-30 | An agent cannot file a change with the information reviewers need because no .github/pull_request_template file exists. |
-| F-031 | HYG-04 | COSMETIC | queued | agent | 2026-10-30 | An agent cannot report a bug or request in a structured way because no .github/ISSUE_TEMPLATE entry exists. |
-| F-032 | HYG-06 | COSMETIC | queued | agent | 2026-10-30 | An agent cannot report a vulnerability responsibly because no SECURITY document exists at the root, under .github/, or under docs/. |
+| F-029 | HYG-02 | COSMETIC | done | agent | 2026-11-06 | An agent cannot know who owns a path before changing it because no CODEOWNERS file exists at the root, under .github/, or under docs/. |
+| F-030 | HYG-03 | COSMETIC | done | agent | 2026-11-06 | An agent cannot file a change with the information reviewers need because no .github/pull_request_template file exists. |
+| F-031 | HYG-04 | COSMETIC | done | agent | 2026-11-06 | An agent cannot report a bug or request in a structured way because no .github/ISSUE_TEMPLATE entry exists. |
+| F-032 | HYG-06 | COSMETIC | done | agent | 2026-11-06 | An agent cannot report a vulnerability responsibly because no SECURITY document exists at the root, under .github/, or under docs/. |
 | F-033 | HYG-07 | COSMETIC | deferred | owner | 2026-10-30 | An agent cannot see what changed between two versions because no CHANGELOG (or CHANGES/HISTORY) document exists. |
-| F-034 | HYG-08 | COSMETIC | queued | agent | 2026-10-30 | An agent cannot know how a release is cut because no text or markdown document describing the release process exists. |
+| F-034 | HYG-08 | COSMETIC | done | agent | 2026-11-06 | An agent cannot know how a release is cut because no text or markdown document describing the release process exists. |
 | F-035 | HYG-11 | COSMETIC | deferred | owner | 2026-10-30 | An agent cannot reproduce the protected-branch rules as code because the github provider is detected but no branch-protection configuration exists. |
 | F-042 | IDX-03 | COSMETIC | skipped | owner | 2026-10-30 | An agent cannot be sure the index matches HEAD because the index predates the HEAD commit by one commit (CI files only, no indexed symbols affected). |
 
+- **F-029**: notes: owner (2026-11-06): confirm @kcramakrishna for the default line; required code-owner
+  review stays off; commits: `d3ca037`; verification: `test -e .github/CODEOWNERS && grep -n '^\*'
+  .github/CODEOWNERS` gave default * line present; /.github/ and /scripts/ci/ rules kept
+- **F-030**: commits: `1f80b72`; verification: `test -e .github/pull_request_template.md` gave present
+- **F-031**: commits: `5c023c6`; verification: `ls .github/ISSUE_TEMPLATE/` gave bug_report.md,
+  feature_request.md
+- **F-032**: notes: owner action: enable private vulnerability reporting in the repository settings; fill the
+  TODO(owner) mailbox and response time before a release is announced (owner answer 2026-11-06, Q1=2);
+  commits: `d2c8787`; verification: `ls SECURITY.md` gave present; TODO(owner) placeholders for mailbox and
+  response time
 - **F-033**: reason: Release Please (release-type simple) creates and maintains CHANGELOG.md at the first
   release; a hand-written file would fight it. Revisit after the first release PR (owner answer via Hermes
   2026-10-30)
+- **F-034**: commits: `37f0bef`; verification: `ls docs/release-process.md` gave present; linked from
+  docs/README.md
 - **F-035**: reason: Branch protection as code needs repo-admin access and an infra repo outside this track;
   the runbook half is covered by F-040(c) (owner answer via Hermes 2026-10-30)
 - **F-042**: reason: Moment-in-time observation (index one commit behind HEAD at audit time), not a repository
@@ -553,3 +569,14 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | 2026-11-06 | IR10.2 | F-027 in_progress to partial by agent |
 | 2026-11-06 | IR10.2 | F-039 in_progress to partial by agent |
 | 2026-11-06 | IR10.2 | theme T7 not_started to pr_open: branch agentic-readiness/ir10-agents-md, PR #122 |
+| 2026-11-06 | IR11.2 | F-029 queued to in_progress by agent |
+| 2026-11-06 | IR11.2 | F-030 queued to in_progress by agent |
+| 2026-11-06 | IR11.2 | F-031 queued to in_progress by agent |
+| 2026-11-06 | IR11.2 | F-032 queued to in_progress by agent |
+| 2026-11-06 | IR11.2 | F-034 queued to in_progress by agent |
+| 2026-11-06 | IR11.2 | F-029 in_progress to done by agent |
+| 2026-11-06 | IR11.2 | F-030 in_progress to done by agent |
+| 2026-11-06 | IR11.2 | F-031 in_progress to done by agent |
+| 2026-11-06 | IR11.2 | F-032 in_progress to done by agent |
+| 2026-11-06 | IR11.2 | F-034 in_progress to done by agent |
+| 2026-11-06 | IR11.2 | preference security.contact set to TODO(owner) placeholders: Owner answer 2026-11-06 (IR11.2 Q1=2): SECURITY.md keeps TODO(owner) placeholders for the mailbox and response time; the owner fills them before a release is announced |
