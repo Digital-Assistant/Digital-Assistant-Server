@@ -1,2 +1,6 @@
+# Default owner for every path. Required code-owner review is not enabled (with one owner it would block every pull request).
+*  @kcramakrishna
+# Second reviewer: TODO(owner) add a handle here when one exists, for example `# *  @second-reviewer`.
+
 /.github/ @kcramakrishna
 /scripts/ci/ @kcramakrishna
