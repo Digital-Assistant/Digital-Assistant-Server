@@ -464,6 +464,30 @@
       "by": "owner",
       "date": "2026-11-06",
       "phase": "IR11.2"
+    },
+    {
+      "key": "reaudit.stage4",
+      "value": "accept-engine-verdicts",
+      "reason": "IR14.2 Q2=1: engine verdicts accepted; blockers independently verified; engine-only pending findings listed as unconfirmed by owner; PR awaits owner Stage 4 confirmation (via Hermes 2026-11-06)",
+      "by": "owner",
+      "date": "2026-11-06",
+      "phase": "IR14.2"
+    },
+    {
+      "key": "reaudit.verbs",
+      "value": "same-as-first-audit",
+      "reason": "IR14.2 Q1=1: same probe verbs as the first audit (none allowed), nothing added (via Hermes 2026-11-06)",
+      "by": "owner",
+      "date": "2026-11-06",
+      "phase": "IR14.2"
+    },
+    {
+      "key": "reaudit.issue_annotation",
+      "value": "mr-phase-and-issue",
+      "reason": "IR14.2 Q4=1: annotate engine-explained moves with MR phase and issue number; list issues under owner may close (via Hermes 2026-11-06)",
+      "by": "owner",
+      "date": "2026-11-06",
+      "phase": "IR14.2"
     }
   ],
   "themes": [
@@ -524,20 +548,20 @@
     {
       "id": "T7",
       "title": "AGENTS.md and governance",
-      "status": "pr_open",
-      "phase": "IR10.2",
+      "status": "merged",
+      "phase": "IR14.2",
       "branch": "agentic-readiness/ir10-agents-md",
       "pr": 122,
-      "merged_sha": null
+      "merged_sha": "1d429d58a2d1e963ac10d2204768c953b45e1305"
     },
     {
       "id": "T8",
       "title": "Hygiene and index",
-      "status": "pr_open",
-      "phase": "IR11.2",
+      "status": "merged",
+      "phase": "IR14.2",
       "branch": "agentic-readiness/ir11-hygiene",
       "pr": 123,
-      "merged_sha": null
+      "merged_sha": "7226273b1588efadfad37dde5fe74b702e4ed5f8"
     }
   ],
   "items": [
@@ -2236,6 +2260,31 @@
       "date": "2026-11-06",
       "phase": "IR11.2",
       "event": "theme T8 not_started to pr_open: branch agentic-readiness/ir11-hygiene, PR #123"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR14.2",
+      "event": "theme T7 pr_open to merged: branch agentic-readiness/ir10-agents-md, PR #122, merged as 1d429d58a2d1e963ac10d2204768c953b45e1305"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR14.2",
+      "event": "theme T8 pr_open to merged: branch agentic-readiness/ir11-hygiene, PR #123, merged as 7226273b1588efadfad37dde5fe74b702e4ed5f8"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR14.2",
+      "event": "preference reaudit.stage4 set to accept-engine-verdicts: IR14.2 Q2=1: engine verdicts accepted; blockers independently verified; engine-only pending findings listed as unconfirmed by owner; PR awaits owner Stage 4 confirmation (via Hermes 2026-11-06)"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR14.2",
+      "event": "preference reaudit.verbs set to same-as-first-audit: IR14.2 Q1=1: same probe verbs as the first audit (none allowed), nothing added (via Hermes 2026-11-06)"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR14.2",
+      "event": "preference reaudit.issue_annotation set to mr-phase-and-issue: IR14.2 Q4=1: annotate engine-explained moves with MR phase and issue number; list issues under owner may close (via Hermes 2026-11-06)"
     }
   ]
 }

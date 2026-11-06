@@ -1,0 +1,12 @@
+# gitleaks config: the default rules, plus one narrow allowlist.
+# gitleaks reads this file from the repo root (scripts/ci/secrets.sh runs from there).
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Audit report JSON: git_sha and framework_revision are commit hashes that the sourcegraph-access-token rule misreads"
+targetRules = ["sourcegraph-access-token"]
+paths = [
+  '''^docs/agentic-readiness-report/[^/]+\.json$''',
+]

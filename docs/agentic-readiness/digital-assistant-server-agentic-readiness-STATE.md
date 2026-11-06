@@ -77,6 +77,9 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | `lock.verify_configurations` | all-resolvable | IR05.2 Q2: before/after compare over all resolvable configurations | owner | 2026-10-31 | IR05.2 |
 | `order.ir05_before_ir04` | yes | IR05.2 Q3: run ahead of IR04.2; IR04.2 regenerates the lock when it adds plugins | owner | 2026-10-31 | IR05.2 |
 | `overlap.section_b` | covered-by-findings | Q5 items 2, 3, 5, 6, 9 are not extra work: 2=F-003 (keep the dependabot comment true), 3=F-040(a)... | owner | 2026-10-30 | IR03.1 |
+| `reaudit.issue_annotation` | mr-phase-and-issue | IR14.2 Q4=1: annotate engine-explained moves with MR phase and issue number; list issues under ow... | owner | 2026-11-06 | IR14.2 |
+| `reaudit.stage4` | accept-engine-verdicts | IR14.2 Q2=1: engine verdicts accepted; blockers independently verified; engine-only pending findi... | owner | 2026-11-06 | IR14.2 |
+| `reaudit.verbs` | same-as-first-audit | IR14.2 Q1=1: same probe verbs as the first audit (none allowed), nothing added (via Hermes 2026-1... | owner | 2026-11-06 | IR14.2 |
 | `scanner.choice` | osv-scanner-on-lockfile | F-024: OSV-Scanner on gradle.lockfile (after F-003), no secret needed; rename the no-op Dependenc... | owner | 2026-10-30 | IR03.1 |
 | `scanner.version` | osv-scanner-2.7.0 | IR07.2 Q1 option 1: pinned binary with SHA-256 check on gradle.lockfile | owner | 2026-11-01 | IR07.2 |
 | `security.contact` | TODO(owner) placeholders | Owner answer 2026-11-06 (IR11.2 Q1=2): SECURITY.md keeps TODO(owner) placeholders for the mailbox... | owner | 2026-11-06 | IR11.2 |
@@ -156,6 +159,13 @@ A skipped finding is final until the owner unskips it, and every preference bind
 - `overlap.section_b`: value: covered-by-findings; reason: Q5 items 2, 3, 5, 6, 9 are not extra work: 2=F-003
   (keep the dependabot comment true), 3=F-040(a)/F-024 (rename the no-op job first), 5=F-039/F-012/F-014,
   6=F-001/F-022/F-023/F-024/F-041, 9=F-040(c) with F-035 deferred (owner answer via Hermes 2026-10-30)
+- `reaudit.issue_annotation`: value: mr-phase-and-issue; reason: IR14.2 Q4=1: annotate engine-explained moves
+  with MR phase and issue number; list issues under owner may close (via Hermes 2026-11-06)
+- `reaudit.stage4`: value: accept-engine-verdicts; reason: IR14.2 Q2=1: engine verdicts accepted; blockers
+  independently verified; engine-only pending findings listed as unconfirmed by owner; PR awaits owner Stage 4
+  confirmation (via Hermes 2026-11-06)
+- `reaudit.verbs`: value: same-as-first-audit; reason: IR14.2 Q1=1: same probe verbs as the first audit (none
+  allowed), nothing added (via Hermes 2026-11-06)
 - `scanner.choice`: value: osv-scanner-on-lockfile; reason: F-024: OSV-Scanner on gradle.lockfile (after
   F-003), no secret needed; rename the no-op Dependency Scan job and correct AGENTS.md line 27 first; drop or
   leave the OWASP plugin as decided in IR04.2 (owner answer via Hermes 2026-10-30)
@@ -184,8 +194,8 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | T4 | CI parity, hooks, commits | merged | 3 | 2 | IR08.2 | `agentic-readiness/ir07-ci-hooks` | #116 | `f246aab5b9b1c81ac32deedd90ab683da5a97114` |
 | T5 | Tests and baselines | merged | 5 | 5 | IR10.2 | `agentic-readiness/ir08-baselines` | #121 | `57621d6b47c6981c7ef420fe8e73ee3a86d37848` |
 | T6 | Docs and navigation | merged | 4 | 0 | IR08.2 | `agentic-readiness/ir09-docs` | #113 | `d40cf99d70ed9688bc0b1940472b13057dc3f477` |
-| T7 | AGENTS.md and governance | pr_open | 11 | 3 | IR10.2 | `agentic-readiness/ir10-agents-md` | #122 | - |
-| T8 | Hygiene and index | pr_open | 8 | 2 | IR11.2 | `agentic-readiness/ir11-hygiene` | #123 | - |
+| T7 | AGENTS.md and governance | merged | 11 | 3 | IR14.2 | `agentic-readiness/ir10-agents-md` | #122 | `1d429d58a2d1e963ac10d2204768c953b45e1305` |
+| T8 | Hygiene and index | merged | 8 | 2 | IR14.2 | `agentic-readiness/ir11-hygiene` | #123 | `7226273b1588efadfad37dde5fe74b702e4ed5f8` |
 
 ## Items by theme
 
@@ -581,3 +591,8 @@ A skipped finding is final until the owner unskips it, and every preference bind
 | 2026-11-06 | IR11.2 | F-034 in_progress to done by agent |
 | 2026-11-06 | IR11.2 | preference security.contact set to TODO(owner) placeholders: Owner answer 2026-11-06 (IR11.2 Q1=2): SECURITY.md keeps TODO(owner) placeholders for the mailbox and response time; the owner fills them before a release is announced |
 | 2026-11-06 | IR11.2 | theme T8 not_started to pr_open: branch agentic-readiness/ir11-hygiene, PR #123 |
+| 2026-11-06 | IR14.2 | theme T7 pr_open to merged: branch agentic-readiness/ir10-agents-md, PR #122, merged as 1d429d58a2d1e963ac10d2204768c953b45e1305 |
+| 2026-11-06 | IR14.2 | theme T8 pr_open to merged: branch agentic-readiness/ir11-hygiene, PR #123, merged as 7226273b1588efadfad37dde5fe74b702e4ed5f8 |
+| 2026-11-06 | IR14.2 | preference reaudit.stage4 set to accept-engine-verdicts: IR14.2 Q2=1: engine verdicts accepted; blockers independently verified; engine-only pending findings listed as unconfirmed by owner; PR awaits owner Stage 4 confirmation (via Hermes 2026-11-06) |
+| 2026-11-06 | IR14.2 | preference reaudit.verbs set to same-as-first-audit: IR14.2 Q1=1: same probe verbs as the first audit (none allowed), nothing added (via Hermes 2026-11-06) |
+| 2026-11-06 | IR14.2 | preference reaudit.issue_annotation set to mr-phase-and-issue: IR14.2 Q4=1: annotate engine-explained moves with MR phase and issue number; list issues under owner may close (via Hermes 2026-11-06) |
