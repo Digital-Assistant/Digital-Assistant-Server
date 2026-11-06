@@ -408,6 +408,54 @@
       "by": "owner",
       "date": "2026-11-06",
       "phase": "IR08.2"
+    },
+    {
+      "key": "agents_md.stubs",
+      "value": "keep",
+      "reason": "IR10.2 Q3=1: CLAUDE.md stays the pointer stub; no new harness file (Q4=1) (owner answer via Hermes 2026-11-06)",
+      "by": "owner",
+      "date": "2026-11-06",
+      "phase": "IR10.2"
+    },
+    {
+      "key": "agents_md.deferral",
+      "value": "inline",
+      "reason": "IR10.2 Q3=1: must-always rules move into a Code conventions block, CONVENTIONS.md not edited (owner answer via Hermes 2026-11-06)",
+      "by": "owner",
+      "date": "2026-11-06",
+      "phase": "IR10.2"
+    },
+    {
+      "key": "agents_md.generic_text",
+      "value": "move-to-docs",
+      "reason": "IR10.2 Q2=1: section 6 and persona lines move to docs/workflow-profiles.md (owner answer via Hermes 2026-11-06)",
+      "by": "owner",
+      "date": "2026-11-06",
+      "phase": "IR10.2"
+    },
+    {
+      "key": "agents_md.contradicted_rules",
+      "value": "target-state",
+      "reason": "IR10.2 Q2=1: EntityManager rule becomes target state with exception count; no code edit (owner answer via Hermes 2026-11-06)",
+      "by": "owner",
+      "date": "2026-11-06",
+      "phase": "IR10.2"
+    },
+    {
+      "key": "agents_md.harness_files",
+      "value": "none",
+      "reason": "IR10.2 Q4=1: F-027 recorded partial with the six harnesses; no file created (owner answer via Hermes 2026-11-06)",
+      "by": "owner",
+      "date": "2026-11-06",
+      "phase": "IR10.2"
+    },
+    {
+      "key": "agents_md.scratch_ignore",
+      "value": "artefacts/",
+      "reason": "IR10.2 Q5=1: artefacts/ added to .gitignore in its own commit (owner answer via Hermes 2026-11-06)",
+      "by": "owner",
+      "date": "2026-11-06",
+      "phase": "IR10.2"
     }
   ],
   "themes": [
@@ -450,11 +498,11 @@
     {
       "id": "T5",
       "title": "Tests and baselines",
-      "status": "pr_open",
-      "phase": "IR08.2",
+      "status": "merged",
+      "phase": "IR10.2",
       "branch": "agentic-readiness/ir08-baselines",
       "pr": 121,
-      "merged_sha": null
+      "merged_sha": "57621d6b47c6981c7ef420fe8e73ee3a86d37848"
     },
     {
       "id": "T6",
@@ -1890,6 +1938,41 @@
       "date": "2026-11-06",
       "phase": "IR08.2",
       "event": "theme T5 branch_open to pr_open: branch agentic-readiness/ir08-baselines, PR #121"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR10.2",
+      "event": "theme T5 pr_open to merged: branch agentic-readiness/ir08-baselines, PR #121, merged as 57621d6b47c6981c7ef420fe8e73ee3a86d37848"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR10.2",
+      "event": "preference agents_md.stubs set to keep: IR10.2 Q3=1: CLAUDE.md stays the pointer stub; no new harness file (Q4=1) (owner answer via Hermes 2026-11-06)"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR10.2",
+      "event": "preference agents_md.deferral set to inline: IR10.2 Q3=1: must-always rules move into a Code conventions block, CONVENTIONS.md not edited (owner answer via Hermes 2026-11-06)"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR10.2",
+      "event": "preference agents_md.generic_text set to move-to-docs: IR10.2 Q2=1: section 6 and persona lines move to docs/workflow-profiles.md (owner answer via Hermes 2026-11-06)"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR10.2",
+      "event": "preference agents_md.contradicted_rules set to target-state: IR10.2 Q2=1: EntityManager rule becomes target state with exception count; no code edit (owner answer via Hermes 2026-11-06)"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR10.2",
+      "event": "preference agents_md.harness_files set to none: IR10.2 Q4=1: F-027 recorded partial with the six harnesses; no file created (owner answer via Hermes 2026-11-06)"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR10.2",
+      "event": "preference agents_md.scratch_ignore set to artefacts/: IR10.2 Q5=1: artefacts/ added to .gitignore in its own commit (owner answer via Hermes 2026-11-06)"
     }
   ]
 }
