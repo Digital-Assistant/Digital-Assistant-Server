@@ -90,6 +90,8 @@ All contributions must follow this comprehensive, sequential lifecycle:
 6.  **Committing:** Commit your final, validated work with a message conforming to the Conventional Commits specification.
 7.  **Pull Request:** Create a Pull Request. The PR description **must** link to the issue it resolves using the keyword `Closes #NUMBER`. In the description, confirm which Workflow Profile was applied.
 
+**Definition of done:** When a change alters a public interface, observable behaviour, the architecture or a decision, update the affected documentation and the decision records (`docs/adr/`) in the same change set.
+
 Agentic-readiness work: read `docs/agentic-readiness/digital-assistant-server-agentic-readiness-STATE.md` before changing tooling, CI, docs or this file; skipped findings in it are final.
 
 Documentation: `docs/README.md` indexes `docs/`; follow `docs/STYLE_GUIDE.md`, record decisions in `docs/adr/`, and
