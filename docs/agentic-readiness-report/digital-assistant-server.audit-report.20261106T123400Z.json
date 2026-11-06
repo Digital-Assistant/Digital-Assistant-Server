@@ -1,0 +1,1997 @@
+{
+  "schema_version": "0.1",
+  "status": "final",
+  "provenance": {
+    "recipe": {
+      "name": "brownfield-audit",
+      "version": "0.1.0"
+    },
+    "framework_revision": "c132d974bdc53c333963c1c8053734b7ba96e5f1",
+    "catalogue_version": "0.2.8",
+    "engine": {
+      "name": "python-agentic-audit",
+      "version": "0.1.0",
+      "ruleset_revision": "2026-11-06.1",
+      "ruleset_hash": "970e6792f98eeeb5",
+      "scanned_at": "2026-11-06T09:18:01+00:00"
+    },
+    "agent": {
+      "harness": "Claude Code",
+      "model": "claude-sonnet-5-5"
+    },
+    "target": {
+      "label": "digital-assistant-server",
+      "path": "/tmp/ir14-2/server-audit",
+      "git_sha": "ffce29f9c23a756d98466ff1f5cc41b7a24ebda0",
+      "branch": null,
+      "dirty": false
+    },
+    "started_at": "2026-11-06T09:17:56+00:00",
+    "finalised_at": "2026-11-06T12:34:00+00:00"
+  },
+  "run_context": {
+    "eval_mode": false,
+    "confirmation_policy": "interactive",
+    "provider_exposure_acknowledged": true,
+    "index": {
+      "kind": "mcp",
+      "name": "codebase-memory-mcp"
+    },
+    "probes": {
+      "allowed": [],
+      "timeout_s": 120
+    },
+    "excluded": [
+      "build/*",
+      ".gradle/*"
+    ],
+    "known_components": [],
+    "stack_profile": {
+      "id": "java",
+      "source": "shipped",
+      "confirmed_by_user": true
+    }
+  },
+  "stack": {
+    "ecosystems": [
+      "jvm"
+    ],
+    "package_managers": [
+      "gradle"
+    ],
+    "ci_providers": [
+      "github"
+    ],
+    "test_frameworks": [
+      "junit"
+    ],
+    "hook_managers": [
+      "lefthook"
+    ]
+  },
+  "components": [
+    {
+      "name": "(root)",
+      "path": ".",
+      "declared": true,
+      "declared_by": "implicit",
+      "manifest": "build.gradle",
+      "agents_md": "present"
+    }
+  ],
+  "checks": [
+    {
+      "id": "IDX-01",
+      "title": "codebase-memory-mcp registered for this repository",
+      "phase": 1,
+      "severity": "BLOCKER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "FAIL",
+      "engine_verdict": "FAIL",
+      "summary": "no project-level MCP configuration found (user-level configuration not read: --no-user-config)",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "IDX-02",
+      "title": "An index exists for this checkout",
+      "phase": 1,
+      "severity": "BLOCKER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "UNKNOWN",
+      "engine_verdict": "UNKNOWN",
+      "summary": "index store could not be located; searched: user-level locations (not read: --no-user-config), /tmp/ir14-2/server-audit/.codebase-memory/graph.db.zst",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "IDX-03",
+      "title": "Index freshness",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "UNKNOWN",
+      "engine_verdict": "UNKNOWN",
+      "summary": "index freshness is a Tier-C probe; re-run with --run-gates to compare the indexed revision against HEAD",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "AGT-01",
+      "title": "Instruction file present, canonical, and non-trivial",
+      "phase": 1,
+      "severity": "BLOCKER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "AGT-02",
+      "title": "Component coverage by instruction files",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "single-root repository: no component-level instruction files required",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "AGT-03",
+      "title": "Documentation contract named",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "docs/, the style guide and the scratch contract are named",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "AGT-04",
+      "title": "Definition of done stated",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "definition of done ties a doc trigger to the same change set",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "AGT-05",
+      "title": "Seven verbs named",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "all 7 verbs named in AGENTS.md and resolved on a runner",
+      "evidence": [],
+      "searches": [],
+      "data": {
+        "kind": "verb_surface",
+        "missing": [],
+        "resolved_count": 7,
+        "verbs": [
+          {
+            "command": "./gradlew format",
+            "resolved": true,
+            "runner": "build.gradle",
+            "verb": "format"
+          },
+          {
+            "command": "./gradlew formatCheck",
+            "resolved": true,
+            "runner": "build.gradle",
+            "verb": "format:check"
+          },
+          {
+            "command": "./gradlew lint",
+            "resolved": true,
+            "runner": "build.gradle",
+            "verb": "lint"
+          },
+          {
+            "command": "./gradlew typecheck",
+            "resolved": true,
+            "runner": "build.gradle",
+            "verb": "typecheck"
+          },
+          {
+            "command": "./gradlew test",
+            "resolved": true,
+            "runner": "build.gradle",
+            "verb": "test"
+          },
+          {
+            "command": "./gradlew check",
+            "resolved": true,
+            "runner": "build.gradle",
+            "verb": "check"
+          },
+          {
+            "command": "./gradlew security",
+            "resolved": true,
+            "runner": "build.gradle",
+            "verb": "security"
+          }
+        ]
+      }
+    },
+    {
+      "id": "AGT-06",
+      "title": "Architectural boundaries declared",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "11 boundary rules reference real paths",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "AGT-07",
+      "title": "Do-not-do / deny rules present",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "prohibitions cover tests, generated files, the default branch and secrets",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "AGT-08",
+      "title": "No competing instruction files, and the reach matrix is stated",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "FAIL",
+      "engine_verdict": "FAIL",
+      "summary": "22/28 harnesses reached; AGENTS.md:5 states the supported harnesses (Anthropic Claude Code, Cursor, OpenAI Codex CLI, opencode)",
+      "evidence": [
+        {
+          "kind": "file",
+          "captured_by": "tool",
+          "tool": "python-agentic-audit",
+          "tool_version": "0.1.0",
+          "path": "CLAUDE.md"
+        },
+        {
+          "kind": "file",
+          "captured_by": "tool",
+          "tool": "python-agentic-audit",
+          "tool_version": "0.1.0",
+          "path": "AGENTS.md"
+        },
+        {
+          "kind": "file",
+          "captured_by": "tool",
+          "tool": "python-agentic-audit",
+          "tool_version": "0.1.0",
+          "path": "CLAUDE.md"
+        },
+        {
+          "kind": "file",
+          "captured_by": "tool",
+          "tool": "python-agentic-audit",
+          "tool_version": "0.1.0",
+          "path": "CONVENTIONS.md"
+        }
+      ],
+      "searches": [],
+      "data": {
+        "kind": "harness_matrix",
+        "reached": 22,
+        "reached_tools": [
+          "Aider",
+          "Anthropic Claude Code",
+          "Augment Code",
+          "Bolt (StackBlitz)",
+          "Charm Crush",
+          "Cline",
+          "Cursor",
+          "Devin (Cognition)",
+          "Firebase Studio (ex-IDX)",
+          "GitHub Copilot / VS Code",
+          "Goose (Block)",
+          "JetBrains Junie",
+          "Jules (Google)",
+          "Kiro (AWS)",
+          "OpenAI Codex CLI",
+          "Roo Code",
+          "Sourcegraph Amp",
+          "Trae",
+          "Warp",
+          "Windsurf / Devin Desktop",
+          "Zed",
+          "opencode"
+        ],
+        "total": 28,
+        "unreached_tools": [
+          "Amazon Q Developer",
+          "Continue",
+          "Google Gemini CLI",
+          "Qwen Code",
+          "Replit Agent",
+          "Void"
+        ]
+      }
+    },
+    {
+      "id": "AGT-09",
+      "title": "Branch and release boundary declared",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "the branch model and the release boundary are stated",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "AGT-10",
+      "title": "Instruction indirection resolved",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "DOC-01",
+      "title": "docs/ exists",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "16 markdown file(s) under docs/",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "DOC-02",
+      "title": "docs/STYLE_GUIDE.md exists",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "docs/STYLE_GUIDE.md present and named in AGENTS.md",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "DOC-03",
+      "title": "artefacts/ exists and is ignored",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "no scratch directory in use",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "DOC-04",
+      "title": "ADR directory and index",
+      "phase": 1,
+      "severity": "COSMETIC",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "3 ADR(s) indexed in docs/adr/README.md",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "CMD-01",
+      "title": "Seven verbs resolvable on one runner",
+      "phase": 1,
+      "severity": "BLOCKER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "format -> build.gradle; format:check -> build.gradle; lint -> build.gradle; typecheck -> build.gradle; test -> build.gradle; check -> build.gradle; security -> build.gradle",
+      "evidence": [],
+      "searches": [],
+      "data": {
+        "kind": "verb_surface",
+        "missing": [],
+        "resolved_count": 7,
+        "verbs": [
+          {
+            "command": "./gradlew format",
+            "resolved": true,
+            "runner": "build.gradle",
+            "verb": "format"
+          },
+          {
+            "command": "./gradlew formatCheck",
+            "resolved": true,
+            "runner": "build.gradle",
+            "verb": "format:check"
+          },
+          {
+            "command": "./gradlew lint",
+            "resolved": true,
+            "runner": "build.gradle",
+            "verb": "lint"
+          },
+          {
+            "command": "./gradlew typecheck",
+            "resolved": true,
+            "runner": "build.gradle",
+            "verb": "typecheck"
+          },
+          {
+            "command": "./gradlew test",
+            "resolved": true,
+            "runner": "build.gradle",
+            "verb": "test"
+          },
+          {
+            "command": "./gradlew check",
+            "resolved": true,
+            "runner": "build.gradle",
+            "verb": "check"
+          },
+          {
+            "command": "./gradlew security",
+            "resolved": true,
+            "runner": "build.gradle",
+            "verb": "security"
+          }
+        ]
+      }
+    },
+    {
+      "id": "CMD-02",
+      "title": "check composes the read-only verbs",
+      "phase": 1,
+      "severity": "BLOCKER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "UNKNOWN",
+      "engine_verdict": "UNKNOWN",
+      "summary": "the build.gradle check is a build lifecycle task, and what it composes is set by the build's task graph, which the engine does not read",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "CMD-03",
+      "title": "No divergent second definition",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "no runner defines check, so there is nothing to diverge",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "CMD-04",
+      "title": "Write verbs separated from read-only verbs",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "no read-only verb invokes a write verb",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "TOOL-01",
+      "title": "Formatter configured",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PARTIAL",
+      "engine_verdict": "PARTIAL",
+      "summary": "format verb on build.gradle but no formatter config file",
+      "evidence": [
+        {
+          "kind": "file",
+          "captured_by": "tool",
+          "tool": "python-agentic-audit",
+          "tool_version": "0.1.0",
+          "path": "build.gradle",
+          "note": "./gradlew format"
+        }
+      ],
+      "searches": []
+    },
+    {
+      "id": "TOOL-02",
+      "title": "Linter configured",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PARTIAL",
+      "engine_verdict": "PARTIAL",
+      "summary": "lint verb on build.gradle but no linter config file",
+      "evidence": [
+        {
+          "kind": "file",
+          "captured_by": "tool",
+          "tool": "python-agentic-audit",
+          "tool_version": "0.1.0",
+          "path": "build.gradle",
+          "note": "./gradlew lint"
+        }
+      ],
+      "searches": []
+    },
+    {
+      "id": "TOOL-03",
+      "title": "Type checker configured",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "UNKNOWN",
+      "engine_verdict": "UNKNOWN",
+      "summary": "no recognised strict type-check configuration and no ecosystem this pack knows one for, so type-checking cannot be judged",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "TOOL-04",
+      "title": "Dependency / security scan verb",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PARTIAL",
+      "engine_verdict": "PARTIAL",
+      "summary": "security verb on build.gradle runs no dependency audit (./gradlew security)",
+      "evidence": [
+        {
+          "kind": "file",
+          "captured_by": "tool",
+          "tool": "python-agentic-audit",
+          "tool_version": "0.1.0",
+          "path": "build.gradle",
+          "note": "./gradlew security"
+        }
+      ],
+      "searches": []
+    },
+    {
+      "id": "TOOL-05",
+      "title": "Local hook chain active",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "wired: lefthook.yml",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "TOOL-06",
+      "title": "Commit convention enforced",
+      "phase": 1,
+      "severity": "COSMETIC",
+      "scored": true,
+      "method": "automated",
+      "verdict": "FAIL",
+      "engine_verdict": "FAIL",
+      "summary": "no commit-message rule",
+      "evidence": [
+        {
+          "kind": "file",
+          "captured_by": "tool",
+          "tool": "python-agentic-audit",
+          "tool_version": "0.1.0",
+          "path": "build.gradle"
+        }
+      ],
+      "searches": []
+    },
+    {
+      "id": "CI-01",
+      "title": "Pipeline present, triggered on PRs",
+      "phase": 1,
+      "severity": "BLOCKER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "PR-triggered: .github/workflows/ci.yml (github); .github/workflows/image.yml (github); .github/workflows/pr-title.yml (github)",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "CI-02",
+      "title": "Local↔CI parity",
+      "phase": 1,
+      "severity": "BLOCKER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "CI verbs: none; local read-only verbs not exercised: check, format:check, lint, security, test, typecheck",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "CI-03",
+      "title": "CI-only steps flagged",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "no CI-only steps",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "BASE-01",
+      "title": "Baseline artifact exists",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "baseline/suppression mechanism present: docs/agentic-readiness/digital-assistant-server-quality-baseline.json",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "BASE-02",
+      "title": "Current violation counts measured",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PARTIAL",
+      "engine_verdict": "PARTIAL",
+      "summary": "counting surface present but no committed count/budget: build.gradle:lint, build.gradle:security, build.gradle:typecheck, docs/agentic-readiness/digital-assistant-server-quality-baseline.json; method: static configuration scan; the target's own tools are never run",
+      "evidence": [
+        {
+          "kind": "file",
+          "captured_by": "tool",
+          "tool": "python-agentic-audit",
+          "tool_version": "0.1.0",
+          "path": "build.gradle",
+          "note": "lint"
+        },
+        {
+          "kind": "file",
+          "captured_by": "tool",
+          "tool": "python-agentic-audit",
+          "tool_version": "0.1.0",
+          "path": "build.gradle",
+          "note": "security"
+        },
+        {
+          "kind": "file",
+          "captured_by": "tool",
+          "tool": "python-agentic-audit",
+          "tool_version": "0.1.0",
+          "path": "build.gradle",
+          "note": "typecheck"
+        },
+        {
+          "kind": "file",
+          "captured_by": "tool",
+          "tool": "python-agentic-audit",
+          "tool_version": "0.1.0",
+          "path": "docs/agentic-readiness/digital-assistant-server-quality-baseline.json"
+        }
+      ],
+      "searches": []
+    },
+    {
+      "id": "BASE-03",
+      "title": "No-new-violations mechanism",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "ratchet present: baseline compared in CI (.github/workflows/ci.yml)",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "BASE-04",
+      "title": "Coverage floor configured",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PARTIAL",
+      "engine_verdict": "PARTIAL",
+      "summary": "coverage threshold stated in prose only: AGENTS.md:*   **coverage** (needs the local stack): `./gradlew coverage` runs the tests, w; AGENTS.md:Existing debt is counted and cannot grow. `./gradlew formatCheck` runs `scripts/",
+      "evidence": [
+        {
+          "kind": "file",
+          "captured_by": "tool",
+          "tool": "python-agentic-audit",
+          "tool_version": "0.1.0",
+          "path": "AGENTS.md"
+        },
+        {
+          "kind": "file",
+          "captured_by": "tool",
+          "tool": "python-agentic-audit",
+          "tool_version": "0.1.0",
+          "path": "AGENTS.md"
+        }
+      ],
+      "searches": []
+    },
+    {
+      "id": "CON-01",
+      "title": "Allow/deny artifact present",
+      "phase": 1,
+      "severity": "BLOCKER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "the prohibitions section of AGENTS.md names paths that exist: src/main/java/com/nistapp/uda/index/, config/, models/, repository/, services/, users/, utils/, StatusService.java (+8 more)",
+      "evidence": [],
+      "searches": [],
+      "data": {
+        "kind": "path_list",
+        "paths": [
+          "src/main/java/com/nistapp/uda/index/",
+          "config/",
+          "models/",
+          "repository/",
+          "services/",
+          "users/",
+          "utils/",
+          "services/Clickevents.java",
+          "StatusService.java",
+          "application.properties",
+          "src/main/resources/local.properties",
+          "local-secrets.properties",
+          "local-secrets.properties.example",
+          "additional.properties",
+          "/search/all",
+          "/user-sessions",
+          "src/main/resources/db/migration",
+          "CONVENTIONS.md",
+          "/api",
+          "/api/clickevents/all",
+          "config/CustomTenantResolver.java",
+          "/api/",
+          "utils/InputSanitizer",
+          "config/XssSanitizationFilter",
+          "config/GlobalExceptionMapper",
+          ".github/workflows/",
+          ".env",
+          "src/test/",
+          "build/",
+          ".gradle/",
+          "artefacts/",
+          "*.jks",
+          "local.properties"
+        ],
+        "truncated": false
+      }
+    },
+    {
+      "id": "CON-02",
+      "title": "Test directories protected",
+      "phase": 1,
+      "severity": "BLOCKER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "the prohibitions section of AGENTS.md names the test directories (src/test/)",
+      "evidence": [],
+      "searches": [],
+      "data": {
+        "kind": "path_list",
+        "paths": [
+          "src/test"
+        ],
+        "truncated": false
+      }
+    },
+    {
+      "id": "CON-03",
+      "title": "artefacts/ excluded from index and agent reads",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "no scratch or agent-state directory in use",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "CON-04",
+      "title": "Draft allow/deny emitted",
+      "phase": 1,
+      "severity": "COSMETIC",
+      "scored": false,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "draft deny list written: /tmp/ir14-2/out-server/do-not-do.draft.md",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "EXEC-01",
+      "title": "Toolchain pinned / wrapper committed",
+      "phase": 1,
+      "severity": "BLOCKER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "pinned: jvm (gradlew)",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "EXEC-02",
+      "title": "Lockfile committed and consistent",
+      "phase": 1,
+      "severity": "BLOCKER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PARTIAL",
+      "engine_verdict": "PARTIAL",
+      "summary": "consistency unverified: gradle.lockfile",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "EXEC-03",
+      "title": "Non-interactive setup path",
+      "phase": 1,
+      "severity": "BLOCKER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "FAIL",
+      "engine_verdict": "FAIL",
+      "summary": "no setup path found",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "EXEC-04",
+      "title": "Env-var inventory complete",
+      "phase": 1,
+      "severity": "BLOCKER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "FAIL",
+      "engine_verdict": "FAIL",
+      "summary": "8 referenced key(s) are absent from any committed example file: ADVISORIES, AWS_ROLE_ARN, CACHE_DIR, IMAGE_TAR, INSTANCE_ID, PACKAGES, SECONDS, SSM_DOCUMENT",
+      "evidence": [],
+      "searches": [],
+      "data": {
+        "kind": "env_keys",
+        "missing": [
+          "ADVISORIES",
+          "AWS_ROLE_ARN",
+          "CACHE_DIR",
+          "IMAGE_TAR",
+          "INSTANCE_ID",
+          "PACKAGES",
+          "SECONDS",
+          "SSM_DOCUMENT"
+        ],
+        "referenced": [
+          "ACTIONS_ID_TOKEN_REQUEST_TOKEN",
+          "ACTIONS_ID_TOKEN_REQUEST_URL",
+          "ADVISORIES",
+          "AWS_ROLE_ARN",
+          "CACHE_DIR",
+          "GITHUB_REPOSITORY",
+          "GITHUB_STEP_SUMMARY",
+          "HOME",
+          "IMAGE_TAR",
+          "INSTANCE_ID",
+          "PACKAGES",
+          "SECONDS",
+          "SSM_DOCUMENT"
+        ],
+        "templates": []
+      }
+    },
+    {
+      "id": "EXEC-05",
+      "title": "No generated artifacts committed in-tree",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "no tracked generated or vendored paths",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "EXEC-06",
+      "title": "Documented commands resolve",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "4 documented command(s) resolve",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "EXEC-07",
+      "title": "No competing configs for one concern",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "no concern configs found",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "TST-01",
+      "title": "Test verb exists, suite non-empty",
+      "phase": 1,
+      "severity": "BLOCKER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "test verb on build.gradle (./gradlew test); 20 test file(s)",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "TST-02",
+      "title": "Suite status known",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "UNKNOWN",
+      "engine_verdict": "UNKNOWN",
+      "summary": "probe not run: probes disabled (pass --run-gates)",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "TST-03",
+      "title": "Skip / xfail census",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "skip/xfail census across 20 test file(s): no markers; total 0",
+      "evidence": [],
+      "searches": [],
+      "data": {
+        "breakdown": {},
+        "kind": "counter",
+        "unit": "skip/xfail markers",
+        "value": 0
+      }
+    },
+    {
+      "id": "TST-04",
+      "title": "Fast path documented",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "fast path documented: AGENTS.md:51 `./gradlew test --tests '*FieldLimitValidationTest' --tests '*PrefixIndexLayoutStrategyTest' --tests '*CurrentUserTest' --tests '*InputSanitizerTest' --tests '*XssSanitizationFilterTest'` (scope: README.md, AGENTS.md, CLAUDE.md, CONTRIBUTING.md)",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "TST-05",
+      "title": "Coverage configuration present",
+      "phase": 1,
+      "severity": "COSMETIC",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "coverage configured: build.gradle",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "NAV-01",
+      "title": "Declared component boundaries",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "single-root repository declares build.gradle",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "NAV-02",
+      "title": "Obvious entry points",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "entry point(s): build.gradle",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "NAV-03",
+      "title": "Structural red flags",
+      "phase": 1,
+      "severity": "COSMETIC",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "oversized(>524288 B): 0; catch-all dirs(>50 files): 0; binaries: 0; minified: 0",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "NAV-04",
+      "title": "Architecture orientation artifact",
+      "phase": 1,
+      "severity": "COSMETIC",
+      "scored": false,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "docs/architecture/; an ADR directory",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "NAV-05",
+      "title": "Public-symbol documentation coverage",
+      "phase": 1,
+      "severity": "COSMETIC",
+      "scored": false,
+      "method": "automated",
+      "verdict": "UNKNOWN",
+      "engine_verdict": "UNKNOWN",
+      "summary": "no recognised source language, so 'public' cannot be defined",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "SEC-01",
+      "title": ".env untracked and ignored",
+      "phase": 1,
+      "severity": "BLOCKER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "no tracked .env and ignore rules cover the shape",
+      "evidence": [],
+      "searches": [],
+      "data": {
+        "covered": [
+          "dotenv",
+          "dotenv variant"
+        ],
+        "kind": "secret_shapes",
+        "missing": [],
+        "root_only": [],
+        "shapes": [
+          {
+            "covered": true,
+            "label": "dotenv",
+            "probe": ".env",
+            "root_only": false,
+            "suggested": ".env"
+          },
+          {
+            "covered": true,
+            "label": "dotenv variant",
+            "probe": ".env.local",
+            "root_only": false,
+            "suggested": ".env.*"
+          }
+        ]
+      }
+    },
+    {
+      "id": "SEC-02",
+      "title": "No key-shaped strings in tracked files",
+      "phase": 1,
+      "severity": "BLOCKER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "FAIL",
+      "engine_verdict": "FAIL",
+      "summary": "1 credential-shaped line(s) across 1 file(s) in tracked text files",
+      "evidence": [
+        {
+          "kind": "file",
+          "captured_by": "tool",
+          "tool": "python-agentic-audit",
+          "tool_version": "0.1.0",
+          "path": "scripts/ci/smoke-test.sh",
+          "lines": "67",
+          "note": "credential-shaped string"
+        }
+      ],
+      "searches": [],
+      "data": {
+        "allowlisted": 0,
+        "allowlisted_by": [],
+        "files": [
+          {
+            "lines": [
+              67
+            ],
+            "path": "scripts/ci/smoke-test.sh"
+          }
+        ],
+        "kind": "credential_matrix",
+        "source": "tracked text files",
+        "suppressed": [],
+        "total": 1
+      }
+    },
+    {
+      "id": "SEC-03",
+      "title": "Ignore patterns cover secret shapes",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "covered: dotenv, dotenv variant, ssh private key, PEM, key, PKCS#12, PFX, keystore, certificate (.crt), certificate (.cer), AWS credentials",
+      "evidence": [],
+      "searches": [],
+      "data": {
+        "covered": [
+          "dotenv",
+          "dotenv variant",
+          "ssh private key",
+          "PEM",
+          "key",
+          "PKCS#12",
+          "PFX",
+          "keystore",
+          "certificate (.crt)",
+          "certificate (.cer)",
+          "AWS credentials"
+        ],
+        "kind": "secret_shapes",
+        "missing": [],
+        "root_only": [],
+        "shapes": [
+          {
+            "covered": true,
+            "label": "dotenv",
+            "probe": ".env",
+            "root_only": false,
+            "suggested": ".env"
+          },
+          {
+            "covered": true,
+            "label": "dotenv variant",
+            "probe": ".env.local",
+            "root_only": false,
+            "suggested": ".env.*"
+          },
+          {
+            "covered": true,
+            "label": "ssh private key",
+            "probe": "id_rsa",
+            "root_only": false,
+            "suggested": "id_rsa*"
+          },
+          {
+            "covered": true,
+            "label": "PEM",
+            "probe": "server.pem",
+            "root_only": false,
+            "suggested": "*.pem"
+          },
+          {
+            "covered": true,
+            "label": "key",
+            "probe": "server.key",
+            "root_only": false,
+            "suggested": "*.key"
+          },
+          {
+            "covered": true,
+            "label": "PKCS#12",
+            "probe": "server.p12",
+            "root_only": false,
+            "suggested": "*.p12"
+          },
+          {
+            "covered": true,
+            "label": "PFX",
+            "probe": "server.pfx",
+            "root_only": false,
+            "suggested": "*.pfx"
+          },
+          {
+            "covered": true,
+            "label": "keystore",
+            "probe": "app.keystore",
+            "root_only": false,
+            "suggested": "*.keystore"
+          },
+          {
+            "covered": true,
+            "label": "certificate (.crt)",
+            "probe": "server.crt",
+            "root_only": false,
+            "suggested": "*.crt"
+          },
+          {
+            "covered": true,
+            "label": "certificate (.cer)",
+            "probe": "server.cer",
+            "root_only": false,
+            "suggested": "*.cer"
+          },
+          {
+            "covered": true,
+            "label": "AWS credentials",
+            "probe": ".aws/credentials",
+            "root_only": false,
+            "suggested": ".aws/*"
+          }
+        ]
+      }
+    },
+    {
+      "id": "HYG-01",
+      "title": "README present and non-placeholder",
+      "phase": 1,
+      "severity": "COSMETIC",
+      "scored": false,
+      "method": "automated",
+      "verdict": "FAIL",
+      "engine_verdict": "FAIL",
+      "summary": "README.md is a placeholder — contains the placeholder marker 'placeholder'",
+      "evidence": [
+        {
+          "kind": "file",
+          "captured_by": "tool",
+          "tool": "python-agentic-audit",
+          "tool_version": "0.1.0",
+          "path": "README.md"
+        }
+      ],
+      "searches": []
+    },
+    {
+      "id": "HYG-02",
+      "title": "CODEOWNERS present",
+      "phase": 1,
+      "severity": "COSMETIC",
+      "scored": false,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "CODEOWNERS present at .github/CODEOWNERS",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "HYG-03",
+      "title": "Pull-request template present",
+      "phase": 1,
+      "severity": "COSMETIC",
+      "scored": false,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "pull-request template present at .github/pull_request_template.md",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "HYG-04",
+      "title": "Issue templates present",
+      "phase": 1,
+      "severity": "COSMETIC",
+      "scored": false,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "2 issue template(s) present",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "HYG-05",
+      "title": "CONTRIBUTING present",
+      "phase": 1,
+      "severity": "COSMETIC",
+      "scored": false,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "CONTRIBUTING present at CONTRIBUTING.md",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "HYG-06",
+      "title": "SECURITY present",
+      "phase": 1,
+      "severity": "COSMETIC",
+      "scored": false,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "SECURITY present at SECURITY.md",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "HYG-07",
+      "title": "CHANGELOG present and recent",
+      "phase": 1,
+      "severity": "COSMETIC",
+      "scored": false,
+      "method": "automated",
+      "verdict": "FAIL",
+      "engine_verdict": "FAIL",
+      "summary": "no CHANGELOG document",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "HYG-08",
+      "title": "Release process documented",
+      "phase": 1,
+      "severity": "COSMETIC",
+      "scored": false,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "release document present at docs/release-process.md",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "HYG-09",
+      "title": "Dependency update automation configured",
+      "phase": 1,
+      "severity": "COSMETIC",
+      "scored": false,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "dependency automation configured at .github/dependabot.yml",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "HYG-10",
+      "title": "License present",
+      "phase": 1,
+      "severity": "COSMETIC",
+      "scored": false,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "license present at LICENSE",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "HYG-11",
+      "title": "Branch protection declared as code",
+      "phase": 1,
+      "severity": "COSMETIC",
+      "scored": false,
+      "method": "automated",
+      "verdict": "PASS",
+      "engine_verdict": "PASS",
+      "summary": "branch protection declared as code at docs/branch-protection.md",
+      "evidence": [],
+      "searches": []
+    },
+    {
+      "id": "AGT-11",
+      "title": "Instructions are specific and not inferable",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "agent",
+      "verdict": "PASS",
+      "confidence": "medium",
+      "summary": "About 63 of 74 rule lines (85%) in AGENTS.md are specific (verified commands, real paths, prohibitions, non-default conventions); 11 are generic (the preamble and section 1 maxims, section 5 steps 1-4). All sampled specific lines resolve; section 6 is now one pointer line, no overview section dominates.",
+      "evidence": [
+        {
+          "kind": "file",
+          "captured_by": "agent",
+          "path": "AGENTS.md",
+          "lines": "14-44",
+          "note": "specific: Section 2 commands. Sampled gradlew verbs resolve to tasks registered in build.gradle:62-129; scripts/ci/coverage.sh, check-baseline.sh, scan.sh, lefthook.yml, sync-credentials.sh, pre-flight-check.sh, start-server.sh all exist"
+        },
+        {
+          "kind": "file",
+          "captured_by": "agent",
+          "path": "AGENTS.md",
+          "lines": "53-62",
+          "note": "specific: Section 3 boundary rules name config/CustomTenantResolver, RequireRealmFilter, XssSanitizationFilter, SecurityHeadersFilter, GlobalExceptionMapper, SequenceListDAO, UserclicknodesRepository, Clickevents, StatusService; each exists once under src/main/java/com/nistapp/uda/index/"
+        },
+        {
+          "kind": "file",
+          "captured_by": "agent",
+          "path": "AGENTS.md",
+          "lines": "64-75",
+          "note": "specific: Section 4 prohibitions (tests, generated output, secret stores, default branch); docs/workflow-profiles.md, docs/STYLE_GUIDE.md, docs/adr and docs/architecture exist"
+        },
+        {
+          "kind": "file",
+          "captured_by": "agent",
+          "path": "AGENTS.md",
+          "lines": "1-10",
+          "note": "generic: preamble and section 1 (golden rule, problem-solving approach, strict scope adherence) are maxims with no project-specific content"
+        }
+      ],
+      "searches": []
+    },
+    {
+      "id": "CI-04",
+      "title": "CI enforces the same gate as the local check",
+      "phase": 1,
+      "severity": "DEGRADER",
+      "scored": true,
+      "method": "agent",
+      "verdict": "PARTIAL",
+      "confidence": "medium",
+      "summary": "build-test, secrets, codeql and workflow-lint gate the pull request through the CI Gate job (no continue-on-error, no swallowed exit); the dependency scan (the security verb) is report-only by design and sits outside the gate, docs-lint is also outside it, the image scan step is continue-on-error; required-status-check wiring on the platform cannot be read from the repository.",
+      "evidence": [
+        {
+          "kind": "file",
+          "captured_by": "agent",
+          "path": ".github/workflows/ci.yml",
+          "lines": "243-262",
+          "note": "gate job needs build-test, secrets, codeql, workflow-lint and fails on any result other than success or skipped"
+        },
+        {
+          "kind": "file",
+          "captured_by": "agent",
+          "path": ".github/workflows/ci.yml",
+          "lines": "97-108",
+          "note": "scan job is named report-only and is not in the gate's needs list",
+          "quote": "name: Dependency Scan (report-only)"
+        },
+        {
+          "kind": "file",
+          "captured_by": "agent",
+          "path": ".github/workflows/image.yml",
+          "lines": "174",
+          "note": "image scan and SBOM step is non-gating",
+          "quote": "continue-on-error: true"
+        },
+        {
+          "kind": "file",
+          "captured_by": "agent",
+          "path": ".github/workflows/ci.yml",
+          "lines": "241",
+          "note": "comment says CI Gate is the single required status check for branch protection; platform settings are not in the repository and were not read",
+          "quote": "Single required status check for branch protection"
+        }
+      ],
+      "searches": [
+        {
+          "tool": "grep",
+          "pattern": "continue-on-error|[|][|] true|set [+]e",
+          "scope": ".github/workflows scripts/ci",
+          "hits": 2
+        }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "F-001",
+      "key": "EXEC-03",
+      "check": "EXEC-03",
+      "severity": "BLOCKER",
+      "statement": "An agent cannot prepare the environment non-interactively because no devcontainer, compose file, Dockerfile, setup target/script, or documented install command exists.",
+      "evidence": [],
+      "searches": [],
+      "remediation": {
+        "summary": "Add a committed setup path (a devcontainer, compose file, or a documented install command in README.md) that runs with no prompts."
+      },
+      "disposition": "edited",
+      "disposition_note": "README.md now names the setup command (./gradlew assemble) and AGENTS.md points to it, so people and agents read one source (commit 5779089 on the Server branch docs/readme-setup-command).",
+      "confirmed_via": "interactive"
+    },
+    {
+      "id": "F-002",
+      "key": "EXEC-04",
+      "check": "EXEC-04",
+      "severity": "BLOCKER",
+      "statement": "An agent cannot know every variable the code needs before running it because 8 referenced key(s) are absent from any committed example file: ADVISORIES, AWS_ROLE_ARN, CACHE_DIR, IMAGE_TAR, INSTANCE_ID, PACKAGES, SECONDS, SSM_DOCUMENT.",
+      "evidence": [],
+      "searches": [],
+      "remediation": {
+        "summary": "Add the missing keys to .env.example (values redacted) so the environment can be provisioned without reading the source."
+      },
+      "disposition": "rejected",
+      "disposition_note": "Documented in scripts/ci/env.example; the engine does not read that location (issue 52). SECONDS is a bash builtin.",
+      "confirmed_via": "interactive"
+    },
+    {
+      "id": "F-003",
+      "key": "IDX-01",
+      "check": "IDX-01",
+      "severity": "BLOCKER",
+      "statement": "An agent cannot discover the codebase through an MCP index because no MCP configuration names codebase-memory-mcp for this repository.",
+      "evidence": [],
+      "searches": [],
+      "remediation": {
+        "summary": "Register the server in a project config (for example `opencode.json`) or a user config (`~/.config/opencode/opencode.json`)."
+      },
+      "disposition": "deferred",
+      "disposition_note": "True: no project-level MCP config is committed. Owner wants a tool-neutral file (for example .mcp.json), not a tool-specific one; decide with the maintainers.",
+      "confirmed_via": "interactive"
+    },
+    {
+      "id": "F-004",
+      "key": "SEC-02:scripts/ci/smoke-test.sh",
+      "check": "SEC-02",
+      "severity": "BLOCKER",
+      "statement": "An agent cannot keep credentials out of the repository and its history because scripts/ci/smoke-test.sh contains 1 credential-shaped line(s).",
+      "evidence": [
+        {
+          "kind": "file",
+          "captured_by": "tool",
+          "tool": "python-agentic-audit",
+          "tool_version": "0.1.0",
+          "path": "scripts/ci/smoke-test.sh",
+          "lines": "67",
+          "note": "credential-shaped string"
+        }
+      ],
+      "searches": [],
+      "remediation": {
+        "summary": "Remove the value from the file and its history, load it from the environment, and rotate the credential. The report never records the value itself."
+      },
+      "disposition": "rejected",
+      "disposition_note": "Deliberate invalid sentinel token in the 401 smoke test; same as first-audit F-006.",
+      "confirmed_via": "interactive"
+    },
+    {
+      "id": "F-005",
+      "key": "AGT-08:CLAUDE.md>AGENTS.md",
+      "check": "AGT-08",
+      "severity": "DEGRADER",
+      "statement": "An agent cannot be sure that both files are read because CLAUDE.md shadows AGENTS.md for the harness that defines the pair, so only one of the two is ever loaded.",
+      "evidence": [
+        {
+          "kind": "file",
+          "captured_by": "tool",
+          "tool": "python-agentic-audit",
+          "tool_version": "0.1.0",
+          "path": "CLAUDE.md"
+        },
+        {
+          "kind": "file",
+          "captured_by": "tool",
+          "tool": "python-agentic-audit",
+          "tool_version": "0.1.0",
+          "path": "AGENTS.md"
+        }
+      ],
+      "searches": [],
+      "remediation": {
+        "summary": "Reconcile the two files, or delete the shadowed one — a file nobody reads still gets edited."
+      },
+      "disposition": "rejected",
+      "disposition_note": "CLAUDE.md is a one-line import of AGENTS.md, so both are read.",
+      "confirmed_via": "batch"
+    },
+    {
+      "id": "F-006",
+      "key": "AGT-08:vendor-files",
+      "check": "AGT-08",
+      "severity": "DEGRADER",
+      "statement": "An agent cannot know which instruction file is authoritative because 2 vendor-specific instruction files exist alongside the canonical one (CLAUDE.md, CONVENTIONS.md).",
+      "evidence": [
+        {
+          "kind": "file",
+          "captured_by": "tool",
+          "tool": "python-agentic-audit",
+          "tool_version": "0.1.0",
+          "path": "CLAUDE.md"
+        },
+        {
+          "kind": "file",
+          "captured_by": "tool",
+          "tool": "python-agentic-audit",
+          "tool_version": "0.1.0",
+          "path": "CONVENTIONS.md"
+        }
+      ],
+      "searches": [],
+      "remediation": {
+        "summary": "Keep AGENTS.md canonical; reduce each vendor file to a pointer at it, or delete it if the harness reads AGENTS.md natively."
+      },
+      "disposition": "rejected",
+      "disposition_note": "CLAUDE.md is that same pointer; CONVENTIONS.md is the coding-style guide AGENTS.md refers to, not a vendor file.",
+      "confirmed_via": "batch"
+    },
+    {
+      "id": "F-007",
+      "key": "BASE-02",
+      "check": "BASE-02",
+      "severity": "DEGRADER",
+      "statement": "An agent cannot state how many violations exist today because a counting surface exists but no numeric violation budget or count is committed.",
+      "evidence": [
+        {
+          "kind": "file",
+          "captured_by": "tool",
+          "tool": "python-agentic-audit",
+          "tool_version": "0.1.0",
+          "path": "build.gradle",
+          "note": "lint"
+        },
+        {
+          "kind": "file",
+          "captured_by": "tool",
+          "tool": "python-agentic-audit",
+          "tool_version": "0.1.0",
+          "path": "build.gradle",
+          "note": "security"
+        },
+        {
+          "kind": "file",
+          "captured_by": "tool",
+          "tool": "python-agentic-audit",
+          "tool_version": "0.1.0",
+          "path": "build.gradle",
+          "note": "typecheck"
+        },
+        {
+          "kind": "file",
+          "captured_by": "tool",
+          "tool": "python-agentic-audit",
+          "tool_version": "0.1.0",
+          "path": "docs/agentic-readiness/digital-assistant-server-quality-baseline.json"
+        }
+      ],
+      "searches": [],
+      "remediation": {
+        "summary": "Commit the count or configure a budget (`--max-warnings N`, `max-issues`, or a `violation budget`) so a regression has a baseline number to compare against."
+      },
+      "disposition": "deferred",
+      "disposition_note": "True: PMD debt is a list of excluded files, no number is committed.",
+      "confirmed_via": "batch"
+    },
+    {
+      "id": "F-008",
+      "key": "BASE-04",
+      "check": "BASE-04",
+      "severity": "DEGRADER",
+      "statement": "An agent cannot know when coverage drops below an agreed floor because a coverage threshold is described in prose but not configured in the test runner.",
+      "evidence": [
+        {
+          "kind": "file",
+          "captured_by": "tool",
+          "tool": "python-agentic-audit",
+          "tool_version": "0.1.0",
+          "path": "AGENTS.md"
+        },
+        {
+          "kind": "file",
+          "captured_by": "tool",
+          "tool": "python-agentic-audit",
+          "tool_version": "0.1.0",
+          "path": "AGENTS.md"
+        }
+      ],
+      "searches": [],
+      "remediation": {
+        "summary": "Move the threshold into test-runner configuration (`coverage.fail_under`, `--cov-fail-under`, `coverageThreshold`, or a vitest/jest `thresholds` block)."
+      },
+      "disposition": "rejected",
+      "disposition_note": "Coverage floor is configured: jacocoTestCoverageVerification minimum 0.70 in build.gradle; the engine does not read Gradle.",
+      "confirmed_via": "batch"
+    },
+    {
+      "id": "F-009",
+      "key": "TOOL-01",
+      "check": "TOOL-01",
+      "severity": "DEGRADER",
+      "statement": "An agent cannot format a change set the same way every time because a format verb exists but no formatter configuration file is present.",
+      "evidence": [
+        {
+          "kind": "file",
+          "captured_by": "tool",
+          "tool": "python-agentic-audit",
+          "tool_version": "0.1.0",
+          "path": "build.gradle",
+          "note": "./gradlew format"
+        }
+      ],
+      "searches": [],
+      "remediation": {
+        "summary": "Commit a formatter config (for example `.prettierrc.json`) so the tool's behaviour does not depend on defaults."
+      },
+      "disposition": "rejected",
+      "disposition_note": "Spotless is configured in build.gradle; the engine does not read Gradle.",
+      "confirmed_via": "batch"
+    },
+    {
+      "id": "F-010",
+      "key": "TOOL-02",
+      "check": "TOOL-02",
+      "severity": "DEGRADER",
+      "statement": "An agent cannot catch lint regressions before they land because a lint verb exists but no linter configuration file is present.",
+      "evidence": [
+        {
+          "kind": "file",
+          "captured_by": "tool",
+          "tool": "python-agentic-audit",
+          "tool_version": "0.1.0",
+          "path": "build.gradle",
+          "note": "./gradlew lint"
+        }
+      ],
+      "searches": [],
+      "remediation": {
+        "summary": "Commit a linter config (for example `.eslintrc.json` or `[tool.ruff]`) so the rule set does not depend on defaults."
+      },
+      "disposition": "rejected",
+      "disposition_note": "PMD rules are in config/pmd/ruleset.xml; the engine does not read Gradle.",
+      "confirmed_via": "batch"
+    },
+    {
+      "id": "F-011",
+      "key": "TOOL-04",
+      "check": "TOOL-04",
+      "severity": "DEGRADER",
+      "statement": "An agent cannot know whether a dependency carries a known vulnerability because a security verb exists but it does not run a dependency-audit check.",
+      "evidence": [
+        {
+          "kind": "file",
+          "captured_by": "tool",
+          "tool": "python-agentic-audit",
+          "tool_version": "0.1.0",
+          "path": "build.gradle",
+          "note": "./gradlew security"
+        }
+      ],
+      "searches": [],
+      "remediation": {
+        "summary": "Make the security verb run a dependency audit (npm audit, pip-audit, osv-scanner, cargo audit, govulncheck, snyk)."
+      },
+      "disposition": "rejected",
+      "disposition_note": "./gradlew security runs OSV-Scanner through scripts/ci/scan.sh (issue 52).",
+      "confirmed_via": "batch"
+    },
+    {
+      "id": "F-012",
+      "key": "HYG-01:README.md",
+      "check": "HYG-01",
+      "severity": "COSMETIC",
+      "statement": "An agent cannot learn what this project is because README.md exists but is a placeholder — contains the placeholder marker 'placeholder'.",
+      "evidence": [
+        {
+          "kind": "file",
+          "captured_by": "tool",
+          "tool": "python-agentic-audit",
+          "tool_version": "0.1.0",
+          "path": "README.md"
+        }
+      ],
+      "searches": [],
+      "remediation": {
+        "summary": "Replace the stub with a description, a quick-start, and a link to the documentation."
+      },
+      "disposition": "rejected",
+      "disposition_note": "The word placeholder appears in one config table cell; the README is not a stub.",
+      "confirmed_via": "batch"
+    },
+    {
+      "id": "F-013",
+      "key": "HYG-07",
+      "check": "HYG-07",
+      "severity": "COSMETIC",
+      "statement": "An agent cannot see what changed between two versions because no CHANGELOG (or CHANGES/HISTORY) document exists.",
+      "evidence": [],
+      "searches": [],
+      "remediation": {
+        "summary": "Add CHANGELOG.md and record notable changes under a version heading."
+      },
+      "disposition": "deferred",
+      "disposition_note": "True: no CHANGELOG yet; release-please creates it at the first release.",
+      "confirmed_via": "batch"
+    },
+    {
+      "id": "F-014",
+      "key": "TOOL-06",
+      "check": "TOOL-06",
+      "severity": "COSMETIC",
+      "statement": "An agent cannot rely on a consistent commit-message convention because no commitlint config, commit-msg hook, or equivalent exists.",
+      "evidence": [
+        {
+          "kind": "file",
+          "captured_by": "tool",
+          "tool": "python-agentic-audit",
+          "tool_version": "0.1.0",
+          "path": "build.gradle"
+        }
+      ],
+      "searches": [],
+      "remediation": {
+        "summary": "Add a commitlint config or a commit-msg hook so commit messages follow one convention."
+      },
+      "disposition": "rejected",
+      "disposition_note": "The Conventional Commit Title CI check enforces the convention at squash merge.",
+      "confirmed_via": "batch"
+    },
+    {
+      "id": "F-015",
+      "key": "CI-04",
+      "check": "CI-04",
+      "severity": "DEGRADER",
+      "statement": "An agent cannot be sure a green CI run means every verb passed because the dependency scan (the security verb) and the docs lint run outside the CI Gate job, the image scan step is continue-on-error, and the required-status-check wiring is not readable from the repository.",
+      "evidence": [
+        {
+          "kind": "file",
+          "captured_by": "agent",
+          "path": ".github/workflows/ci.yml",
+          "lines": "243-262",
+          "note": "gate needs build-test, secrets, codeql, workflow-lint only"
+        },
+        {
+          "kind": "file",
+          "captured_by": "agent",
+          "path": ".github/workflows/ci.yml",
+          "lines": "97-108",
+          "note": "scan job is report-only by design (recorded debt)"
+        },
+        {
+          "kind": "file",
+          "captured_by": "agent",
+          "path": ".github/workflows/image.yml",
+          "lines": "174",
+          "quote": "continue-on-error: true"
+        }
+      ],
+      "searches": [
+        {
+          "tool": "grep",
+          "pattern": "continue-on-error|[|][|] true|set [+]e",
+          "scope": ".github/workflows scripts/ci",
+          "hits": 2
+        }
+      ],
+      "remediation": {
+        "summary": "Confirm on the platform that CI Gate is the required status check; decide whether the report-only scan and docs lint should join the gate once their baselines are at zero."
+      },
+      "disposition": "deferred",
+      "disposition_note": "True: dependency scan and docs lint run outside CI Gate; owner must confirm on GitHub that CI Gate is the required check.",
+      "confirmed_via": "batch"
+    }
+  ],
+  "summary": {
+    "phase1_score": 0.7262,
+    "scored_checks": 57,
+    "blockers_remaining": {
+      "total": 7,
+      "fail": 4,
+      "partial": 1,
+      "unknown": 2
+    },
+    "unknown_scored_checks": 5,
+    "unconfirmed_agent_findings": 0
+  },
+  "unattested": [
+    {
+      "requirement": "REQ-SH-004",
+      "method": "attested",
+      "property": "index-in-use",
+      "why": "Whether the codebase index is actually used during agent work."
+    },
+    {
+      "requirement": "REQ-BF-004",
+      "method": "attested",
+      "property": "baseline-adequacy",
+      "why": "Whether the committed baseline or budget is adequate."
+    },
+    {
+      "requirement": "REQ-SH-050",
+      "method": "attested",
+      "property": "suite-trustworthiness",
+      "why": "Whether the passing test suite actually catches regressions."
+    },
+    {
+      "requirement": "REQ-SH-020",
+      "method": "attested",
+      "property": "doc-accuracy",
+      "why": "Whether the documentation matches the code it describes."
+    },
+    {
+      "requirement": "REQ-SH-026",
+      "method": "attested",
+      "property": "gate-honoured",
+      "why": "Whether the gate is actually run and honoured before merge."
+    }
+  ],
+  "coverage": {
+    "scopes_examined": [],
+    "scopes_skipped": [],
+    "inventory": {
+      "files_inspected": 175,
+      "files_skipped": 1,
+      "truncated": false
+    }
+  }
+}
