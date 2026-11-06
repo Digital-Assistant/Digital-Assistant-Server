@@ -565,12 +565,17 @@
       "severity": "BLOCKER",
       "theme": "T7",
       "statement": "An agent cannot trust that a failing test is not rewritten to pass because the prohibitions section of AGENTS.md does not name any test directory.",
-      "status": "queued",
+      "status": "done",
       "by": "agent",
-      "date": "2026-10-30",
+      "date": "2026-11-06",
       "reason": null,
-      "commits": [],
-      "verification": null,
+      "commits": [
+        "93a56b7"
+      ],
+      "verification": {
+        "command": "engine.py: CON-02",
+        "result": "CON-02 PASS, src/test/ named"
+      },
       "debt": [],
       "notes": ""
     },
@@ -640,12 +645,18 @@
       "severity": "DEGRADER",
       "theme": "T7",
       "statement": "An agent cannot know where permanent and scratch documentation live because AGENTS.md does not name docs/STYLE_GUIDE.md, artefacts/.",
-      "status": "queued",
+      "status": "done",
       "by": "agent",
-      "date": "2026-10-30",
+      "date": "2026-11-06",
       "reason": null,
-      "commits": [],
-      "verification": null,
+      "commits": [
+        "9b0eeca",
+        "e70df4b"
+      ],
+      "verification": {
+        "command": "engine.py: AGT-03",
+        "result": "AGT-03 PASS"
+      },
       "debt": [],
       "notes": ""
     },
@@ -655,12 +666,17 @@
       "severity": "DEGRADER",
       "theme": "T7",
       "statement": "An agent cannot keep code and its documentation in step because no definition-of-done sentence ties a documentation trigger to the same change set.",
-      "status": "queued",
+      "status": "done",
       "by": "agent",
-      "date": "2026-10-30",
+      "date": "2026-11-06",
       "reason": null,
-      "commits": [],
-      "verification": null,
+      "commits": [
+        "8d68dcf"
+      ],
+      "verification": {
+        "command": "engine.py: AGT-04",
+        "result": "AGT-04 PASS"
+      },
       "debt": [],
       "notes": ""
     },
@@ -670,12 +686,15 @@
       "severity": "DEGRADER",
       "theme": "T7",
       "statement": "An agent cannot use the project's own commands instead of inventing them because not named: format:check, lint, typecheck; not resolved: format, format:check, lint, typecheck, security.",
-      "status": "queued",
+      "status": "done",
       "by": "agent",
-      "date": "2026-10-30",
+      "date": "2026-11-06",
       "reason": null,
       "commits": [],
-      "verification": null,
+      "verification": {
+        "command": "engine.py: AGT-05, EXEC-06",
+        "result": "AGT-05 PASS 7 verbs, EXEC-06 PASS"
+      },
       "debt": [],
       "notes": ""
     },
@@ -685,14 +704,19 @@
       "severity": "DEGRADER",
       "theme": "T7",
       "statement": "An agent cannot rely on an explicit do-not list because AGENTS.md does not prohibit edits to tests, generated files.",
-      "status": "queued",
+      "status": "done",
       "by": "agent",
-      "date": "2026-10-30",
+      "date": "2026-11-06",
       "reason": null,
-      "commits": [],
-      "verification": null,
+      "commits": [
+        "93a56b7"
+      ],
+      "verification": {
+        "command": "engine.py: AGT-07",
+        "result": "AGT-07 PASS; harness permission review: none present"
+      },
       "debt": [],
-      "notes": ""
+      "notes": "Harness permission review: no harness config present."
     },
     {
       "finding": "F-011",
@@ -715,14 +739,25 @@
       "severity": "DEGRADER",
       "theme": "T7",
       "statement": "An agent cannot know which instruction file is authoritative because 2 vendor-specific instruction files exist alongside the canonical one (CLAUDE.md, CONVENTIONS.md).",
-      "status": "queued",
+      "status": "partial",
       "by": "agent",
-      "date": "2026-10-30",
+      "date": "2026-11-06",
       "reason": null,
-      "commits": [],
-      "verification": null,
-      "debt": [],
-      "notes": ""
+      "commits": [
+        "a2dec46"
+      ],
+      "verification": {
+        "command": "engine.py: AGT-08",
+        "result": "reach line true; vendor-files check still FAIL: CLAUDE.md stub and CONVENTIONS.md kept"
+      },
+      "debt": [
+        {
+          "what": "vendor instruction files beside AGENTS.md",
+          "count": 2,
+          "baseline_file": null
+        }
+      ],
+      "notes": "Owner Q3=1: stub kept, CONVENTIONS.md not edited; staleness reported in the PR"
     },
     {
       "finding": "F-013",
@@ -730,12 +765,17 @@
       "severity": "DEGRADER",
       "theme": "T7",
       "statement": "An agent cannot know which branch to work on and whether it may cut a release because the branch model is stated but nothing says whether an agent may tag or release.",
-      "status": "queued",
+      "status": "done",
       "by": "agent",
-      "date": "2026-10-30",
+      "date": "2026-11-06",
       "reason": null,
-      "commits": [],
-      "verification": null,
+      "commits": [
+        "400a9e6"
+      ],
+      "verification": {
+        "command": "engine.py: AGT-09",
+        "result": "AGT-09 PASS; master verified in release.yml"
+      },
       "debt": [],
       "notes": ""
     },
@@ -745,12 +785,17 @@
       "severity": "DEGRADER",
       "theme": "T7",
       "statement": "An agent cannot trust that the referenced rules are actually loaded because the instruction file defers its content to CONVENTIONS.md and no harness configuration names that file, so loading depends on the agent choosing to follow the pointer.",
-      "status": "queued",
+      "status": "done",
       "by": "agent",
-      "date": "2026-10-30",
+      "date": "2026-11-06",
       "reason": null,
-      "commits": [],
-      "verification": null,
+      "commits": [
+        "191ff4d"
+      ],
+      "verification": {
+        "command": "engine.py: AGT-10",
+        "result": "AGT-10 PASS"
+      },
       "debt": [],
       "notes": ""
     },
@@ -1038,14 +1083,23 @@
       "severity": "COSMETIC",
       "theme": "T7",
       "statement": "An agent cannot assume every harness on the team sees the project rules because 21 of 27 known harnesses reach an instruction file; Amazon Q Developer, Continue, Google Gemini CLI, Qwen Code, Replit Agent, Void reach nothing.",
-      "status": "queued",
+      "status": "partial",
       "by": "agent",
-      "date": "2026-10-30",
+      "date": "2026-11-06",
       "reason": null,
       "commits": [],
-      "verification": null,
-      "debt": [],
-      "notes": ""
+      "verification": {
+        "command": "engine.py: AGT-08",
+        "result": "22/28 harnesses reached"
+      },
+      "debt": [
+        {
+          "what": "harnesses that reach no instruction file",
+          "count": 6,
+          "baseline_file": null
+        }
+      ],
+      "notes": "Owner Q4=1: no harness file created; unreached: Amazon Q Developer, Continue, Gemini CLI, Qwen Code, Replit Agent, Void"
     },
     {
       "finding": "F-028",
@@ -1240,14 +1294,25 @@
       "severity": "DEGRADER",
       "theme": "T7",
       "statement": "An agent cannot rely on AGENTS.md being specific because about 62% of its rule lines are generic (section 6 role-play prompts, persona lines) and its EntityManager rule is contradicted by the code in several services.",
-      "status": "queued",
+      "status": "partial",
       "by": "agent",
-      "date": "2026-10-30",
+      "date": "2026-11-06",
       "reason": null,
-      "commits": [],
-      "verification": null,
-      "debt": [],
-      "notes": ""
+      "commits": [
+        "64a2336"
+      ],
+      "verification": {
+        "command": "grep -rln EntityManager src/main | wc -l",
+        "result": "14 files"
+      },
+      "debt": [
+        {
+          "what": "files that break the EntityManager rule",
+          "count": 14,
+          "baseline_file": null
+        }
+      ],
+      "notes": "EntityManager rule kept as target state (Q2=1); section 6 and persona moved"
     },
     {
       "finding": "F-040",
@@ -1973,6 +2038,106 @@
       "date": "2026-11-06",
       "phase": "IR10.2",
       "event": "preference agents_md.scratch_ignore set to artefacts/: IR10.2 Q5=1: artefacts/ added to .gitignore in its own commit (owner answer via Hermes 2026-11-06)"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR10.2",
+      "event": "F-002 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR10.2",
+      "event": "F-010 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR10.2",
+      "event": "F-007 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR10.2",
+      "event": "F-008 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR10.2",
+      "event": "F-009 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR10.2",
+      "event": "F-013 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR10.2",
+      "event": "F-014 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR10.2",
+      "event": "F-012 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR10.2",
+      "event": "F-027 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR10.2",
+      "event": "F-039 queued to in_progress by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR10.2",
+      "event": "F-002 in_progress to done by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR10.2",
+      "event": "F-010 in_progress to done by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR10.2",
+      "event": "F-007 in_progress to done by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR10.2",
+      "event": "F-008 in_progress to done by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR10.2",
+      "event": "F-009 in_progress to done by agent: Resolved by drift: T1 named and resolved all seven verbs"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR10.2",
+      "event": "F-013 in_progress to done by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR10.2",
+      "event": "F-014 in_progress to done by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR10.2",
+      "event": "F-012 in_progress to partial by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR10.2",
+      "event": "F-027 in_progress to partial by agent"
+    },
+    {
+      "date": "2026-11-06",
+      "phase": "IR10.2",
+      "event": "F-039 in_progress to partial by agent"
     }
   ]
 }
