@@ -14,3 +14,10 @@ pre-commit:
     secrets:
       # gitleaks 8.30.1, the version pinned in scripts/ci/secrets.sh. Scans the staged change only.
       run: gitleaks git --pre-commit --staged --redact --no-banner
+
+# The subject must be a Conventional Commit, the rule CI applies to the pull-request title
+# (.github/workflows/pr-title.yml). A bad subject is refused here, before you push.
+commit-msg:
+  commands:
+    commit-subject:
+      run: scripts/ci/check-commit-subject.sh {1}
