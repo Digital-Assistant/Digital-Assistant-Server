@@ -160,4 +160,5 @@ and in [CONTRIBUTING.md](CONTRIBUTING.md). They are not restated here.
 
 ---
 
-> This document is the single source of truth for repository structure and conventions. All contributors must follow these guidelines.
+> This document is the source of truth for code style and repository structure. Git workflow rules are in
+> [AGENTS.md](AGENTS.md), section 5. Where the two files disagree on workflow, `AGENTS.md` wins.
