@@ -1,7 +1,8 @@
 # Branch protection on `dev`
 
-Reference: what GitHub requires before a change reaches `dev`, as confirmed on 2026-11-13. The setting lives on
-GitHub, not in the repository, so this page is a record and can go stale. Re-check it with the command below.
+Reference: what GitHub requires before a change reaches `dev`, as confirmed on 2026-11-13. The rules are declared
+as code in `.github/rulesets/`, but GitHub does not apply those files by itself. The live setting can differ from the
+files and from this page. Re-check it with the command below.
 
 ## What is enforced
 
@@ -19,7 +20,23 @@ GitHub, not in the repository, so this page is a record and can go stale. Re-che
 
 A second ruleset, "Protect master" (id 25616143), covers `master`. It is active and has no bypass actors. It blocks
 branch deletion and non-fast-forward pushes, and it requires a pull request with 0 approvals. It requires no status
-check and has no merge queue (read 2026-11-13).
+check and has no merge queue (read 2026-11-13). Its file adds one check; see [Rules as code](#rules-as-code).
+
+## Rules as code
+
+| File | Ruleset | Same as the live setting? |
+|---|---|---|
+| `.github/rulesets/dev-protection.json` | Protect dev | Yes, copied on 2026-11-13 |
+| `.github/rulesets/master-protection.json` | Protect master | No: it also requires `Check source branch` |
+
+The files are the source of truth for review. Change a rule in the file in a pull request, then ask the owner to apply it.
+
+## Source-branch rule
+
+A pull request into `master` must come from `dev`. Release Please also opens release pull requests from a branch
+that starts with `release-please--branches--master`, so that prefix is allowed. The job `Check source branch` in
+`.github/workflows/pr-source-branch.yml` fails any other head branch. Its name must not change: the master ruleset
+file requires it by name. The live "Protect master" ruleset does not require it until the owner applies the file.
 
 ## What this means for CI
 
@@ -45,3 +62,15 @@ gh api repos/Digital-Assistant/Digital-Assistant-Server/rulesets/25616141
 Compare `enforcement`, `bypass_actors`, the `required_status_checks` rule and its `strict_required_status_checks_policy`
 with the table above. Update this page and its confirmation date when they differ. Only the repository owner changes
 the setting.
+
+## Apply a changed file
+
+Only the repository owner runs these commands. GitHub does not apply a file by itself.
+
+```bash
+gh api repos/Digital-Assistant/Digital-Assistant-Server/rulesets --jq '.[] | [.id, .name] | @tsv'
+gh api -X PUT repos/Digital-Assistant/Digital-Assistant-Server/rulesets/25616143 --input .github/rulesets/master-protection.json
+gh api -X PUT repos/Digital-Assistant/Digital-Assistant-Server/rulesets/25616141 --input .github/rulesets/dev-protection.json
+```
+
+The first command lists the ruleset ids. Use the second for "Protect master" and the third for "Protect dev".
