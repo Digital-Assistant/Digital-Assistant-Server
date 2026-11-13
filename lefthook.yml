@@ -14,6 +14,14 @@ pre-commit:
     secrets:
       # gitleaks 8.30.1, the version pinned in scripts/ci/secrets.sh. Scans the staged change only.
       run: gitleaks git --pre-commit --staged --redact --no-banner
+    protected-branch:
+      # dev and master are protected on GitHub (docs/branch-protection.md). Refuse the commit here, so you learn
+      # it before the push is refused. A convenience, not the enforcement: the rulesets are.
+      run: >-
+        branch="$(git branch --show-current)";
+        case "$branch" in dev|master)
+        echo "Do not commit on '$branch'. Run: git switch -c <type>/<topic>, then commit again." >&2; exit 1;;
+        esac
 
 # The subject must be a Conventional Commit, the rule CI applies to the pull-request title
 # (.github/workflows/pr-title.yml). A bad subject is refused here, before you push.
