@@ -1,0 +1,30 @@
+name: PR Source Branch
+
+# A ruleset cannot say "master accepts pull requests from dev only", so this check does.
+# Release Please opens its release pull requests from a branch that starts with
+# release-please--branches--master, so that prefix is allowed too.
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+    branches: ['master']
+
+permissions: {}
+
+jobs:
+  check-source-branch:
+    name: Check source branch
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Require the head branch to be dev or a release branch
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          THIS_REPO: ${{ github.repository }}
+        run: |
+          if [[ "$HEAD_REPO" == "$THIS_REPO" && ( "$HEAD_REF" == "dev" || "$HEAD_REF" == release-please--branches--master* ) ]]; then
+            echo "OK: $HEAD_REF"
+            exit 0
+          fi
+          echo "::error::A pull request into master must come from dev (or from Release Please). Open it against dev."
+          exit 1
