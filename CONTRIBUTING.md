@@ -45,10 +45,19 @@ Following these guidelines helps to communicate that you respect the time of the
 
 ### Local hooks
 
-A `pre-commit` hook scans the staged change for secrets. It is a fast safety net: CI (`CI Gate`) is the real gate, and it does not replace `./gradlew formatCheck` before you push. Setup, once per clone:
+Three hooks run on your commits. They are a fast safety net: CI (`CI Gate`) is the real gate, and they do not
+replace `./gradlew formatCheck` before you push.
+
+* `pre-commit` scans the staged change for secrets.
+* `pre-commit` also refuses a commit on `dev` or `master`. Run `git switch -c <type>/<topic>` and commit again; the
+  staged change comes with you.
+* `commit-msg` refuses a subject that is not a Conventional Commit (`scripts/ci/check-commit-subject.sh`). It uses
+  the same pattern and types as the PR title check below. Merge, `fixup!`, `squash!` and `amend!` subjects pass.
+
+Setup, once per clone:
 
 1.  Install the [lefthook](https://github.com/evilmartians/lefthook) (v2.2.2) and [gitleaks](https://github.com/gitleaks/gitleaks) (v8.30.1) binaries and put them on your `PATH`.
-2.  Run `lefthook install` in the repository.
+2.  Run `lefthook install` in the repository. Run it again after a pull that changes `lefthook.yml`.
 
 When a hook fails, fix the cause. Do not bypass it with `--no-verify`.
 
@@ -67,7 +76,7 @@ flowchart LR
     G --> H["Release: dev into master,<br/>Release Please tags vX.Y.Z"]
 ```
 
-1.  **Create a pull request:** Once your changes are ready, push your branch to your fork and create a pull request to the `dev` branch of the original repository. The PR title must follow [Conventional Commits](https://www.conventionalcommits.org/) (for example `fix: handle a missing session id`), because it becomes the commit message and drives the changelog. The `PR Title` workflow (`.github/workflows/pr-title.yml`, job `Conventional Commit Title`) rejects other titles. Allowed types: `feat`, `fix`, `perf`, `refactor`, `docs`, `test`, `build`, `ci`, `chore`, `revert`, with an optional scope and `!` for a breaking change (`fix(api): ...`). The repository squash-merges, so the PR title is the only message that lands on `dev`; individual commit messages are not checked.
+1.  **Create a pull request:** Once your changes are ready, push your branch to your fork and create a pull request to the `dev` branch of the original repository. The PR title must follow [Conventional Commits](https://www.conventionalcommits.org/) (for example `fix: handle a missing session id`), because it becomes the commit message and drives the changelog. The `PR Title` workflow (`.github/workflows/pr-title.yml`, job `Conventional Commit Title`) rejects other titles. Allowed types: `feat`, `fix`, `perf`, `refactor`, `docs`, `test`, `build`, `ci`, `chore`, `revert`, with an optional scope and `!` for a breaking change (`fix(api): ...`). The repository squash-merges, so the PR title is the only message that lands on `dev`. CI checks only the title; the local `commit-msg` hook checks each commit subject before you push.
 2.  **Write a good description:** Provide a clear and concise description of your changes in the pull request. Explain the "what" and "why" of your contribution.
 3.  **Tag reviewers:** Tag the appropriate reviewers for your pull request.
 4.  **Address feedback:** Be responsive to any feedback or questions from the reviewers.
