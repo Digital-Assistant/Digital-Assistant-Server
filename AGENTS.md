@@ -69,6 +69,18 @@ Adherence to these patterns is mandatory. Code lives under `src/main/java/com/ni
 *   **Input safety:** Use `utils/InputSanitizer` for user-supplied text; `config/XssSanitizationFilter` and `SecurityHeadersFilter` apply to all requests.
 *   **Error Handling Pattern (Java):** For user-driven errors (4xx), throw a standard JAX-RS `WebApplicationException`. For server-side errors (5xx), create a custom unchecked exception and log it in the Service layer (`LoggerUtil`). `config/GlobalExceptionMapper` formats responses.
 
+## How to write for people
+
+This covers chat replies, status reports, pull request descriptions and commit messages. Rules for pages under
+`docs/` are in `docs/STYLE_GUIDE.md`.
+
+* **Reader:** write for a new engineer who knows Git and Java but not this repository or its terms.
+* **Bottom line first:** open with the answer, the result or the decision you need.
+* **Plain language:** short sentences (at most 25 words), active voice, one term per meaning.
+* **Reports:** a status report says what is done, not done, blocked and next. A done report has three headings:
+  what changed, how it was checked, what was not done. Mark each claim as checked or inferred.
+* **Decisions:** give the context, two to four options with pros and cons, your recommendation and the default.
+
 ## 4. Security & Safety Guardrails
 
 These are strict, non-negotiable rules.
