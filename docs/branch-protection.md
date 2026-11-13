@@ -17,18 +17,18 @@ GitHub, not in the repository, so this page is a record and can go stale. Re-che
 | Plan | The repository is public under an Organization owner, so rulesets are enforced on the free plan |
 | Confirmed | 2026-11-13, read with `gh api` (read-only) on the owner's behalf; earlier 2026-10-31 |
 
-A second ruleset, "Protect master" (id 25616143), covers `master`: active, no bypass actors, branch deletion and
-non-fast-forward pushes blocked, and a pull request required with 0 approvals. It requires no status check and has no
-merge queue (read 2026-11-13).
+A second ruleset, "Protect master" (id 25616143), covers `master`. It is active and has no bypass actors. It blocks
+branch deletion and non-fast-forward pushes, and it requires a pull request with 0 approvals. It requires no status
+check and has no merge queue (read 2026-11-13).
 
 ## What this means for CI
 
 - `CI Gate` and `Conventional Commit Title` are the required checks on `dev`. Their job names must not change: a
   rename silently drops the requirement.
 - A job gates `CI Gate` only if it is in its `needs` list: `Build and Test`, `Secret Scan`, `CodeQL (Java)`,
-  `Workflow Lint` and `Docs Lint`. `Docs Lint` skips its steps when no Markdown changed and the job then still
-  succeeds. `Dependency Scan (report-only)` and the image scan in `image.yml` are outside the list and cannot block a
-  merge. The scan is report-only on purpose: its count (101 advisories in 29 packages) is recorded debt, and
+  `Workflow Lint` and `Docs Lint`. `Docs Lint` skips its steps when no Markdown changed, and the job still succeeds.
+  `Dependency Scan (report-only)` and the image scan in `image.yml` are outside the list. They cannot block a merge.
+  The scan is report-only on purpose. Its count (101 advisories in 29 packages) is recorded debt.
   `scripts/ci/scan.sh` fails when the count rises, but only in that job.
 - The merge queue verifies a pull request on a temporary `merge_group` ref, so `ci.yml` keeps the `merge_group`
   trigger.

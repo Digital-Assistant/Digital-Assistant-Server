@@ -14,7 +14,7 @@ the first audit in [`../agentic-readiness-report/`](../agentic-readiness-report/
    `AGENTS.md`.
 2. Respect every preference and every `skipped` or `deferred` finding in it. A skipped finding is final: do not
    propose it again.
-3. Work one theme at a time, on its own branch from `dev`, and record each status change with `progress.py`
-   in the same branch.
+3. Work one theme at a time, on its own branch from `dev`. Record each status change with `progress.py` in the same
+   branch.
 
 The 2 findings the audit rejected are not queued and stay out of scope.
