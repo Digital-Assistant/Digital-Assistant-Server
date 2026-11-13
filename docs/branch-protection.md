@@ -1,6 +1,6 @@
 # Branch protection on `dev`
 
-Reference: what GitHub requires before a change reaches `dev`, as confirmed on 2026-10-31. The setting lives on
+Reference: what GitHub requires before a change reaches `dev`, as confirmed on 2026-11-13. The setting lives on
 GitHub, not in the repository, so this page is a record and can go stale. Re-check it with the command below.
 
 ## What is enforced
@@ -9,21 +9,27 @@ GitHub, not in the repository, so this page is a record and can go stale. Re-che
 |---|---|
 | Mechanism | Repository ruleset named "Protect dev", id 25616141. Classic branch protection is not used (`/branches/dev/protection` answers 404 "Branch not protected") |
 | Enforcement | Active, on `refs/heads/dev` |
-| Required status check | `CI Gate` (the aggregate job in `.github/workflows/ci.yml`) |
+| Required status checks | `CI Gate` (the aggregate job in `.github/workflows/ci.yml`) and `Conventional Commit Title` (the job in `.github/workflows/pr-title.yml`) |
 | Up to date before merge | Yes (`strict_required_status_checks_policy: true`) |
 | Pull request | Required, with 0 required approvals |
 | Other rules | Branch deletion blocked; non-fast-forward pushes blocked; merge queue on (grouping `ALLGREEN`, method `SQUASH`) |
 | Bypass actors | None. The rules bind administrators too (`current_user_can_bypass` reports `never`) |
 | Plan | The repository is public under an Organization owner, so rulesets are enforced on the free plan |
-| Confirmed | 2026-10-31, read with `gh api` by the orchestrator on the owner's behalf |
+| Confirmed | 2026-11-13, read with `gh api` (read-only) on the owner's behalf; earlier 2026-10-31 |
 
-A second ruleset, "Protect master", covers `master`. Its details are not recorded here.
+A second ruleset, "Protect master" (id 25616143), covers `master`: active, no bypass actors, branch deletion and
+non-fast-forward pushes blocked, and a pull request required with 0 approvals. It requires no status check and has no
+merge queue (read 2026-11-13).
 
 ## What this means for CI
 
-- `CI Gate` is the only required check. Its job name must not change: a rename silently drops the requirement.
-- A job counts only if it is in the `needs` list of `CI Gate`. `Dependency Scan (report-only)`, `Docs Lint` and the
-  image scan in `image.yml` are outside it and cannot block a merge.
+- `CI Gate` and `Conventional Commit Title` are the required checks on `dev`. Their job names must not change: a
+  rename silently drops the requirement.
+- A job gates `CI Gate` only if it is in its `needs` list: `Build and Test`, `Secret Scan`, `CodeQL (Java)`,
+  `Workflow Lint` and `Docs Lint`. `Docs Lint` skips its steps when no Markdown changed and the job then still
+  succeeds. `Dependency Scan (report-only)` and the image scan in `image.yml` are outside the list and cannot block a
+  merge. The scan is report-only on purpose: its count (101 advisories in 29 packages) is recorded debt, and
+  `scripts/ci/scan.sh` fails when the count rises, but only in that job.
 - The merge queue verifies a pull request on a temporary `merge_group` ref, so `ci.yml` keeps the `merge_group`
   trigger.
 - One required approval is not configured. A review is a convention here, not a platform rule.
