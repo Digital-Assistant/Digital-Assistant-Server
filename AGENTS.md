@@ -123,5 +123,5 @@ read `docs/architecture/` for the map of the code.
 The `workflow:` profiles (`core`, `infra`, `docs`) and the six refinement prompts are in [`docs/workflow-profiles.md`](docs/workflow-profiles.md).
 
 ## Agent notes
-- Prefer a code-graph tool (the codebase-memory MCP: `search_graph`, `trace_path`, `get_code_snippet`) over grep for code questions; the index project name is derived from this directory. `.mcp.json` registers the server; a tool that reads another config file copies the `codebase-memory-mcp` entry from it.
+- Prefer a code-graph tool (the codebase-memory MCP: `search_graph`, `trace_path`, `get_code_snippet`) over grep for code questions; the index project name is derived from this directory. `.mcp.json` registers the server; a tool that reads another config file copies the `codebase-memory-mcp` entry from it. Keep the index fresh: re-index at the start of a task and after your last commit, and check it with `detect_changes`.
 - Do not start the server or run `local-up.sh` unless the task needs it; infrastructure lives in the sibling repo `Digital_Assistant_microServices`.
