@@ -9,12 +9,12 @@ Releases are cut by Release Please, from the `master` branch. Feature work never
 2. When `dev` is ready to ship, a maintainer opens a pull request from `dev` into `master` and merges it.
 3. A push to `master` runs `.github/workflows/release.yml`. The job runs Release Please with
    `release-please-config.json` (release type `simple`, one package at the repository root). Release Please reads the
-   Conventional Commit titles since the last release to choose the version bump, opens or updates the release pull
-   request, and, when that pull request is merged, creates the tag `vX.Y.Z` and the GitHub release.
+   Conventional Commit titles since the last release to choose the version bump. It then opens or updates the
+   release pull request. When that pull request is merged, it creates the tag `vX.Y.Z` and the GitHub release.
 4. Release Please writes `CHANGELOG.md` and updates the version in `.release-please-manifest.json`, `version.txt` and
    `build.gradle` (listed in `extra-files`). These changes come through the release pull request, not by hand.
-5. When a release is created, the same workflow opens a back-merge pull request from `master` into `dev`, so the version
-   and the changelog return to `dev`.
+5. When a release is created, the same workflow opens a back-merge pull request from `master` into `dev`. The version
+   and the changelog then return to `dev`.
 
 ## Who does what
 
