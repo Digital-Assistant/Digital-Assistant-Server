@@ -32,7 +32,8 @@ does not restate them.
 ## Plain language
 
 Write for a new engineer who knows Git and Java but not this repository or its terms. The audit check `DOC-05`
-measures rules 2 and 6 on every page under `docs/`.
+measures rules 2 and 6 on every page under `docs/`. The repository has no prose-check script of its own, so check
+your own pages by hand.
 
 1. **Bottom line first.** Put the answer, the result or the decision in the first two lines.
 2. **Short sentences.** At most 20 words in a numbered step. At most 25 words in other text.
