@@ -193,7 +193,7 @@ jobs:
     name: Docs Lint
     runs-on: ubuntu-24.04
     timeout-minutes: 10
-    # Advisory: not part of `gate` yet (owner decision). Runs only when Markdown or its lint wiring changes.
+    # Part of `gate.needs`. Its steps run only when Markdown or its lint wiring changes; otherwise the job still succeeds.
     steps:
       - name: Checkout Code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -242,7 +242,7 @@ jobs:
   # failed or cancelled jobs fail the gate.
   gate:
     name: CI Gate
-    needs: [build-test, secrets, codeql, workflow-lint]
+    needs: [build-test, secrets, codeql, workflow-lint, docs-lint]
     if: ${{ always() }}
     runs-on: ubuntu-24.04
     timeout-minutes: 5
