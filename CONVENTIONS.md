@@ -65,18 +65,9 @@
 - **Database Tables:** `PascalCase` (e.g., `Userclicknodes`).
 - **Database Columns:** `lowercase` (e.g., `sessionid`).
 
-### Git Branches
-- Use `feature/<short-description>` for new features (e.g., `feature/user-auth`)
-- Use `bugfix/<short-description>` for bug fixes
-- Use `hotfix/<short-description>` for urgent production fixes
-- Use `chore/<short-description>` for maintenance
-
-### Commit Messages
-- Use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/):
-  - `feat: add user login endpoint`
-  - `fix: correct null pointer in UserService`
-  - `docs: update README`
-  - `refactor: simplify domain model`
+### Git Branches and Commit Messages
+Branch names and commit messages are set in [AGENTS.md](AGENTS.md), section 5, and in
+[CONTRIBUTING.md](CONTRIBUTING.md). They are not restated here.
 
 ### File Naming
 - Java classes: `PascalCase` (e.g., `UserAuthData.java`)
@@ -164,10 +155,10 @@
 
 ## 9. Git & Version Control
 
-- **Branching Model:** TBD (e.g., GitFlow).
-- **Commit Messages:** Follow the [Conventional Commits](https.conventionalcommits.org/) specification (e.g., `feat: add user profile endpoint`).
-- **Pull Requests:** Require at least one approval before merging.
+The branching model, commit messages, pull requests and merging are described in [AGENTS.md](AGENTS.md), section 5,
+and in [CONTRIBUTING.md](CONTRIBUTING.md). They are not restated here.
 
 ---
 
-> This document is the single source of truth for repository structure and conventions. All contributors must follow these guidelines.
+> This document is the source of truth for code style and repository structure. Git workflow rules are in
+> [AGENTS.md](AGENTS.md), section 5. Where the two files disagree on workflow, `AGENTS.md` wins.
