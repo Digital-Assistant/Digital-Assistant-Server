@@ -29,6 +29,48 @@ does not restate them.
 - Line length 120. The rules are in [../.markdownlint-cli2.yaml](../.markdownlint-cli2.yaml); run
   `scripts/ci/docs-lint.sh` before pushing.
 
+## Plain language
+
+Write for a new engineer who knows Git and Java but not this repository or its terms. The audit check `DOC-05`
+measures rules 2 and 6 on every page under `docs/`.
+
+1. **Bottom line first.** Put the answer, the result or the decision in the first two lines.
+2. **Short sentences.** At most 20 words in a numbered step. At most 25 words in other text.
+3. **One instruction per sentence.** Write steps in the imperative: "Run the tests", not "You should run them".
+4. **Active voice.** Say who does what: "The service reads the file", not "The file is read".
+5. **One word, one meaning.** Use the same term every time. Do not change words for variety.
+6. **No vague or padded words.** Do not write `simply`, `just`, `obviously`, `clearly`, `basically`, `easily`,
+   `utilize`, `leverage`, `in order to`, `and/or` or `etc.`. Name the real items instead of `etc.`.
+
+Example. The "before" text breaks rules 2, 4 and 6 on purpose, so the check skips it:
+
+<!-- prose-check off -->
+
+> Before: In order to ensure that the build is green, it is recommended that the tests are run by the
+> contributor prior to the proposal of a change.
+>
+> After: Run the tests before you propose a change.
+
+<!-- prose-check on -->
+
+A text that must stay word for word, such as a quoted prompt, goes between the same two comments. Do not reword it.
+
+## Diagrams
+
+A diagram often explains a flow faster than text. Every explanation or tutorial page has at least one Mermaid
+diagram. An index page does not need one. Pick the type by what you show:
+
+| You show | Mermaid type |
+|---|---|
+| Steps and choices in a process | `flowchart` |
+| Who calls whom, in order | `sequenceDiagram` |
+| The states of one thing and how it moves between them | `stateDiagram-v2` |
+| Data shapes and how they relate | `classDiagram` or `erDiagram` |
+
+- Keep a diagram to about 12 nodes. Split a larger one.
+- Write one sentence before the diagram that says what it shows.
+- Validate every block before you commit it. The docs-lint job renders each one.
+
 ## Decisions
 
 - Status is `proposed` until the owner accepts it. The owner changes the status, not the writer.
