@@ -1,5 +1,9 @@
 # Coding Conventions
 
+These rules are mandatory for new code, for people and agents alike. Why a rule exists is recorded in
+[`docs/adr/`](docs/adr/README.md). The map of the code is
+[`docs/architecture/overview.md`](docs/architecture/overview.md).
+
 ---
 
 ## 0. Directory Structure
@@ -53,6 +57,9 @@
 - **Maximum Line Length:** 120 characters.
 - **Braces:** Opening braces go on the same line as the class or method declaration.
 - **Whitespace:** Use whitespace for readability (e.g., around operators, after commas).
+- **Tools:** Spotless applies these rules with
+  [`config/spotless/eclipse-formatter.xml`](config/spotless/eclipse-formatter.xml). PMD lints with
+  [`config/pmd/ruleset.xml`](config/pmd/ruleset.xml).
 
 ## 2. Naming Conventions
 
@@ -81,6 +88,9 @@
     - Don't swallow exceptions.
     - Use specific exceptions where possible.
     - Document exceptions thrown by methods using `@throws` in Javadoc.
+- **Errors:** for a user-driven error (4xx), throw a standard JAX-RS `WebApplicationException`. For a server-side
+  error (5xx), create a custom unchecked exception and log it in the service layer ([4. Logging](#4-logging)).
+  `config/GlobalExceptionMapper` formats the error responses.
 - **Streams:** Use the Java Stream API for processing collections.
 - **Comments:**
     - Write Javadoc for all public classes and methods.
@@ -102,8 +112,10 @@
 
 ## 5. API Design (JAX-RS)
 
-- **Base Path:** `/api`.
-- **Resources:** in `services/`, named `<Topic>Resource` (e.g. `VoteResource`). Resource methods handle HTTP only.
+- **Base Path:** `/api`, set once by `@ApplicationPath("/api")` in `RestApplication`. Resource `@Path` values omit
+  the prefix: `/clickevents/all` is served at `/api/clickevents/all`.
+- **Resources:** new endpoints are JAX-RS resources in `services/`, named `<Topic>Resource` (e.g. `VoteResource`).
+  Resource methods handle HTTP only.
 - **Business logic:** in an `@ApplicationScoped` class `<Topic>Service` in `services/`, which uses the DAOs in
   `repository/`.
 - **Existing names:** the package name is historical. `SequenceListService` and `StatusService` are resources; do not
@@ -162,6 +174,24 @@
 
 Branches, commit messages, pull requests and merging are in [CONTRIBUTING.md](CONTRIBUTING.md). They are not restated
 here.
+
+## 10. Configuration
+
+- **Reading values:** read every configuration value (URLs, tokens, feature flags) from the Quarkus configuration
+  with `@ConfigProperty`. Never hardcode one.
+- **Secrets:** a password or secret never goes in a tracked file, `application.properties` and the tracked
+  `local.properties` included. Local credentials go in the untracked `local-secrets.properties`, which
+  `./sync-credentials.sh` writes from `local-secrets.properties.example`. Deployed environments use a mounted
+  `additional.properties` or environment variables.
+- **Credentials from elsewhere:** never commit a credential from the sibling `Digital_Assistant_microServices`
+  checkout or from a real environment.
+- **Sources and keys:** the load order and every `udan.*` key are in
+  [README.md, "Configuration"](README.md#configuration).
+
+## 11. Input Safety
+
+- Clean user-supplied text with `utils/InputSanitizer`.
+- `config/XssSanitizationFilter` and `config/SecurityHeadersFilter` apply to every request.
 
 ---
 
