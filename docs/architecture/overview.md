@@ -16,6 +16,22 @@ One Gradle module (`settings.gradle`, `rootProject.name = 'index'`), one Quarkus
 | Repositories | `repository/` | DAO classes (see [ADR 0003](../adr/0003-database-access-through-repositories.md)) |
 | Search | `search/` | Elasticsearch analysis, index layout, startup reindex |
 | Utilities | `utils/` | Input sanitiser, logger helper, sequence status |
+| Converters | `converters/` | JPA attribute converter for click nodes (`UserclicknodeConverter`) |
+| Views | `views/` | `SearchListView` marker classes for the search-list views |
+| Old SQL | `migration/` | `sql-modifications.sql`, a SQL file in the Java tree; Flyway does not read it |
+
+## Repository layout
+
+| Path | What it holds |
+|---|---|
+| `build.gradle`, `settings.gradle`, `gradle.properties`, `gradlew`, `gradle/wrapper/` | The Gradle build and its wrapper |
+| `config/pmd/`, `config/spotless/` | The PMD ruleset and the formatter settings ([CONVENTIONS.md](../../CONVENTIONS.md#1-code-formatting)) |
+| `src/main/docker/` | `Dockerfile.jvm` and `Dockerfile.native` |
+| `src/main/resources/` | `application.properties`, `local.properties` and `META-INF/` |
+| `src/main/resources/db/migration/` | Flyway migrations for MariaDB; the only folder Flyway reads |
+| `src/main/resources/pg/migration/` | Legacy PostgreSQL scripts; no configuration reads them |
+| `docs/`, `scripts/ci/`, `.github/` | Documentation, CI scripts, and the workflows and repository rules |
+| `AGENTS.md`, `CONTRIBUTING.md`, `CONVENTIONS.md`, `README.md`, `LICENSE` | The root documents and the licence |
 
 ## Entry points
 

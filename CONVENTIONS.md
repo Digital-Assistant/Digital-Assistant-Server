@@ -8,45 +8,8 @@ These rules are mandatory for new code, for people and agents alike. Why a rule 
 
 ## 0. Directory Structure
 
-```
-/ (repo root)
-├── build.gradle
-├── gradle.properties
-├── gradlew*
-├── settings.gradle
-├── CONVENTIONS.md
-├── LICENSE
-├── README.md
-├── config/
-│   ├── pmd/
-│   └── spotless/
-├── gradle/
-│   └── wrapper/
-│       ├── gradle-wrapper.jar
-│       └── gradle-wrapper.properties
-├── src/
-│   ├── main/
-│   │   ├── docker/
-│   │   │   ├── Dockerfile.jvm
-│   │   │   └── Dockerfile.native
-│   │   ├── java/
-│   │   │   └── com/nistapp/uda/index/
-│   │   │       ├── config/
-│   │   │       ├── converters/
-│   │   │       ├── migration/
-│   │   │       ├── models/
-│   │   │       ├── repository/
-│   │   │       ├── search/
-│   │   │       ├── services/
-│   │   │       ├── users/
-│   │   │       ├── utils/
-│   │   │       └── views/
-│   │   └── resources/
-│   │       ├── application.properties
-│   │       ├── db/migration/        # Flyway migrations (MariaDB); the only folder Flyway reads
-│   │       ├── META-INF/
-│   │       └── pg/migration/        # legacy PostgreSQL scripts; not read by Flyway or any config
-```
+The folders, the Java packages and what each one holds are in
+[`docs/architecture/overview.md`](docs/architecture/overview.md).
 
 ---
 
