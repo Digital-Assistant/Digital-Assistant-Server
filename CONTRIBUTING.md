@@ -16,6 +16,9 @@ Following these guidelines helps to communicate that you respect the time of the
     cd Digital-Assistant-Server
     ```
 
+4. **Set up the build:** follow [Setup (non-interactive)](README.md#setup-non-interactive) in the README. It
+   holds the one setup command, so it is not repeated here.
+
 ## Commands
 
 Gradle is the one runner. Run every command from the repository root. Gradle task names cannot contain `:`, so the
