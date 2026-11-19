@@ -89,7 +89,7 @@ These are strict, non-negotiable rules.
 
 All contributions must follow this comprehensive, sequential lifecycle:
 
-1.  **Branching:** Create a new branch from `dev` using the format `feature/issue-NUMBER-short-description`.
+1.  **Branching:** Create a branch from `dev`, named as [`CONTRIBUTING.md`, "Development Workflow"](CONTRIBUTING.md#development-workflow) says.
 2.  **Initial Implementation:** Write the initial, functionally correct code that satisfies the primary objective of the assigned GitHub Issue.
 3.  **Identify Workflow Profile:** Check the labels on the assigned GitHub Issue for a `workflow:` label (e.g., `workflow:core`, `workflow:infra`). This label determines the required quality assurance steps.
 4.  **Execute Refinement Loop:** Based on the identified profile, apply the **mandatory** "Quality Assurance & Refinement Prompts" from the corresponding profile in [`docs/workflow-profiles.md`](docs/workflow-profiles.md). This is a required step.

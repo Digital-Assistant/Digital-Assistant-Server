@@ -49,13 +49,12 @@ verb `format:check` is spelled `formatCheck`.
 
 ## Development Workflow
 
-1.  **Create a new branch:** Create a new branch for your feature or bug fix. Use a descriptive name, including the issue number if applicable.
+1.  **Create a branch from `dev`:** name it `<type>/<topic>`. `<type>` is the Conventional Commit type of the change:
+    `feat`, `fix`, `docs`, `ci` and so on. `<topic>` is a few words in kebab-case. Add the issue number when there is
+    one: `fix/123-session-timeout`.
+
     ```bash
-    git checkout -b feature/your-feature-name
-    ```
-    or
-    ```bash
-    git checkout -b bugfix/issue-description
+    git switch -c feat/limit-request-payload-size dev
     ```
 2.  **Make your changes:** Make your changes to the codebase.
 3.  **Run tests:** Ensure that all tests pass before submitting a pull request.
