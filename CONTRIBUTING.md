@@ -47,8 +47,8 @@ verb `format:check` is spelled `formatCheck`.
   `./gradlew dependencyCheckAnalyze` is the old OWASP scan, not this verb; it needs an NVD key that is not set up.
 * **Lint:** files that violated PMD when it was added are listed in the exclude patterns of
   `config/pmd/ruleset.xml`. That list only shrinks; new files are checked in full.
-* **Dependencies:** after you change a dependency or a plugin, regenerate the lock with
-  `./gradlew dependencies --write-locks`.
+* **Dependencies:** add a new third-party library or dependency only when the task needs it. After you change a
+  dependency or a plugin, regenerate the lock with `./gradlew dependencies --write-locks`.
 
 ### Running tests
 

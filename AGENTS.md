@@ -74,7 +74,9 @@ These are strict, non-negotiable rules.
     Follow [CONVENTIONS.md §10](CONVENTIONS.md#10-configuration).
 *   **Authentication & Authorization:** You **must not** alter or add any logic related to user authentication or
     role-based access control, unless the task explicitly says so.
-*   **Dependency Vetting:** You **must not** introduce new third-party libraries or dependencies unless it is an explicit requirement of the assigned task.
+*   **Dependency Vetting:** You **must not** introduce new third-party libraries or dependencies unless it is an
+    explicit requirement of the assigned task. The same rule for people is in
+    [`CONTRIBUTING.md`, "Commands"](CONTRIBUTING.md#commands).
 *   **Recorded Decisions:** You **must not** change behaviour that a decision record in `docs/adr/` describes, unless
     the task says so. An example is the `UDAN-Realm` tenant selection in `config/CustomTenantResolver.java`. Such a change
     updates or adds the decision record in the same change set.
