@@ -7,7 +7,7 @@ This file is read by Claude Code (through the `CLAUDE.md` import), opencode, Cod
 ## 1. High-Level Directive
 
 *   **Golden Rule:** Your primary directive is to **first read and understand the existing code and the project conventions below** before writing new code. Adhere to existing patterns to ensure consistency.
-*   **Problem-Solving Approach:** If a task is ambiguous, state your assumptions and ask clarifying questions in your summary. Do not invent new requirements.
+*   **Problem-Solving Approach:** A task may be ambiguous. Ask before you start when the answer changes what you build, or when the change touches a guarded area (section 4). Otherwise take the safest reading, say so, and list the open questions in your summary. Do not invent new requirements.
 *   **Strict Scope Adherence:** Your work must be strictly confined to the files and requirements of the assigned task: its GitHub issue, or the task as given when there is none ([`CONTRIBUTING.md`, "With or without an issue"](CONTRIBUTING.md#pull-request-process)). Do not modify unrelated files or refactor code that is outside the explicit scope of the task.
 
 ## 2. Command & Tooling Reference
