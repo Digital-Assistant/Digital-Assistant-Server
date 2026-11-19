@@ -11,3 +11,4 @@ Status stays `proposed` until the owner accepts it. The first three records were
 | [0002](0002-tenant-from-udan-realm-header.md) | Tenant (OIDC realm) comes from the `UDAN-Realm` header | proposed | No default realm; missing header gives 400 |
 | [0003](0003-database-access-through-repositories.md) | Database access goes through repository classes | proposed | Rule exists; 14 files and 3 active-record calls still break it |
 | [0004](0004-resources-handle-http-services-hold-logic.md) | Resources handle HTTP; business logic lives in services | proposed | New endpoints: `<Topic>Resource` plus an `@ApplicationScoped` `<Topic>Service` |
+| [0005](0005-tracked-settings-untracked-local-secrets.md) | Tracked settings, untracked local secrets, mounted overrides | proposed | No credential in a tracked file; local secrets come from `sync-credentials.sh` |
