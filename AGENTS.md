@@ -25,7 +25,9 @@ are in [`CONTRIBUTING.md`, "Commands"](CONTRIBUTING.md#commands). The local hook
 [`CONTRIBUTING.md`, "Local hooks"](CONTRIBUTING.md#local-hooks).
 
 #### **Baselines and floors**
-Existing debt is counted and cannot grow. `./gradlew formatCheck` runs `scripts/ci/check-baseline.sh` (no new violations: it fails when a count goes up) against the quality baseline `docs/agentic-readiness/digital-assistant-server-quality-baseline.json`. The baselines are: the PMD exclude list in `config/pmd/ruleset.xml`, the Spotless `ratchetFrom 'origin/dev'` (changed files only) with the full-tree count in the baseline file, the OSV-Scanner advisory count (compared by `scripts/ci/scan.sh` in the CI scan job) and the skip-marker count (0), all in the baseline file. The image-scan count is in the baseline file too, but nothing compares it: `image.yml` only reports it in the job summary. Coverage floor: 70% line coverage, enforced by `jacocoTestCoverageVerification` in `build.gradle` and run by the CI `Coverage floor` step. **A baseline only goes down and a coverage floor only goes up; raising a count or lowering the floor needs the owner.** Lower a count (or raise the floor) in the baseline file and `build.gradle` in the same change that earns it.
+Existing debt is counted in the quality baseline and cannot grow: no new violations. Never raise a count or lower the
+coverage floor yourself; that needs the owner. The counts, the floor and how to lower a count are in
+[`CONTRIBUTING.md`, "Baselines and floors"](CONTRIBUTING.md#baselines-and-floors).
 
 #### **Testing**
 *   **Run all tests:** `./gradlew test`

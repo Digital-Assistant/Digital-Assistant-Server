@@ -2,7 +2,7 @@
 # No-new-violations check. Compares today's counts with the committed quality baseline
 # (docs/agentic-readiness/digital-assistant-server-quality-baseline.json) and fails when a count went UP
 # or the coverage floor went DOWN. A baseline only goes down, a floor only goes up; raising or lowering
-# either needs the owner (AGENTS.md, "Baselines and floors"). The script never rewrites the baseline file.
+# either needs the owner (CONTRIBUTING.md, "Baselines and floors"). The script never rewrites the baseline file.
 #
 # Usage:
 #   scripts/ci/check-baseline.sh            offline checks (run by `./gradlew formatCheck`, so by CI `build.sh`):

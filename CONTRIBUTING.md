@@ -50,6 +50,25 @@ verb `format:check` is spelled `formatCheck`.
 * **Dependencies:** after you change a dependency or a plugin, regenerate the lock with
   `./gradlew dependencies --write-locks`.
 
+### Baselines and floors
+
+Existing debt is counted in the quality baseline,
+`docs/agentic-readiness/digital-assistant-server-quality-baseline.json`, and cannot grow.
+`./gradlew formatCheck` runs `scripts/ci/check-baseline.sh` against it. No new violations: the script fails when a
+count goes up. The baselines are:
+
+* **PMD:** the exclude list in `config/pmd/ruleset.xml`.
+* **Spotless:** `ratchetFrom 'origin/dev'` checks changed files only; the baseline file holds the full-tree count.
+* **OSV-Scanner:** the advisory count, compared by `scripts/ci/scan.sh` in the CI scan job.
+* **Skip markers:** skipped or conditionally run tests; the count is 0.
+* **Image scan:** the count is in the baseline file too, but nothing compares it. `image.yml` only reports it in the
+  job summary.
+* **Coverage floor:** 70% line coverage, enforced by `jacocoTestCoverageVerification` in `build.gradle` and run by
+  the CI `Coverage floor` step.
+
+**A baseline only goes down and a coverage floor only goes up.** Raising a count or lowering the floor needs the
+owner. Lower a count, or raise the floor, in the baseline file and `build.gradle` in the same change that earns it.
+
 ## Development Workflow
 
 1.  **Create a branch from `dev`:** name it `<type>/<topic>`. `<type>` is the Conventional Commit type of the change:
