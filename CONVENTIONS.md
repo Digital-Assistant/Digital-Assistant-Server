@@ -39,9 +39,9 @@
 │   │   │       └── views/
 │   │   └── resources/
 │   │       ├── application.properties
-│   │       ├── db/migration/
+│   │       ├── db/migration/        # Flyway migrations (MariaDB); the only folder Flyway reads
 │   │       ├── META-INF/
-│   │       └── pg/migration/
+│   │       └── pg/migration/        # legacy PostgreSQL scripts; not read by Flyway or any config
 ```
 
 ---
