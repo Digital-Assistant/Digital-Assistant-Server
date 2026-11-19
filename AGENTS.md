@@ -35,7 +35,8 @@ Running one test class, the stack-free unit tests and the stack the other tests 
 [`CONVENTIONS.md` §7](CONVENTIONS.md#7-testing).
 
 #### **Dependency Management**
-*   **Adding a Java dependency:** edit `build.gradle`. Versions come from the Quarkus BOM (`quarkusVersion` in `gradle.properties`); Flyway is pinned to 9.22.3 in `build.gradle` for MariaDB 10.11 support.
+Where dependencies and their versions are declared is in [`CONVENTIONS.md` §8](CONVENTIONS.md#8-build--dependencies).
+Regenerate the lock after a change, as [`CONTRIBUTING.md`, "Commands"](CONTRIBUTING.md#commands) says.
 
 ## 3. Architectural Patterns & Code Conventions
 

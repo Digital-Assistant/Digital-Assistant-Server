@@ -174,7 +174,10 @@ Why: [ADR 0001](docs/adr/0001-flyway-for-schema-migrations.md) (Flyway) and
 
 - **Build Tool:** The project is built with Gradle.
 - **Dependencies:** Dependencies are managed in `build.gradle`.
-- **BOM:** Use the Quarkus BOM (Bill of Materials) to ensure compatible dependency versions.
+- **BOM:** Use the Quarkus BOM (Bill of Materials) to ensure compatible dependency versions. The Quarkus version is
+  `quarkusVersion` in `gradle.properties`.
+- **Pinned versions:** Flyway is forced to 9.22.3 in `build.gradle`, because the BOM's Flyway does not support
+  MariaDB 10.11. Why: [ADR 0001](docs/adr/0001-flyway-for-schema-migrations.md).
 
 ## 9. Git & Version Control
 
