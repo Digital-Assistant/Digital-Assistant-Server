@@ -155,6 +155,8 @@ change is infra or docs only.
 A pull request is considered "done" when it meets the following criteria:
 
 *   All tests pass.
+*   No test was edited, skipped or deleted to make a failing test pass. A test changes only together with the code
+    change that needs it.
 *   The code is well-documented.
 * When the change alters a public interface, observable behaviour, the architecture or a decision, the affected
   documentation and the decision records (`docs/adr/`) are updated in the same change set.

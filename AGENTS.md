@@ -78,7 +78,8 @@ These are strict, non-negotiable rules.
 *   **Recorded Decisions:** You **must not** change behaviour that a decision record in `docs/adr/` describes, unless
     the task says so. An example is the `UDAN-Realm` tenant selection in `config/CustomTenantResolver.java`. Such a change
     updates or adds the decision record in the same change set.
-*   **Tests:** You **must not** edit, skip or delete a test in `src/test/` to make a failing test pass; change a test only together with the code change that needs it.
+*   **Tests:** You **must not** edit, skip or delete a test in `src/test/` to make a failing test pass. The rule and
+    its exception are in [`CONTRIBUTING.md`, "Definition of Done"](CONTRIBUTING.md#definition-of-done).
 *   **Generated Output & Scratch:** You **must not** edit generated output by hand (`build/`, `.gradle/`); regenerate it with `./gradlew assemble`. `artefacts/` is scratch: never commit it, never treat it as a source of truth.
 *   **Secret Stores:** You **must not** open, print or commit a secret store (`.env`, `*.jks`, `local-secrets.properties`).
 
