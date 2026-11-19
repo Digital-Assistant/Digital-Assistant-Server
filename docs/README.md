@@ -11,7 +11,7 @@ Rules for writing pages are in [STYLE_GUIDE.md](STYLE_GUIDE.md).
 | [workflow-profiles.md](workflow-profiles.md) | The `workflow:` label profiles and the six refinement prompts agents apply (moved from `AGENTS.md`) |
 | [branch-protection.md](branch-protection.md) | What GitHub requires before a merge to `dev`, and how to re-check it |
 | [release-process.md](release-process.md) | How a release is cut from `master` (Release Please), and what agents never do |
-| [agentic-readiness/](agentic-readiness/README.md) | Live state of the agentic-readiness work: findings, preferences, skipped items |
+| [agentic-readiness/](agentic-readiness/README.md) | The finished first agentic-readiness run, and the live quality baseline file |
 | [agentic-readiness-report/](agentic-readiness-report/README.md) | Frozen first-audit report, not current |
 
 Decisions of record are in [adr/](adr/README.md). The map of the code is in [architecture/](architecture/overview.md).
