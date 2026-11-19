@@ -47,16 +47,15 @@ Existing debt is counted and cannot grow. `./gradlew formatCheck` runs `scripts/
 
 ## 3. Architectural Patterns & Code Conventions
 
-Adherence to these patterns is mandatory. Code lives under `src/main/java/com/nistapp/uda/index/`: `config/` (filters, exception mappers, tenant resolver), `models/` (entities), `repository/` (DAOs), `services/` (JAX-RS resources and their business services), `users/`, `utils/`.
+The rules for code are the same for people and agents. They live outside this file:
 
-*   **Database Access Pattern (Java):** All database interactions **must** go through a Repository/DAO class. What a DAO is, and the two lists of older code that may only shrink (`EntityManager`, active record), are in [`CONVENTIONS.md`, 6. Persistence](CONVENTIONS.md#6-persistence-jpahibernatepanache).
-*   **API Endpoint Pattern (Java):** New endpoints are JAX-RS resources. Business logic **must** be delegated to an `@ApplicationScoped` service. Where each goes and how it is named: [`CONVENTIONS.md`, 5. API Design](CONVENTIONS.md#5-api-design-jax-rs).
-*   **Configuration Pattern (Java):** All configuration values (URLs, tokens, feature flags) **must** be read from `application.properties` using `@ConfigProperty`. `src/main/resources/local.properties` is tracked and holds local-stack settings only, no passwords or secrets. Local credentials go in the untracked `local-secrets.properties` (template `local-secrets.properties.example`, written by sync-credentials.sh from the sibling microServices checkout); never commit credentials from microServices or real environment credentials. Deployed environments use a mounted `additional.properties` or environment variables. Keys for search index prefix, startup re-index, realm requirement and CORS are in the README, "Configuration".
-*   **Code conventions:** naming, formatting, logging, Javadoc, exceptions, REST paths and migrations are in [`CONVENTIONS.md`](CONVENTIONS.md), for people and agents alike.
-*   **Base path:** all REST routes are served under `/api` (`RestApplication` has `@ApplicationPath("/api")`), e.g. `/api/clickevents/all`. Resource `@Path` values omit the prefix.
-*   **Multi-tenancy:** The OIDC tenant is chosen from the `UDAN-Realm` request header (`config/CustomTenantResolver.java`). Do not change this without an explicit task. There is no default realm: `RequireRealmFilter` returns 400 for `/api/` requests without the header, and CORS must allow the `udan-realm` header (README, "Configuration").
-*   **Input safety:** Use `utils/InputSanitizer` for user-supplied text; `config/XssSanitizationFilter` and `SecurityHeadersFilter` apply to all requests.
-*   **Error Handling Pattern (Java):** For user-driven errors (4xx), throw a standard JAX-RS `WebApplicationException`. For server-side errors (5xx), create a custom unchecked exception and log it in the Service layer ([`CONVENTIONS.md`, Logging](CONVENTIONS.md#4-logging)). `config/GlobalExceptionMapper` formats responses.
+*   **How to write code:** [`CONVENTIONS.md`](CONVENTIONS.md) covers naming, formatting, logging, errors, API design,
+    data access, configuration and input safety. Its rules are mandatory for new code.
+*   **Why the code is shaped this way:** see the decision records in [`docs/adr/`](docs/adr/README.md). Examples are
+    the tenant header (ADR 0002) and data access through repositories (ADR 0003).
+*   **Where things are:** [`docs/architecture/overview.md`](docs/architecture/overview.md) maps the packages, entry
+    points, data stores and the tenant flow.
+*   **Configuration sources and keys:** [`README.md`, "Configuration"](README.md#configuration).
 
 ## How to write for people
 
@@ -78,6 +77,9 @@ These are strict, non-negotiable rules.
 *   **Secrets Management:** You **must not** hardcode any passwords, API keys, or tokens in the source code. Use the Quarkus configuration system (`application.properties`).
 *   **Authentication & Authorization:** You **must not** alter or add any logic related to user authentication or role-based access control.
 *   **Dependency Vetting:** You **must not** introduce new third-party libraries or dependencies unless it is an explicit requirement of the assigned task.
+*   **Recorded Decisions:** You **must not** change behaviour that a decision record in `docs/adr/` describes, unless
+    the task says so. An example is the `UDAN-Realm` tenant selection in `config/CustomTenantResolver.java`. Such a change
+    updates or adds the decision record in the same change set.
 *   **Tests:** You **must not** edit, skip or delete a test in `src/test/` to make a failing test pass; change a test only together with the code change that needs it.
 *   **Generated Output & Scratch:** You **must not** edit generated output by hand (`build/`, `.gradle/`); regenerate it with `./gradlew build`. `artefacts/` is scratch: never commit it, never treat it as a source of truth.
 *   **Secret Stores:** You **must not** open, print or commit a secret store (`.env`, `*.jks`, `local-secrets.properties`).
