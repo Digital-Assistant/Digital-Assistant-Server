@@ -74,6 +74,8 @@ This covers chat replies, status reports, pull request descriptions and commit m
 These are strict, non-negotiable rules.
 
 *   **Forbidden Files & Directories:** You **must not** modify any files in the `.github/workflows/`, `.env`, or any security-related configuration files unless the task explicitly instructs you to do so.
+    Security-related configuration means `.github/CODEOWNERS`, `.github/rulesets/`, `.gitleaks.toml`,
+    `scripts/ci/secrets.sh`, and the `quarkus.oidc.*`, `quarkus.http.auth.*` and `quarkus.http.cors*` keys.
 *   **Secrets Management:** You **must not** hardcode a password, API key or token.
     Follow [CONVENTIONS.md §10](CONVENTIONS.md#10-configuration).
 *   **Authentication & Authorization:** You **must not** alter or add any logic related to user authentication or
