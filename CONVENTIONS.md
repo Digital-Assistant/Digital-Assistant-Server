@@ -112,9 +112,6 @@ Branch names and commit messages are set in [AGENTS.md](AGENTS.md), section 5, a
   `repository/`.
 - **Existing names:** the package name is historical. `SequenceListService` and `StatusService` are resources; do not
   rename them for this rule.
-- **Resource Paths:** Use plural nouns for resource paths (e.g., `/users`, `/orders`).
-- **HTTP Methods:** Use standard HTTP methods: `GET`, `POST`, `PUT`, `DELETE`.
-- **Status Codes:** Use appropriate HTTP status codes.
 - **Data Format:** Use JSON for request and response bodies.
 - **DTOs:** Use Data Transfer Objects (DTOs) to decouple the API from the persistence layer.
 
@@ -122,8 +119,7 @@ Branch names and commit messages are set in [AGENTS.md](AGENTS.md), section 5, a
 
 ## 5a. API Endpoint Design (House Style)
 
-- Use RESTful resource naming: `/users`, `/sessions`, `/domains`
-- Use plural nouns for resources
+- Name resources with plural nouns: `/users`, `/sessions`, `/domains`
 - Use lowercase and hyphens for paths: `/user-sessions`
 - Use HTTP verbs for actions:
   - `GET /users` (list)
