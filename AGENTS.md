@@ -89,6 +89,7 @@ All contributions must follow this comprehensive, sequential lifecycle:
 2.  **Initial Implementation:** Write the initial, functionally correct code that satisfies the primary objective of the assigned task.
 3.  **Identify Workflow Profile:** Read the `workflow:` label on the assigned issue (e.g., `workflow:core`, `workflow:infra`). Without an issue, pick the profile as `CONTRIBUTING.md` says. The profile determines the required quality assurance steps.
 4.  **Execute Refinement Loop:** Based on the identified profile, apply the **mandatory** "Quality Assurance & Refinement Prompts" from the corresponding profile in [`docs/workflow-profiles.md`](docs/workflow-profiles.md). This is a required step.
+    That file holds the `workflow:` profiles (`core`, `infra`, `docs`) and the six refinement prompts.
 5.  **Final Validation:** After the refinement loop is complete, you **must** run all relevant validation commands from Section 2 to ensure the final code is clean, correct, and passes all tests.
 6.  **Committing:** Commit your final, validated work with a message conforming to the Conventional Commits specification.
 7.  **Pull Request:** Create a Pull Request. Write the description as [`CONTRIBUTING.md`, "Pull Request Process"](CONTRIBUTING.md#pull-request-process) says: `Closes #NUMBER` when an issue exists, and the Workflow Profile you applied.
@@ -97,12 +98,8 @@ All contributions must follow this comprehensive, sequential lifecycle:
 
 **Branches and releases:** Branch from `dev` and open pull requests into `dev`; `master` receives releases only, cut by release-please. An agent may push its branch and open a pull request; it never merges, tags, publishes a release or pushes to `dev` or `master`.
 
-Documentation: `docs/README.md` indexes `docs/`; follow `docs/STYLE_GUIDE.md`, record decisions in `docs/adr/`, and
-read `docs/architecture/` for the map of the code.
-
-## 6. Quality Assurance Workflow Profiles & Prompts
-
-The `workflow:` profiles (`core`, `infra`, `docs`) and the six refinement prompts are in [`docs/workflow-profiles.md`](docs/workflow-profiles.md).
+Documentation: `docs/README.md` indexes `docs/`; follow `docs/STYLE_GUIDE.md` and record decisions in `docs/adr/`.
+Section 3 links the map of the code.
 
 ## Agent notes
 - Prefer a code-graph tool (the codebase-memory MCP: `search_graph`, `trace_path`, `get_code_snippet`) over grep for code questions; the index project name is derived from this directory. `.mcp.json` registers the server; a tool that reads another config file copies the `codebase-memory-mcp` entry from it. Keep the index fresh: re-index at the start of a task and after your last commit, and check it with `detect_changes`.
