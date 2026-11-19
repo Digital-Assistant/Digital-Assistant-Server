@@ -30,14 +30,9 @@ coverage floor yourself; that needs the owner. The counts, the floor and how to 
 [`CONTRIBUTING.md`, "Baselines and floors"](CONTRIBUTING.md#baselines-and-floors).
 
 #### **Testing**
-*   **Run all tests:** `./gradlew test`
-*   **Run a single test class:** `./gradlew test --tests 'com.nistapp.uda.index.StatusResourceTest'`
-*   Tests live in `src/test/java/com/nistapp/uda/index/` (Quarkus JUnit5 + RestAssured).
-*   No known failures; the CI test step is blocking. Tests need MariaDB and Elasticsearch on `127.0.0.1`.
-*   **Unit-test subset (no stack needed):** 5 of the 20 test classes are not `@QuarkusTest` (`FieldLimitValidationTest`, `PrefixIndexLayoutStrategyTest`, `CurrentUserTest`, `InputSanitizerTest`, `XssSanitizationFilterTest`). The other 15 need the live MariaDB and Elasticsearch from the local stack; there is no Testcontainers profile (recorded as debt):
-    ```bash
-    ./gradlew test --tests '*FieldLimitValidationTest' --tests '*PrefixIndexLayoutStrategyTest' --tests '*CurrentUserTest' --tests '*InputSanitizerTest' --tests '*XssSanitizationFilterTest'
-    ```
+Running one test class, the stack-free unit tests and the stack the other tests need are in
+[`CONTRIBUTING.md`, "Running tests"](CONTRIBUTING.md#running-tests). Where tests live and how they are written is in
+[`CONVENTIONS.md` §7](CONVENTIONS.md#7-testing).
 
 #### **Dependency Management**
 *   **Adding a Java dependency:** edit `build.gradle`. Versions come from the Quarkus BOM (`quarkusVersion` in `gradle.properties`); Flyway is pinned to 9.22.3 in `build.gradle` for MariaDB 10.11 support.

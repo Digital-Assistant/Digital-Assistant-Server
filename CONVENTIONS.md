@@ -163,9 +163,10 @@ Why: [ADR 0001](docs/adr/0001-flyway-for-schema-migrations.md) (Flyway) and
 
 ## 7. Testing
 
-- **Framework:** Use JUnit 5 for unit tests.
+- **Framework:** Use JUnit 5 for unit tests. Tests that need the running application are `@QuarkusTest` classes
+  that call the API with RestAssured.
 - **Mocking:** Use Mockito for mocking dependencies.
-- **Location:** Tests should be in the `src/test/java` directory.
+- **Location:** Tests should be in the `src/test/java` directory, under `com/nistapp/uda/index/`.
 - **Test Classes:** Test classes should be named `<ClassName>Test` (e.g., `SearchListTest`).
 - **Coverage:** Aim for high test coverage.
 

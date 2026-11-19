@@ -50,6 +50,25 @@ verb `format:check` is spelled `formatCheck`.
 * **Dependencies:** after you change a dependency or a plugin, regenerate the lock with
   `./gradlew dependencies --write-locks`.
 
+### Running tests
+
+`./gradlew test` runs all tests. The tests have no known failures, and the CI test step is blocking. Run one test
+class with `--tests`:
+
+```bash
+./gradlew test --tests 'com.nistapp.uda.index.StatusResourceTest'
+```
+
+Fifteen of the 20 test classes are `@QuarkusTest` classes. They need the live MariaDB and Elasticsearch from the
+local stack. There is no Testcontainers profile; that gap is recorded as debt in the
+[agentic-readiness state](docs/agentic-readiness/digital-assistant-server-agentic-readiness-STATE.md).
+The other five are plain unit tests and need no stack: `FieldLimitValidationTest`, `PrefixIndexLayoutStrategyTest`,
+`CurrentUserTest`, `InputSanitizerTest` and `XssSanitizationFilterTest`. Run just them with:
+
+```bash
+./gradlew test --tests '*FieldLimitValidationTest' --tests '*PrefixIndexLayoutStrategyTest' --tests '*CurrentUserTest' --tests '*InputSanitizerTest' --tests '*XssSanitizationFilterTest'
+```
+
 ### Baselines and floors
 
 Existing debt is counted in the quality baseline,
