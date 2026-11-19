@@ -65,10 +65,6 @@
 - **Database Tables:** `PascalCase` (e.g., `Userclicknodes`).
 - **Database Columns:** `lowercase` (e.g., `sessionid`).
 
-### Git Branches and Commit Messages
-Branch names and commit messages are set in [AGENTS.md](AGENTS.md), section 5, and in
-[CONTRIBUTING.md](CONTRIBUTING.md). They are not restated here.
-
 ### File Naming
 - Java classes: `PascalCase` (e.g., `UserAuthData.java`)
 - Configuration files: `lowercase-with-hyphens` (e.g., `local-secrets.properties`)
@@ -164,10 +160,10 @@ Branch names and commit messages are set in [AGENTS.md](AGENTS.md), section 5, a
 
 ## 9. Git & Version Control
 
-The branching model, commit messages, pull requests and merging are described in [AGENTS.md](AGENTS.md), section 5,
-and in [CONTRIBUTING.md](CONTRIBUTING.md). They are not restated here.
+Branches, commit messages, pull requests and merging are in [CONTRIBUTING.md](CONTRIBUTING.md). They are not restated
+here.
 
 ---
 
-> This document is the source of truth for code style and repository structure. Git workflow rules are in
-> [AGENTS.md](AGENTS.md), section 5. Where the two files disagree on workflow, `AGENTS.md` wins.
+> This document is the source of truth for code style and repository structure. The Git workflow is in
+> [CONTRIBUTING.md](CONTRIBUTING.md).
