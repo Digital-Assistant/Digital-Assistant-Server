@@ -58,8 +58,8 @@
 
 - **Packages:** `lowercase` (e.g., `com.nistapp.uda.index.services`).
 - **Classes & Interfaces:** `PascalCase` (e.g., `SearchList`, `UserclicknodesRepository`).
-- **Methods:** `camelCase` (e.g., `search`, `findbynodeid`).
-- **Variables:** `camelCase` (e.g., `searchresults`, `queryFunction`).
+- **Methods:** `camelCase` (e.g., `search`, `getId`).
+- **Variables:** `camelCase` (e.g., `userClickNodes`, `correlationId`).
 - **Constants:** `UPPER_SNAKE_CASE` (e.g., `MAX_RESULTS`).
 - **REST Endpoints:** see [5a. API Endpoint Design](#5a-api-endpoint-design-house-style).
 - **Database Tables:** `PascalCase` (e.g., `Userclicknodes`).
@@ -71,7 +71,7 @@ Branch names and commit messages are set in [AGENTS.md](AGENTS.md), section 5, a
 
 ### File Naming
 - Java classes: `PascalCase` (e.g., `UserAuthData.java`)
-- Configuration files: `lowercase-with-hyphens` (e.g., `application.properties`)
+- Configuration files: `lowercase-with-hyphens` (e.g., `local-secrets.properties`)
 - SQL migrations: `V<version>__<description>.sql` (e.g., `V1.0.1__multiple-upgrades.sql`)
 
 ---
