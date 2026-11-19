@@ -102,6 +102,11 @@ flowchart LR
 3.  **Tag reviewers:** Tag the appropriate reviewers for your pull request.
 4.  **Address feedback:** Be responsive to any feedback or questions from the reviewers.
 
+**With or without an issue.** When an issue exists, link it in the description with `Closes #N`. Without one, the
+task as given sets the scope: a request, a review comment or an audit finding. Say it in the description. Also name
+the [workflow profile](docs/workflow-profiles.md) you applied: the issue's `workflow:` label, or `core` unless the
+change is infra or docs only.
+
 ## Definition of Done
 
 A pull request is considered "done" when it meets the following criteria:

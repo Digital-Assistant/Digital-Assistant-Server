@@ -8,7 +8,7 @@ This file is read by Claude Code (through the `CLAUDE.md` import), opencode, Cod
 
 *   **Golden Rule:** Your primary directive is to **first read and understand the existing code and the project conventions below** before writing new code. Adhere to existing patterns to ensure consistency.
 *   **Problem-Solving Approach:** If a task is ambiguous, state your assumptions and ask clarifying questions in your summary. Do not invent new requirements.
-*   **Strict Scope Adherence:** Your work must be strictly confined to the files and requirements outlined in the assigned GitHub Issue. Do not modify unrelated files or refactor code that is outside the explicit scope of the task.
+*   **Strict Scope Adherence:** Your work must be strictly confined to the files and requirements of the assigned task: its GitHub issue, or the task as given when there is none ([`CONTRIBUTING.md`, "With or without an issue"](CONTRIBUTING.md#pull-request-process)). Do not modify unrelated files or refactor code that is outside the explicit scope of the task.
 
 ## 2. Command & Tooling Reference
 
@@ -90,12 +90,12 @@ These are strict, non-negotiable rules.
 All contributions must follow this comprehensive, sequential lifecycle:
 
 1.  **Branching:** Create a branch from `dev`, named as [`CONTRIBUTING.md`, "Development Workflow"](CONTRIBUTING.md#development-workflow) says.
-2.  **Initial Implementation:** Write the initial, functionally correct code that satisfies the primary objective of the assigned GitHub Issue.
-3.  **Identify Workflow Profile:** Check the labels on the assigned GitHub Issue for a `workflow:` label (e.g., `workflow:core`, `workflow:infra`). This label determines the required quality assurance steps.
+2.  **Initial Implementation:** Write the initial, functionally correct code that satisfies the primary objective of the assigned task.
+3.  **Identify Workflow Profile:** Read the `workflow:` label on the assigned issue (e.g., `workflow:core`, `workflow:infra`). Without an issue, pick the profile as `CONTRIBUTING.md` says. The profile determines the required quality assurance steps.
 4.  **Execute Refinement Loop:** Based on the identified profile, apply the **mandatory** "Quality Assurance & Refinement Prompts" from the corresponding profile in [`docs/workflow-profiles.md`](docs/workflow-profiles.md). This is a required step.
 5.  **Final Validation:** After the refinement loop is complete, you **must** run all relevant validation commands from Section 2 to ensure the final code is clean, correct, and passes all tests.
 6.  **Committing:** Commit your final, validated work with a message conforming to the Conventional Commits specification.
-7.  **Pull Request:** Create a Pull Request. The PR description **must** link to the issue it resolves using the keyword `Closes #NUMBER`. In the description, confirm which Workflow Profile was applied.
+7.  **Pull Request:** Create a Pull Request. Write the description as [`CONTRIBUTING.md`, "Pull Request Process"](CONTRIBUTING.md#pull-request-process) says: `Closes #NUMBER` when an issue exists, and the Workflow Profile you applied.
 
 **Definition of done:** When a change alters a public interface, observable behaviour, the architecture or a decision, update the affected documentation and the decision records (`docs/adr/`) in the same change set.
 
