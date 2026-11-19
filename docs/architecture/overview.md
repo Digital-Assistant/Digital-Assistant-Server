@@ -9,7 +9,8 @@ One Gradle module (`settings.gradle`, `rootProject.name = 'index'`), one Quarkus
 
 | Component | Where | Role |
 |---|---|---|
-| REST resources | `Domain.java`, `User.java`, `services/`, `users/` | JAX-RS endpoints (14 classes with `@Path`) |
+| REST resources | `Domain.java`, `User.java`, `services/`, `users/` | JAX-RS endpoints (14 classes with `@Path`). New business services go in `services/` beside them ([CONVENTIONS.md](../../CONVENTIONS.md#5-api-design-jax-rs)) |
+| Users and identity | `users/` | User and admin endpoints, the caller's identity from the token (`CurrentUser`), the account service |
 | Filters and tenant | `config/` | Realm check, tenant resolver, security headers, XSS sanitising, error mappers |
 | Entities | `models/` | JPA and Hibernate Search entities |
 | Repositories | `repository/` | DAO classes (see [ADR 0003](../adr/0003-database-access-through-repositories.md)) |

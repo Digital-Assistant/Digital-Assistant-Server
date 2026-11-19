@@ -18,7 +18,7 @@
       "guard": "none; the exclude list is the guard"
     },
     "spotless_unformatted_files": {
-      "count": 45,
+      "count": 44,
       "of": 73,
       "what": "Java files a full format run would change (the ratchet vs origin/dev guards changed files only)",
       "command": "./gradlew spotlessApply -PspotlessFull in a scratch copy, count changed files",

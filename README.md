@@ -97,4 +97,5 @@ Expect `200` or `204` with `Access-Control-Allow-Origin` and `udan-realm` in `Ac
 
 ---
 Note that you will need both the server (this repo) and client (https://github.com/Digital-Assistant/Digital_Assistant_Client) to get the functionality in above video.
-Will try to release a docker version of server soon to ease deployment.
+The server image is published to `ghcr.io/digital-assistant/udan-server` on each push to `dev` (tag `sha-<commit>`)
+and on each release (also tagged `X.Y.Z`). To configure it, see "Container" under [Configuration](#configuration).

@@ -16,32 +16,56 @@ Following these guidelines helps to communicate that you respect the time of the
     cd Digital-Assistant-Server
     ```
 
+4. **Set up the build:** follow [Setup (non-interactive)](README.md#setup-non-interactive) in the README. It
+   holds the one setup command, so it is not repeated here.
+
+## Commands
+
+Gradle is the one runner. Run every command from the repository root. Gradle task names cannot contain `:`, so the
+verb `format:check` is spelled `formatCheck`.
+
+```bash
+./gradlew build         # compiles, packages and runs check, tests included (needs the local stack)
+./gradlew format        # rewrites the changed Java files in place
+./gradlew formatCheck   # read-only: changed files must be formatted, and no baseline count may go up
+./gradlew lint          # read-only: PMD bug-oriented ruleset
+./gradlew typecheck     # compiles main and test code
+./gradlew test          # runs all tests (needs the local stack)
+./gradlew coverage      # runs the tests, then fails below the coverage floor (needs the local stack)
+./gradlew check         # the pre-merge gate: formatCheck, typecheck, test, PMD (needs the local stack)
+./gradlew security      # scans gradle.lockfile for known vulnerable dependencies (needs the network)
+```
+
+* **The local stack** is MariaDB and Elasticsearch on `127.0.0.1`, started from the sibling repository
+  `Digital_Assistant_microServices`. Without it, run `./gradlew formatCheck typecheck lint`: the gate minus the tests.
+* **Format:** Spotless follows `CONVENTIONS.md` (tabs, LF, 120 columns) and only touches files you changed. Run
+  `git fetch origin` first, so the formatter compares against a current `origin/dev`.
+* **Coverage:** the report goes to `build/reports/jacoco/test/`. `check` does not run the coverage floor; CI runs it
+  in its `Coverage floor` step (`scripts/ci/coverage.sh`).
+* **Security:** OSV-Scanner runs through `scripts/ci/scan.sh`. It is report-only: it prints the finding count and
+  exits 0, because the existing findings are recorded debt. `SCAN_MODE=block` makes it fail.
+  `./gradlew dependencyCheckAnalyze` is the old OWASP scan, not this verb; it needs an NVD key that is not set up.
+* **Lint:** files that violated PMD when it was added are listed in the exclude patterns of
+  `config/pmd/ruleset.xml`. That list only shrinks; new files are checked in full.
+* **Dependencies:** after you change a dependency or a plugin, regenerate the lock with
+  `./gradlew dependencies --write-locks`.
+
 ## Development Workflow
 
-1.  **Create a new branch:** Create a new branch for your feature or bug fix. Use a descriptive name, including the issue number if applicable.
+1.  **Create a branch from `dev`:** name it `<type>/<topic>`. `<type>` is the Conventional Commit type of the change:
+    `feat`, `fix`, `docs`, `ci` and so on. `<topic>` is a few words in kebab-case. Add the issue number when there is
+    one: `fix/123-session-timeout`.
+
     ```bash
-    git checkout -b feature/your-feature-name
-    ```
-    or
-    ```bash
-    git checkout -b bugfix/issue-description
+    git switch -c feat/limit-request-payload-size dev
     ```
 2.  **Make your changes:** Make your changes to the codebase.
 3.  **Run tests:** Ensure that all tests pass before submitting a pull request.
     ```bash
     ./gradlew test
     ```
-4.  **Lint and format:** Make sure your code adheres to the project's coding standards.
-    ```bash
-    ./gradlew formatCheck   # read-only: changed files must be formatted (Spotless, ratchet against origin/dev)
-    ./gradlew format        # rewrites the changed Java files in place
-    ./gradlew lint          # read-only: PMD bug-oriented ruleset
-    ./gradlew typecheck     # compiles main and test code
-    ./gradlew check         # the pre-merge gate: formatCheck, typecheck, test (needs the local stack), PMD
-    ./gradlew security      # scans gradle.lockfile for known vulnerable dependencies (OSV-Scanner, needs network)
-    ```
-    The formatter only touches files you changed, so the rest of the tree stays as it is. Run `git fetch origin`
-    first so `origin/dev` is current.
+4.  **Run the gate:** run `./gradlew check` before you open a pull request. [Commands](#commands) lists every verb
+    and what it needs.
 
 ### Local hooks
 
@@ -81,12 +105,22 @@ flowchart LR
 3.  **Tag reviewers:** Tag the appropriate reviewers for your pull request.
 4.  **Address feedback:** Be responsive to any feedback or questions from the reviewers.
 
+**With or without an issue.** When an issue exists, link it in the description with `Closes #N`. Without one, the
+task as given sets the scope: a request, a review comment or an audit finding. Say it in the description. Also name
+the [workflow profile](docs/workflow-profiles.md) you applied: the issue's `workflow:` label, or `core` unless the
+change is infra or docs only.
+
+**Default branch.** `dev` is the default branch, so GitHub runs manual (`workflow_dispatch`) workflows only from `dev`.
+
 ## Definition of Done
 
 A pull request is considered "done" when it meets the following criteria:
 
 *   All tests pass.
 *   The code is well-documented.
-*   The pull request has been reviewed and approved by at least one other contributor.
+* When the change alters a public interface, observable behaviour, the architecture or a decision, the affected
+  documentation and the decision records (`docs/adr/`) are updated in the same change set.
+*   A maintainer has reviewed the pull request. No approval is required: review is a convention here, not a platform
+    rule ([branch protection](docs/branch-protection.md)).
 *   All feedback has been addressed.
 *   The pull request is merged into the `dev` branch.
