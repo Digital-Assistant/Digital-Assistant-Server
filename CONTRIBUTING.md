@@ -107,6 +107,8 @@ task as given sets the scope: a request, a review comment or an audit finding. S
 the [workflow profile](docs/workflow-profiles.md) you applied: the issue's `workflow:` label, or `core` unless the
 change is infra or docs only.
 
+**Default branch.** `dev` is the default branch, so GitHub runs manual (`workflow_dispatch`) workflows only from `dev`.
+
 ## Definition of Done
 
 A pull request is considered "done" when it meets the following criteria:

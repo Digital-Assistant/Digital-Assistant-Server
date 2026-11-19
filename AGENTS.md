@@ -41,7 +41,6 @@ Existing debt is counted and cannot grow. `./gradlew formatCheck` runs `scripts/
     ./gradlew test --tests '*FieldLimitValidationTest' --tests '*PrefixIndexLayoutStrategyTest' --tests '*CurrentUserTest' --tests '*InputSanitizerTest' --tests '*XssSanitizationFilterTest'
     ```
 *   **Last full run (2026-11-06, local stack):** 167 tests, 0 failures, 0 skipped; no `@Disabled`/`@Ignore` markers.
-*   Merge method: squash into `dev` (the PR title becomes the commit, so it must be a Conventional Commit). Default branch is `dev`; GitHub runs manual (`workflow_dispatch`) workflows only from the default branch.
 
 #### **Dependency Management**
 *   **Adding a Java dependency:** edit `build.gradle`. Versions come from the Quarkus BOM (`quarkusVersion` in `gradle.properties`); Flyway is pinned to 9.22.3 in `build.gradle` for MariaDB 10.11 support.
