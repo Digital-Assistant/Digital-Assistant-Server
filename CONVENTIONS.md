@@ -184,8 +184,8 @@ here.
 
 Why: [ADR 0005](docs/adr/0005-tracked-settings-untracked-local-secrets.md).
 
-- **Reading values:** read every configuration value (URLs, tokens, feature flags) from the Quarkus configuration
-  with `@ConfigProperty`. Never hardcode one.
+- **Reading values:** read every configuration value (URLs, tokens, API keys, feature flags) from the Quarkus
+  configuration with `@ConfigProperty`. Never hardcode one.
 - **Secrets:** a password or secret never goes in a tracked file, `application.properties` and the tracked
   `local.properties` included. Local credentials go in the untracked `local-secrets.properties`, which
   `./sync-credentials.sh` writes from `local-secrets.properties.example`. Deployed environments use a mounted
