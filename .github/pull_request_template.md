@@ -10,5 +10,5 @@
 - [ ] `./gradlew test` passes locally (see `CONTRIBUTING.md`, "Run tests").
 - [ ] `./gradlew formatCheck` and `./gradlew lint` pass for the Java files I changed.
 - [ ] Docs are updated with the code (`docs/`, `AGENTS.md` and `README.md` where they describe what changed).
-- [ ] No password, API key or token is added to the source (use the Quarkus configuration, see `AGENTS.md`, "Secrets Management").
+- [ ] No password, API key or token is added to the source (Quarkus configuration only: `CONVENTIONS.md`, section 10).
 - [ ] `CI Gate` is green before a maintainer merges. This PR is not merged by its author.

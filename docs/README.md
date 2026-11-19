@@ -15,5 +15,5 @@ Rules for writing pages are in [STYLE_GUIDE.md](STYLE_GUIDE.md).
 | [agentic-readiness-report/](agentic-readiness-report/README.md) | Frozen first-audit report, not current |
 
 Decisions of record are in [adr/](adr/README.md). The map of the code is in [architecture/](architecture/overview.md).
-Build, test and run commands are in the root [AGENTS.md](../AGENTS.md), [README.md](../README.md) and
-[CONVENTIONS.md](../CONVENTIONS.md).
+Build and test commands are in [CONTRIBUTING.md, "Commands"](../CONTRIBUTING.md#commands). Setting up and running
+the server is in [README.md, "Getting Started"](../README.md#-getting-started-local-development).
