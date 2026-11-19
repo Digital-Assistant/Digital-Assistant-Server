@@ -61,7 +61,7 @@
 - **Methods:** `camelCase` (e.g., `search`, `findbynodeid`).
 - **Variables:** `camelCase` (e.g., `searchresults`, `queryFunction`).
 - **Constants:** `UPPER_SNAKE_CASE` (e.g., `MAX_RESULTS`).
-- **REST Endpoints:** `lowercase` and `kebab-case` (e.g., `/search/all`).
+- **REST Endpoints:** see [5a. API Endpoint Design](#5a-api-endpoint-design-house-style).
 - **Database Tables:** `PascalCase` (e.g., `Userclicknodes`).
 - **Database Columns:** `lowercase` (e.g., `sessionid`).
 
@@ -129,6 +129,8 @@ Branch names and commit messages are set in [AGENTS.md](AGENTS.md), section 5, a
   - `DELETE /users/{id}` (delete)
 - Use camelCase for JSON keys
 - Return standard HTTP status codes
+- **Existing paths:** most current paths predate this rule (`/addVote`, `/fetchbyurl`). Do not rename them: the
+  SDK and the Client call them. New endpoints follow the rule, even next to an old one.
 
 ---
 
