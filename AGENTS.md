@@ -12,7 +12,8 @@ This file is read by Claude Code (through the `CLAUDE.md` import), opencode, Cod
 
 ## 2. Command & Tooling Reference
 
-This is the definitive list of commands required to build, test, and validate work in this project. All commands should be run from the repository root unless otherwise specified.
+This section points to the commands that build, test and validate work, and to where each one is described.
+Run every command from the repository root unless a step says otherwise.
 
 #### **Environment Setup**
 The local stack, the server's port, credentials, start-up and infrastructure logs are in
