@@ -98,10 +98,8 @@ owner. Lower a count, or raise the floor, in the baseline file and `build.gradle
     git switch -c feat/limit-request-payload-size dev
     ```
 2.  **Make your changes:** Make your changes to the codebase.
-3.  **Run tests:** Ensure that all tests pass before submitting a pull request.
-    ```bash
-    ./gradlew test
-    ```
+3.  **Run tests:** make sure all tests pass before you open a pull request. [Running tests](#running-tests) gives
+    the commands and the stack the tests need.
 4.  **Run the gate:** run `./gradlew check` before you open a pull request. [Commands](#commands) lists every verb
     and what it needs.
 
