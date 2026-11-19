@@ -76,7 +76,8 @@ These are strict, non-negotiable rules.
 *   **Forbidden Files & Directories:** You **must not** modify any files in the `.github/workflows/`, `.env`, or any security-related configuration files unless the task explicitly instructs you to do so.
 *   **Secrets Management:** You **must not** hardcode a password, API key or token.
     Follow [CONVENTIONS.md §10](CONVENTIONS.md#10-configuration).
-*   **Authentication & Authorization:** You **must not** alter or add any logic related to user authentication or role-based access control.
+*   **Authentication & Authorization:** You **must not** alter or add any logic related to user authentication or
+    role-based access control, unless the task explicitly says so.
 *   **Dependency Vetting:** You **must not** introduce new third-party libraries or dependencies unless it is an explicit requirement of the assigned task.
 *   **Recorded Decisions:** You **must not** change behaviour that a decision record in `docs/adr/` describes, unless
     the task says so. An example is the `UDAN-Realm` tenant selection in `config/CustomTenantResolver.java`. Such a change
