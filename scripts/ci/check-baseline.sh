@@ -2,14 +2,14 @@
 # No-new-violations check. Compares today's counts with the committed quality baseline
 # (docs/agentic-readiness/digital-assistant-server-quality-baseline.json) and fails when a count went UP
 # or the coverage floor went DOWN. A baseline only goes down, a floor only goes up; raising or lowering
-# either needs the owner (AGENTS.md, "Baselines and floors"). The script never rewrites the baseline file.
+# either needs the owner (CONTRIBUTING.md, "Baselines and floors"). The script never rewrites the baseline file.
 #
 # Usage:
 #   scripts/ci/check-baseline.sh            offline checks (run by `./gradlew formatCheck`, so by CI `build.sh`):
 #                                           PMD exclude list, Spotless full-tree count, skip markers, coverage floor
 #   scripts/ci/check-baseline.sh osv <advisories> <packages>
 #                                           compare the OSV-Scanner count (called by scan.sh in the CI scan job)
-# Set BASELINE_SKIP_SPOTLESS=1 to skip the Spotless full-tree count (about 10 s) on a quick local run; CI never skips it.
+# Set BASELINE_SKIP_SPOTLESS=1 to skip the Spotless full-tree count on a quick local run; CI never skips it.
 # Needs: bash, python3, grep, git. The Spotless count also needs Java 21 and the Gradle wrapper.
 set -euo pipefail
 cd "$(dirname "$0")/../.."

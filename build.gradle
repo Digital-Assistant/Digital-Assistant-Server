@@ -96,7 +96,7 @@ tasks.register('security', Exec) {
 // that loader and io.quarkus:quarkus-jacoco writes the data file instead (Quarkus test-coverage guide); both land in
 // build/jacoco-quarkus.exec. A plain core-JaCoCo run reports @QuarkusTest classes far too low, so never measure without it.
 // The floor below is today's measured line coverage rounded down. A floor only goes up: raising it is a deliberate commit,
-// lowering it needs the owner (AGENTS.md, "Baselines and floors"). The tests need the local stack, so the floor is
+// lowering it needs the owner (CONTRIBUTING.md, "Baselines and floors"). The tests need the local stack, so the floor is
 // enforced by a CI step (scripts/ci/coverage.sh), not by `check`.
 jacoco {
     toolVersion = '0.8.12'

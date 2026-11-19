@@ -8,45 +8,8 @@ These rules are mandatory for new code, for people and agents alike. Why a rule 
 
 ## 0. Directory Structure
 
-```
-/ (repo root)
-├── build.gradle
-├── gradle.properties
-├── gradlew*
-├── settings.gradle
-├── CONVENTIONS.md
-├── LICENSE
-├── README.md
-├── config/
-│   ├── pmd/
-│   └── spotless/
-├── gradle/
-│   └── wrapper/
-│       ├── gradle-wrapper.jar
-│       └── gradle-wrapper.properties
-├── src/
-│   ├── main/
-│   │   ├── docker/
-│   │   │   ├── Dockerfile.jvm
-│   │   │   └── Dockerfile.native
-│   │   ├── java/
-│   │   │   └── com/nistapp/uda/index/
-│   │   │       ├── config/
-│   │   │       ├── converters/
-│   │   │       ├── migration/
-│   │   │       ├── models/
-│   │   │       ├── repository/
-│   │   │       ├── search/
-│   │   │       ├── services/
-│   │   │       ├── users/
-│   │   │       ├── utils/
-│   │   │       └── views/
-│   │   └── resources/
-│   │       ├── application.properties
-│   │       ├── db/migration/        # Flyway migrations (MariaDB); the only folder Flyway reads
-│   │       ├── META-INF/
-│   │       └── pg/migration/        # legacy PostgreSQL scripts; not read by Flyway or any config
-```
+The folders, the Java packages and what each one holds are in
+[`docs/architecture/overview.md`](docs/architecture/overview.md).
 
 ---
 
@@ -163,9 +126,10 @@ Why: [ADR 0001](docs/adr/0001-flyway-for-schema-migrations.md) (Flyway) and
 
 ## 7. Testing
 
-- **Framework:** Use JUnit 5 for unit tests.
+- **Framework:** Use JUnit 5 for unit tests. Tests that need the running application are `@QuarkusTest` classes
+  that call the API with RestAssured.
 - **Mocking:** Use Mockito for mocking dependencies.
-- **Location:** Tests should be in the `src/test/java` directory.
+- **Location:** Tests should be in the `src/test/java` directory, under `com/nistapp/uda/index/`.
 - **Test Classes:** Test classes should be named `<ClassName>Test` (e.g., `SearchListTest`).
 - **Coverage:** Aim for high test coverage.
 
@@ -173,7 +137,10 @@ Why: [ADR 0001](docs/adr/0001-flyway-for-schema-migrations.md) (Flyway) and
 
 - **Build Tool:** The project is built with Gradle.
 - **Dependencies:** Dependencies are managed in `build.gradle`.
-- **BOM:** Use the Quarkus BOM (Bill of Materials) to ensure compatible dependency versions.
+- **BOM:** Use the Quarkus BOM (Bill of Materials) to ensure compatible dependency versions. The Quarkus version is
+  `quarkusVersion` in `gradle.properties`.
+- **Pinned versions:** Flyway is forced to 9.22.3 in `build.gradle`, because the BOM's Flyway does not support
+  MariaDB 10.11. Why: [ADR 0001](docs/adr/0001-flyway-for-schema-migrations.md).
 
 ## 9. Git & Version Control
 
@@ -184,8 +151,8 @@ here.
 
 Why: [ADR 0005](docs/adr/0005-tracked-settings-untracked-local-secrets.md).
 
-- **Reading values:** read every configuration value (URLs, tokens, feature flags) from the Quarkus configuration
-  with `@ConfigProperty`. Never hardcode one.
+- **Reading values:** read every configuration value (URLs, tokens, API keys, feature flags) from the Quarkus
+  configuration with `@ConfigProperty`. Never hardcode one.
 - **Secrets:** a password or secret never goes in a tracked file, `application.properties` and the tracked
   `local.properties` included. Local credentials go in the untracked `local-secrets.properties`, which
   `./sync-credentials.sh` writes from `local-secrets.properties.example`. Deployed environments use a mounted

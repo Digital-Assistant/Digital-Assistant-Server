@@ -47,8 +47,46 @@ verb `format:check` is spelled `formatCheck`.
   `./gradlew dependencyCheckAnalyze` is the old OWASP scan, not this verb; it needs an NVD key that is not set up.
 * **Lint:** files that violated PMD when it was added are listed in the exclude patterns of
   `config/pmd/ruleset.xml`. That list only shrinks; new files are checked in full.
-* **Dependencies:** after you change a dependency or a plugin, regenerate the lock with
-  `./gradlew dependencies --write-locks`.
+* **Dependencies:** add a new third-party library or dependency only when the task needs it. After you change a
+  dependency or a plugin, regenerate the lock with `./gradlew dependencies --write-locks`.
+
+### Running tests
+
+`./gradlew test` runs all tests. The tests have no known failures, and the CI test step is blocking. Run one test
+class with `--tests`:
+
+```bash
+./gradlew test --tests 'com.nistapp.uda.index.StatusResourceTest'
+```
+
+Fifteen of the 20 test classes are `@QuarkusTest` classes. They need the live MariaDB and Elasticsearch from the
+local stack. There is no Testcontainers profile; that gap is recorded as debt in the
+[agentic-readiness state](docs/agentic-readiness/digital-assistant-server-agentic-readiness-STATE.md).
+The other five are plain unit tests and need no stack: `FieldLimitValidationTest`, `PrefixIndexLayoutStrategyTest`,
+`CurrentUserTest`, `InputSanitizerTest` and `XssSanitizationFilterTest`. Run just them with:
+
+```bash
+./gradlew test --tests '*FieldLimitValidationTest' --tests '*PrefixIndexLayoutStrategyTest' --tests '*CurrentUserTest' --tests '*InputSanitizerTest' --tests '*XssSanitizationFilterTest'
+```
+
+### Baselines and floors
+
+Existing debt is counted in the quality baseline,
+`docs/agentic-readiness/digital-assistant-server-quality-baseline.json`, and cannot grow.
+`./gradlew formatCheck` runs `scripts/ci/check-baseline.sh` against it. No new violations: the script fails when a
+count goes up. The baselines are:
+
+* **PMD:** the exclude list in `config/pmd/ruleset.xml`.
+* **Spotless:** `ratchetFrom 'origin/dev'` checks changed files only; the baseline file holds the full-tree count.
+* **OSV-Scanner:** the advisory count, compared by `scripts/ci/scan.sh` in the CI scan job.
+* **Skip markers:** skipped or conditionally run tests; the count is 0.
+* **Image scan:** the count is in the baseline file too, but nothing compares it. `image.yml` only reports it in the
+  job summary.
+* **Coverage floor:** 70% line coverage, enforced by `jacocoTestCoverageVerification` in `build.gradle` and run by
+  the CI `Coverage floor` step.
+
+**A baseline only goes down and a coverage floor only goes up.** Raising a count or lowering the floor needs the
+owner. Lower a count, or raise the floor, in the baseline file and `build.gradle` in the same change that earns it.
 
 ## Development Workflow
 
@@ -60,10 +98,8 @@ verb `format:check` is spelled `formatCheck`.
     git switch -c feat/limit-request-payload-size dev
     ```
 2.  **Make your changes:** Make your changes to the codebase.
-3.  **Run tests:** Ensure that all tests pass before submitting a pull request.
-    ```bash
-    ./gradlew test
-    ```
+3.  **Run tests:** make sure all tests pass before you open a pull request. [Running tests](#running-tests) gives
+    the commands and the stack the tests need.
 4.  **Run the gate:** run `./gradlew check` before you open a pull request. [Commands](#commands) lists every verb
     and what it needs.
 
@@ -117,6 +153,8 @@ change is infra or docs only.
 A pull request is considered "done" when it meets the following criteria:
 
 *   All tests pass.
+*   No test was edited, skipped or deleted to make a failing test pass. A test changes only together with the code
+    change that needs it.
 *   The code is well-documented.
 * When the change alters a public interface, observable behaviour, the architecture or a decision, the affected
   documentation and the decision records (`docs/adr/`) are updated in the same change set.
