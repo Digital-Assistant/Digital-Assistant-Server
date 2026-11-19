@@ -112,6 +112,8 @@ These rules are mandatory for new code, for people and agents alike. Why a rule 
 
 ## 5. API Design (JAX-RS)
 
+Why: [ADR 0004](docs/adr/0004-resources-handle-http-services-hold-logic.md).
+
 - **Base Path:** `/api`, set once by `@ApplicationPath("/api")` in `RestApplication`. Resource `@Path` values omit
   the prefix: `/clickevents/all` is served at `/api/clickevents/all`.
 - **Resources:** new endpoints are JAX-RS resources in `services/`, named `<Topic>Resource` (e.g. `VoteResource`).
@@ -143,6 +145,9 @@ These rules are mandatory for new code, for people and agents alike. Why a rule 
 ---
 
 ## 6. Persistence (JPA/Hibernate/Panache)
+
+Why: [ADR 0001](docs/adr/0001-flyway-for-schema-migrations.md) (Flyway) and
+[ADR 0003](docs/adr/0003-database-access-through-repositories.md) (repositories).
 
 - **Entities:** Entities should be in the `models` package.
 - **Repositories:** a DAO is a Panache repository class in `repository/` (`implements PanacheRepository...`), for
@@ -176,6 +181,8 @@ Branches, commit messages, pull requests and merging are in [CONTRIBUTING.md](CO
 here.
 
 ## 10. Configuration
+
+Why: [ADR 0005](docs/adr/0005-tracked-settings-untracked-local-secrets.md).
 
 - **Reading values:** read every configuration value (URLs, tokens, feature flags) from the Quarkus configuration
   with `@ConfigProperty`. Never hardcode one.
