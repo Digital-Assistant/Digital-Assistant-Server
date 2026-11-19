@@ -6,6 +6,7 @@ docs/adr/0000-template.md
 docs/adr/0001-flyway-for-schema-migrations.md
 docs/adr/0002-tenant-from-udan-realm-header.md
 docs/adr/0003-database-access-through-repositories.md
+docs/adr/0004-resources-handle-http-services-hold-logic.md
 docs/architecture/overview.md
 docs/agentic-readiness/README.md
 docs/branch-protection.md
