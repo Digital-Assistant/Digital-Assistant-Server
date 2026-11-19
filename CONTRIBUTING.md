@@ -113,6 +113,8 @@ A pull request is considered "done" when it meets the following criteria:
 
 *   All tests pass.
 *   The code is well-documented.
+* When the change alters a public interface, observable behaviour, the architecture or a decision, the affected
+  documentation and the decision records (`docs/adr/`) are updated in the same change set.
 *   A maintainer has reviewed the pull request. No approval is required: review is a convention here, not a platform
     rule ([branch protection](docs/branch-protection.md)).
 *   All feedback has been addressed.

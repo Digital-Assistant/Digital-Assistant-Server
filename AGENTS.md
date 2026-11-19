@@ -95,7 +95,7 @@ All contributions must follow this comprehensive, sequential lifecycle:
 6.  **Committing:** Commit your final, validated work with a message conforming to the Conventional Commits specification.
 7.  **Pull Request:** Create a Pull Request. Write the description as [`CONTRIBUTING.md`, "Pull Request Process"](CONTRIBUTING.md#pull-request-process) says: `Closes #NUMBER` when an issue exists, and the Workflow Profile you applied.
 
-**Definition of done:** When a change alters a public interface, observable behaviour, the architecture or a decision, update the affected documentation and the decision records (`docs/adr/`) in the same change set.
+**Definition of done:** see [`CONTRIBUTING.md`, "Definition of Done"](CONTRIBUTING.md#definition-of-done). It includes updating the affected documentation and the decision records (`docs/adr/`) in the same change set.
 
 **Branches and releases:** Branch from `dev` and open pull requests into `dev`; `master` receives releases only, cut by release-please. An agent may push its branch and open a pull request; it never merges, tags, publishes a release or pushes to `dev` or `master`.
 
