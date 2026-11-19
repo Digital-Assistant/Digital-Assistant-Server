@@ -15,12 +15,8 @@ This file is read by Claude Code (through the `CLAUDE.md` import), opencode, Cod
 This is the definitive list of commands required to build, test, and validate work in this project. All commands should be run from the repository root unless otherwise specified.
 
 #### **Environment Setup**
-This repo is only the Quarkus server (Gradle, Java, port **11081**). MariaDB, Elasticsearch, Keycloak, Postgres and Nginx live in the sibling repo `Digital_Assistant_microServices`.
-*   **Start infrastructure (in the microServices repo):** `./local-up.sh`; stop with `./local-down.sh`
-*   **Sync credentials into `src/main/resources/local-secrets.properties` (untracked):** `./sync-credentials.sh`
-*   **Check infrastructure health:** `./pre-flight-check.sh`
-*   **Start the server in dev mode (runs the pre-flight check first):** `./start-server.sh` (wraps `./gradlew quarkusDev --no-daemon`)
-*   **View infrastructure logs:** `docker logs -f <container>` (e.g. `keycloak-local`, `mariadb-local`)
+The local stack, the server's port, credentials, start-up and infrastructure logs are in
+[`README.md`, "Getting Started"](README.md#-getting-started-local-development).
 
 #### **Build & Validation**
 Setup is in `README.md`, "Setup (non-interactive)". The verbs are `format`, `format:check` (`formatCheck`), `lint`,

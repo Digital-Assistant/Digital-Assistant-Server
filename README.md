@@ -9,7 +9,9 @@ Discord: https://discord.gg/92NqDEUbxV
 
 ## 🚀 Getting Started (Local Development)
 
-Before starting the Quarkus server, ensure that all background microservices and databases are running in the `Digital_Assistant_microServices` project.
+This repository is only the Quarkus server (Gradle, Java). It listens on port **11081**.
+MariaDB, Elasticsearch, Keycloak, Postgres and Nginx run from the sibling repository `Digital_Assistant_microServices`.
+Start them there with `./local-up.sh` before you start the server, and stop them with `./local-down.sh`.
 
 ### Setup (non-interactive)
 
@@ -43,13 +45,20 @@ To launch the backend with automatic environmental validation:
     * Test MariaDB & Postgres connectivity.
     * Validate Keycloak OIDC (Discovery & Token Grant).
     * Check Elasticsearch and NestJS API health.
-2. **Launch Quarkus**: Starts the application in dev mode (`./gradlew quarkusDev`) only if all checks pass.
+2. **Launch Quarkus**: Starts the application in dev mode (`./gradlew quarkusDev --no-daemon`) only if all checks pass.
 
 ### 3. Manual Pre-flight Check (Optional)
 If you only want to verify the infrastructure health without starting the server:
 
 ```bash
 ./pre-flight-check.sh
+```
+
+### 4. Infrastructure Logs (Optional)
+To follow the logs of one container, for example `keycloak-local` or `mariadb-local`:
+
+```bash
+docker logs -f <container>
 ```
 
 ## Configuration
