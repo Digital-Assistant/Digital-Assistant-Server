@@ -1,6 +1,6 @@
 # Quality assurance workflow profiles and prompts
 
-Moved from `AGENTS.md` section 6 without rewriting. In `AGENTS.md` section 5 (steps 3 and 4), the agent reads the
+In `AGENTS.md` section 5 (steps 3 and 4), the agent reads the
 `workflow:` label on the issue. It then applies the matching profile from this page.
 
 This section defines the different levels of quality assurance required for different types of tasks. The agent **must** use the profile that matches the `workflow:` label on the assigned issue.
