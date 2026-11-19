@@ -96,6 +96,7 @@ Branch names and commit messages are set in [AGENTS.md](AGENTS.md), section 5, a
 - **Framework:** Use SLF4J for logging.
 - **Instantiation:** Create a `private static final Logger` in each class.
 - **Parameterized Logging:** Use parameterized logging messages (e.g., `logger.info("User {} not found", userId);`) instead of string concatenation.
+- **Legacy:** `utils/LoggerUtil` takes a finished string, which invites concatenation. Do not use it in new code.
 - **Log Levels:**
     - `ERROR`: For serious errors that prevent the application from functioning correctly.
     - `WARN`: For potential problems that don't immediately cause an error.
