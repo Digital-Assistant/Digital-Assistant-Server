@@ -72,7 +72,7 @@ Branch names and commit messages are set in [AGENTS.md](AGENTS.md), section 5, a
 ### File Naming
 - Java classes: `PascalCase` (e.g., `UserAuthData.java`)
 - Configuration files: `lowercase-with-hyphens` (e.g., `local-secrets.properties`)
-- SQL migrations: `V<version>__<description>.sql` (e.g., `V1.0.1__multiple-upgrades.sql`)
+- SQL migrations: see [6. Persistence](#6-persistence-jpahibernatepanache).
 
 ---
 
@@ -145,7 +145,8 @@ Branch names and commit messages are set in [AGENTS.md](AGENTS.md), section 5, a
   `entity.persist()` or `Entity.find(...)` in a resource or service. 3 existing calls do; find them with
   `grep -rn '\.persist()' src/main/java/com/nistapp/uda/index/services`. The list only shrinks.
 - **Database Migrations:** Database migrations are managed by Flyway. SQL migration scripts go in `src/main/resources/db/migration`.
-- **Migration Script Naming:** `V<VERSION>__<DESCRIPTION>.sql` (e.g., `V1.0.6__Add_user_preferences.sql`).
+- **Migration Script Naming:** `V<VERSION>__<DESCRIPTION>.sql` (e.g., `V1.0.9__ClickNodeOwner.sql`). A new file takes the
+  next version after the highest one in the folder.
 
 ## 7. Testing
 
