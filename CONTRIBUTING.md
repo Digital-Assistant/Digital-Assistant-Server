@@ -16,6 +16,9 @@ Following these guidelines helps to communicate that you respect the time of the
     cd Digital-Assistant-Server
     ```
 
+4. **Set up the build:** follow [Setup (non-interactive)](README.md#setup-non-interactive) in the README. It
+   holds the one setup command, so it is not repeated here.
+
 ## Development Workflow
 
 1.  **Create a new branch:** Create a new branch for your feature or bug fix. Use a descriptive name, including the issue number if applicable.
