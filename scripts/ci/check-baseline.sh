@@ -9,7 +9,7 @@
 #                                           PMD exclude list, Spotless full-tree count, skip markers, coverage floor
 #   scripts/ci/check-baseline.sh osv <advisories> <packages>
 #                                           compare the OSV-Scanner count (called by scan.sh in the CI scan job)
-# Set BASELINE_SKIP_SPOTLESS=1 to skip the Spotless full-tree count (about 10 s) on a quick local run; CI never skips it.
+# Set BASELINE_SKIP_SPOTLESS=1 to skip the Spotless full-tree count on a quick local run; CI never skips it.
 # Needs: bash, python3, grep, git. The Spotless count also needs Java 21 and the Gradle wrapper.
 set -euo pipefail
 cd "$(dirname "$0")/../.."
