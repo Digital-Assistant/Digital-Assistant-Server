@@ -109,6 +109,7 @@ A pull request is considered "done" when it meets the following criteria:
 
 *   All tests pass.
 *   The code is well-documented.
-*   The pull request has been reviewed and approved by at least one other contributor.
+*   A maintainer has reviewed the pull request. No approval is required: review is a convention here, not a platform
+    rule ([branch protection](docs/branch-protection.md)).
 *   All feedback has been addressed.
 *   The pull request is merged into the `dev` branch.
