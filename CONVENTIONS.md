@@ -107,7 +107,11 @@ Branch names and commit messages are set in [AGENTS.md](AGENTS.md), section 5, a
 ## 5. API Design (JAX-RS)
 
 - **Base Path:** `/api`.
-- **Resources:** Resources should be in the `services` package.
+- **Resources:** in `services/`, named `<Topic>Resource` (e.g. `VoteResource`). Resource methods handle HTTP only.
+- **Business logic:** in an `@ApplicationScoped` class `<Topic>Service` in `services/`, which uses the DAOs in
+  `repository/`.
+- **Existing names:** the package name is historical. `SequenceListService` and `StatusService` are resources; do not
+  rename them for this rule.
 - **Resource Paths:** Use plural nouns for resource paths (e.g., `/users`, `/orders`).
 - **HTTP Methods:** Use standard HTTP methods: `GET`, `POST`, `PUT`, `DELETE`.
 - **Status Codes:** Use appropriate HTTP status codes.
