@@ -16,6 +16,37 @@ Following these guidelines helps to communicate that you respect the time of the
     cd Digital-Assistant-Server
     ```
 
+## Commands
+
+Gradle is the one runner. Run every command from the repository root. Gradle task names cannot contain `:`, so the
+verb `format:check` is spelled `formatCheck`.
+
+```bash
+./gradlew build         # compiles, packages and runs check, tests included (needs the local stack)
+./gradlew format        # rewrites the changed Java files in place
+./gradlew formatCheck   # read-only: changed files must be formatted, and no baseline count may go up
+./gradlew lint          # read-only: PMD bug-oriented ruleset
+./gradlew typecheck     # compiles main and test code
+./gradlew test          # runs all tests (needs the local stack)
+./gradlew coverage      # runs the tests, then fails below the coverage floor (needs the local stack)
+./gradlew check         # the pre-merge gate: formatCheck, typecheck, test, PMD (needs the local stack)
+./gradlew security      # scans gradle.lockfile for known vulnerable dependencies (needs the network)
+```
+
+* **The local stack** is MariaDB and Elasticsearch on `127.0.0.1`, started from the sibling repository
+  `Digital_Assistant_microServices`. Without it, run `./gradlew formatCheck typecheck lint`: the gate minus the tests.
+* **Format:** Spotless follows `CONVENTIONS.md` (tabs, LF, 120 columns) and only touches files you changed. Run
+  `git fetch origin` first, so the formatter compares against a current `origin/dev`.
+* **Coverage:** the report goes to `build/reports/jacoco/test/`. `check` does not run the coverage floor; CI runs it
+  in its `Coverage floor` step (`scripts/ci/coverage.sh`).
+* **Security:** OSV-Scanner runs through `scripts/ci/scan.sh`. It is report-only: it prints the finding count and
+  exits 0, because the existing findings are recorded debt. `SCAN_MODE=block` makes it fail.
+  `./gradlew dependencyCheckAnalyze` is the old OWASP scan, not this verb; it needs an NVD key that is not set up.
+* **Lint:** files that violated PMD when it was added are listed in the exclude patterns of
+  `config/pmd/ruleset.xml`. That list only shrinks; new files are checked in full.
+* **Dependencies:** after you change a dependency or a plugin, regenerate the lock with
+  `./gradlew dependencies --write-locks`.
+
 ## Development Workflow
 
 1.  **Create a new branch:** Create a new branch for your feature or bug fix. Use a descriptive name, including the issue number if applicable.
@@ -31,17 +62,8 @@ Following these guidelines helps to communicate that you respect the time of the
     ```bash
     ./gradlew test
     ```
-4.  **Lint and format:** Make sure your code adheres to the project's coding standards.
-    ```bash
-    ./gradlew formatCheck   # read-only: changed files must be formatted (Spotless, ratchet against origin/dev)
-    ./gradlew format        # rewrites the changed Java files in place
-    ./gradlew lint          # read-only: PMD bug-oriented ruleset
-    ./gradlew typecheck     # compiles main and test code
-    ./gradlew check         # the pre-merge gate: formatCheck, typecheck, test (needs the local stack), PMD
-    ./gradlew security      # scans gradle.lockfile for known vulnerable dependencies (OSV-Scanner, needs network)
-    ```
-    The formatter only touches files you changed, so the rest of the tree stays as it is. Run `git fetch origin`
-    first so `origin/dev` is current.
+4.  **Run the gate:** run `./gradlew check` before you open a pull request. [Commands](#commands) lists every verb
+    and what it needs.
 
 ### Local hooks
 
