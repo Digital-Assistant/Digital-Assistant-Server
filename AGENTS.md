@@ -23,20 +23,10 @@ This repo is only the Quarkus server (Gradle, Java, port **11081**). MariaDB, El
 *   **View infrastructure logs:** `docker logs -f <container>` (e.g. `keycloak-local`, `mariadb-local`)
 
 #### **Build & Validation**
-Gradle is the one runner. Gradle task names cannot contain `:`, so the framework verb `format:check` is `formatCheck`. Run `git fetch origin` first: the formatter checks only files changed since `origin/dev`.
-*   **Setup (non-interactive):** see `README.md`, "Setup (non-interactive)" (`./gradlew assemble`, JDK 21)
-*   **Build (compile + package):** `./gradlew build`
-*   **format** (writes files): `./gradlew format`
-*   **format:check** (read-only): `./gradlew formatCheck`
-*   **lint** (read-only, PMD): `./gradlew lint`
-*   **typecheck** (compile main and test): `./gradlew typecheck`
-*   **test:** `./gradlew test` (needs the local stack)
-*   **coverage** (needs the local stack): `./gradlew coverage` runs the tests, writes the JaCoCo line-coverage report to `build/reports/jacoco/test/` and fails below the floor. CI runs the same check in the `Coverage floor` step (`scripts/ci/coverage.sh`); `check` does not, so it stays stack-free.
-*   **check** (pre-merge gate: formatCheck, typecheck, test, PMD): `./gradlew check`
-*   **security** (read-only, needs network): `./gradlew security` runs OSV-Scanner on `gradle.lockfile` through `scripts/ci/scan.sh`. It is report-only: it prints the finding count and exits 0 on findings (existing findings are recorded debt); `SCAN_MODE=block` makes it fail. `./gradlew dependencyCheckAnalyze` is the old OWASP scan, not the verb: it needs an NVD key that is not set up.
-*   **Local hooks (optional, once per clone):** install the `lefthook` and `gitleaks` binaries (versions in `CONTRIBUTING.md`, "Local hooks"), then `lefthook install`. The `pre-commit` hooks scan the staged change for secrets and refuse a commit on `dev` or `master`; the `commit-msg` hook refuses a subject that is not a Conventional Commit (`lefthook.yml`). CI is the real gate; do not use `--no-verify`.
-*   Style follows `CONVENTIONS.md` (tabs, LF, 120 columns); Spotless enforces it on changed files, PMD baselines old violations in `config/pmd/ruleset.xml`.
-*   After changing a dependency or plugin, regenerate the lock: `./gradlew dependencies --write-locks`.
+Setup is in `README.md`, "Setup (non-interactive)". The verbs are `format`, `format:check` (`formatCheck`), `lint`,
+`typecheck`, `test`, `check` and `security`, all on `./gradlew`. What each one does and needs, and the pre-merge gate,
+are in [`CONTRIBUTING.md`, "Commands"](CONTRIBUTING.md#commands). The local hooks are in
+[`CONTRIBUTING.md`, "Local hooks"](CONTRIBUTING.md#local-hooks).
 
 #### **Baselines and floors**
 Existing debt is counted and cannot grow. `./gradlew formatCheck` runs `scripts/ci/check-baseline.sh` (no new violations: it fails when a count goes up) against the quality baseline `docs/agentic-readiness/digital-assistant-server-quality-baseline.json`. The baselines are: the PMD exclude list in `config/pmd/ruleset.xml`, the Spotless `ratchetFrom 'origin/dev'` (changed files only) with the full-tree count in the baseline file, the OSV-Scanner advisory count (compared by `scripts/ci/scan.sh` in the CI scan job), the image-scan count and the skip-marker count (0), all in the baseline file. Coverage floor: 70% line coverage, enforced by `jacocoTestCoverageVerification` in `build.gradle` and run by the CI `Coverage floor` step. **A baseline only goes down and a coverage floor only goes up; raising a count or lowering the floor needs the owner.** Lower a count (or raise the floor) in the baseline file and `build.gradle` in the same change that earns it.
