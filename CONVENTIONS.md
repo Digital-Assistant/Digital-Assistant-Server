@@ -141,8 +141,13 @@ Branch names and commit messages are set in [AGENTS.md](AGENTS.md), section 5, a
 ## 6. Persistence (JPA/Hibernate/Panache)
 
 - **Entities:** Entities should be in the `models` package.
-- **Repositories:** Repositories should be in the `repository` package.
-- **Panache:** Use Panache repositories for standard CRUD operations.
+- **Repositories:** a DAO is a Panache repository class in `repository/` (`implements PanacheRepository...`), for
+  example `SequenceListDAO` or `UserclicknodesRepository`. All data access goes through one.
+- **No `EntityManager` in a resource or service:** new code does not inject it there. 14 existing files still do (10 in
+  `services/`); find them with `grep -rln 'EntityManager' src/main`. The list only shrinks.
+- **No active record outside `repository/`:** some entities extend `PanacheEntityBase`. New code does not call
+  `entity.persist()` or `Entity.find(...)` in a resource or service. 3 existing calls do; find them with
+  `grep -rn '\.persist()' src/main/java/com/nistapp/uda/index/services`. The list only shrinks.
 - **Database Migrations:** Database migrations are managed by Flyway. SQL migration scripts go in `src/main/resources/db/migration`.
 - **Migration Script Naming:** `V<VERSION>__<DESCRIPTION>.sql` (e.g., `V1.0.6__Add_user_preferences.sql`).
 
