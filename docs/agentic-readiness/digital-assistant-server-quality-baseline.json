@@ -27,13 +27,13 @@
     "osv_advisories": {
       "count": 101,
       "packages": 29,
-      "what": "OSV-Scanner advisories over gradle.lockfile (report-only scan; review date is the owner's)",
+      "what": "OSV-Scanner advisories over gradle.lockfile (report-only scan; review date 2026-12-24, proposed, the owner confirms)",
       "command": "scripts/ci/scan.sh",
       "guard": "scripts/ci/scan.sh calls check-baseline.sh osv in the CI job Dependency Scan (fails when the count goes up)"
     },
     "image_scan_findings": {
       "count": 38,
-      "what": "fixable HIGH or CRITICAL image findings accepted as debt on 2026-10-22 (informational here)",
+      "what": "fixable HIGH or CRITICAL image findings accepted as debt on 2026-10-22 (informational here; review date 2026-12-24, proposed, the owner confirms)",
       "command": "scripts/ci/image-scan.sh",
       "guard": "none here; image.yml reports the count and the accepted list only shrinks"
     },
