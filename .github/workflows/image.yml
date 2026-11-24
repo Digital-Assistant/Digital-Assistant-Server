@@ -149,7 +149,7 @@ jobs:
   # TODO: make blocking once the Quarkus 3.2.10 dependency findings are fixed or accepted
   # (38 fixable HIGH/CRITICAL on 2026-10-22; see the image scan notes in scripts/ci/README.md).
   # Until then a finding does not stop the image from being pushed or deployed; the fixable count goes to the
-  # job summary. Debt review date: placeholder for the owner (set it in the state file, not here).
+  # job summary. Debt: 38 findings. Review date: 2026-12-24 (proposed, the owner confirms); see docs/branch-protection.md.
   scan:
     name: Scan image and SBOM
     needs: [build, build-push]
