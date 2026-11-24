@@ -90,6 +90,7 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 
+  # Debt: 101 advisories in 29 packages. Review date: 2026-12-24 (proposed, the owner confirms); see docs/branch-protection.md.
   # Report-only: OSV-Scanner over gradle.lockfile (`./gradlew security`). The existing findings are recorded debt,
   # so the job is outside `gate.needs` and never blocks a merge; it still fails on a scanner error. The count is
   # written to the job summary. Switch to blocking with SCAN_MODE=block once the count is zero or an ignore list

@@ -51,6 +51,19 @@ file requires it by name. The live "Protect master" ruleset does not require it 
   trigger.
 - One required approval is not configured. A review is a convention here, not a platform rule.
 
+## Report-only scans
+
+Both scans below stay outside `CI Gate`, so they cannot block a merge. Their debt is recorded here and in
+`docs/agentic-readiness/digital-assistant-server-quality-baseline.json`.
+
+| Scan | Where it runs | Count | Review date | Re-check |
+|---|---|---|---|---|
+| `Dependency Scan (report-only)` | `ci.yml`, job `scan` | 101 advisories in 29 packages | 2026-12-24 (proposed, the owner confirms) | `scripts/ci/scan.sh` |
+| `Scan image and SBOM (report-only)` | `image.yml`, job `scan` | 38 fixable HIGH or CRITICAL findings | 2026-12-24 (proposed, the owner confirms) | `scripts/ci/image-scan.sh` |
+
+At each review, either fix findings and lower the count, or accept the rest and set a new date. The dependency scan
+moves into `gate.needs` when its count reaches zero.
+
 ## Re-check
 
 Read-only, needs `gh` logged in with read access to the repository:
