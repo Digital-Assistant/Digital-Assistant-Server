@@ -78,7 +78,7 @@ These are strict, non-negotiable rules.
     explicit requirement of the assigned task. The same rule for people is in
     [`CONTRIBUTING.md`, "Commands"](CONTRIBUTING.md#commands).
 *   **Recorded Decisions:** You **must not** change behaviour that a decision record in `docs/adr/` describes, unless
-    the task says so. An example is the `UDAN-Realm` tenant selection in `config/CustomTenantResolver.java`. Such a change
+    the task says so. An example is the `UDAN-Realm` tenant selection in `src/main/java/com/nistapp/uda/index/config/CustomTenantResolver.java`. Such a change
     updates or adds the decision record in the same change set.
 *   **Tests:** You **must not** edit, skip or delete a test in `src/test/` to make a failing test pass. The rule and
     its exception are in [`CONTRIBUTING.md`, "Definition of Done"](CONTRIBUTING.md#definition-of-done).
