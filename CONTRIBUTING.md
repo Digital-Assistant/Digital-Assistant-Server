@@ -101,7 +101,8 @@ owner. Lower a count, or raise the floor, in the baseline file and `build.gradle
 3.  **Run tests:** make sure all tests pass before you open a pull request. [Running tests](#running-tests) gives
     the commands and the stack the tests need.
 4.  **Run the gate:** run `./gradlew check` before you open a pull request. [Commands](#commands) lists every verb
-    and what it needs.
+    and what it needs. CI runs the same gate: the `Build and Test` job runs `scripts/ci/build.sh` and
+    `scripts/ci/test.sh`, which together equal `./gradlew check`.
 
 ### Local hooks
 
