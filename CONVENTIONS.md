@@ -165,7 +165,8 @@ Why: [ADR 0005](docs/adr/0005-tracked-settings-untracked-local-secrets.md).
 ## 11. Input Safety
 
 - Clean user-supplied text with `utils/InputSanitizer`.
-- `config/XssSanitizationFilter` and `config/SecurityHeadersFilter` apply to every request.
+- `config/XssSanitizationFilter` and `config/SecurityHeadersFilter` apply to every JAX-RS request and response
+  outside the `dev` profile. Both are off in `dev`. Details: [docs/request-filters.md](docs/request-filters.md).
 
 ---
 
