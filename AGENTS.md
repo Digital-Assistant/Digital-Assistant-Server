@@ -107,4 +107,4 @@ Section 3 links the map of the code.
 
 ## Agent notes
 - Prefer a code-graph tool (the codebase-memory MCP: `search_graph`, `trace_path`, `get_code_snippet`) over grep for code questions; the index project name is derived from this directory. `.mcp.json` registers the server; a tool that reads another config file copies the `codebase-memory-mcp` entry from it. Keep the index fresh: re-index at the start of a task and after your last commit, and check it with `detect_changes`.
-- Do not start the server or run `local-up.sh` unless the task needs it; infrastructure lives in the sibling repo `Digital_Assistant_microServices`.
+- Do not start the server or start the local infrastructure unless the task needs it; the local infrastructure comes from `udan-workspace` (`./udan up infra`, see `README.md`). To run the Server without the workspace, see `README.md`, "Run the Server alone".
