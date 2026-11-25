@@ -47,8 +47,8 @@ One Gradle module (`settings.gradle`, `rootProject.name = 'index'`), one Quarkus
 
 - MariaDB through JDBC, schema by Flyway.
 - Elasticsearch through Hibernate Search (`quarkus.hibernate-search-orm.*` in `application.properties`).
-- Keycloak as OIDC provider; the sibling infrastructure project that runs these services locally is an external
-  dependency and is not documented here.
+- Keycloak as OIDC provider. Locally these services come from `udan-workspace` or your own; see
+  [`README.md`](../../README.md#-getting-started-local-development).
 
 ## Tenant and authentication flow
 

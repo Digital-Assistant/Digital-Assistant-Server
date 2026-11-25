@@ -157,8 +157,8 @@ Why: [ADR 0005](docs/adr/0005-tracked-settings-untracked-local-secrets.md).
   `local.properties` included. Local credentials go in the untracked `local-secrets.properties`, which
   `./sync-credentials.sh` writes from `local-secrets.properties.example`. Deployed environments use a mounted
   `additional.properties` or environment variables.
-- **Credentials from elsewhere:** never commit a credential from the sibling `Digital_Assistant_microServices`
-  checkout or from a real environment.
+- **Credentials from elsewhere:** never commit a credential from another checkout (for example the
+  workspace's `infra/.env`) or from a real environment.
 - **Sources and keys:** the load order and every `udan.*` key are in
   [README.md, "Configuration"](README.md#configuration).
 

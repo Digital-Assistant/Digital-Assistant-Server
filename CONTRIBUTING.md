@@ -36,8 +36,8 @@ verb `format:check` is spelled `formatCheck`.
 ./gradlew security      # scans gradle.lockfile for known vulnerable dependencies (needs the network)
 ```
 
-* **The local stack** is MariaDB and Elasticsearch on `127.0.0.1`, started from the sibling repository
-  `Digital_Assistant_microServices`. Without it, run `./gradlew formatCheck typecheck lint`: the gate minus the tests.
+* **The local stack** is MariaDB and Elasticsearch on `127.0.0.1`, started from `udan-workspace` (`./udan up infra`,
+  see `README.md`) or your own. Without it, run `./gradlew formatCheck typecheck lint`: the gate minus the tests.
 * **Format:** Spotless follows `CONVENTIONS.md` (tabs, LF, 120 columns) and only touches files you changed. Run
   `git fetch origin` first, so the formatter compares against a current `origin/dev`.
 * **Coverage:** the report goes to `build/reports/jacoco/test/`. `check` does not run the coverage floor; CI runs it

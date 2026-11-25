@@ -10,8 +10,41 @@ Discord: https://discord.gg/92NqDEUbxV
 ## 🚀 Getting Started (Local Development)
 
 This repository is only the Quarkus server (Gradle, Java). It listens on port **11081**.
-MariaDB, Elasticsearch, Keycloak, Postgres and Nginx run from the sibling repository `Digital_Assistant_microServices`.
-Start them there with `./local-up.sh` before you start the server, and stop them with `./local-down.sh`.
+This Server is one part of UDAN, together with the Client (browser extension) and the SDK. The full local setup
+(MariaDB, Postgres, Keycloak, Elasticsearch, Nginx, the Client and the SDK) is in
+[`udan-workspace`](https://github.com/Digital-Assistant/udan-workspace) (branch `dev`).
+
+The Server also works alone, against your own MariaDB, Elasticsearch and Keycloak. Then skip the workspace steps and
+read [Run the Server alone](#run-the-server-alone).
+
+### With the workspace
+
+Clone `udan-workspace` and, from its directory:
+
+```bash
+./udan bootstrap     # clone and build the repositories, this one included
+./udan up infra      # MariaDB, Postgres, Keycloak, Elasticsearch, Nginx
+./udan doctor        # check that everything is ready
+```
+
+`./udan bootstrap` clones this repository into `Digital-Assistant-Server/` inside the workspace. Run the next
+commands in that copy, from its root:
+
+```bash
+cd Digital-Assistant-Server
+./sync-credentials.sh
+./start-server.sh
+```
+
+`./udan help` lists every workspace command. `sync-credentials.sh` and `pre-flight-check.sh` (which `start-server.sh`
+runs) read the workspace path from `UDAN_WORKSPACE`. The default is `..`: the workspace is the parent directory of
+this checkout. A relative value is relative to the directory you run the command from, not to this repository. They
+stop with a pointer to the workspace when it is missing. Run `start-server.sh` from the repository root: it calls
+`./pre-flight-check.sh` by a relative path.
+
+To use a checkout you already have instead of the cloned copy, list it in the workspace's local manifest
+(`repos.local.yaml`; see the workspace `README.md`). If that checkout is not inside the workspace directory, set
+`UDAN_WORKSPACE=/path/to/udan-workspace` when you run the scripts.
 
 ### Setup (non-interactive)
 
@@ -24,13 +57,17 @@ It asks no questions and needs no running services:
 
 This is the one setup command for people and for coding agents. `AGENTS.md` points here and does not repeat it.
 
+Steps 1 to 4 below use the workspace infrastructure. Without it, see [Run the Server alone](#run-the-server-alone).
+
 ### 1. Synchronize Credentials
-If you are setting up for the first time or if the central credentials in `Digital_Assistant_microServices/DOCKER-MAP.md` have changed, synchronize your local configuration:
+Run this the first time, and again when the workspace credentials change:
 
 ```bash
 ./sync-credentials.sh
 ```
-*This creates `src/main/resources/local-secrets.properties` (untracked, from `local-secrets.properties.example`) with the latest passwords and the `backend-service` client secret. Nothing secret is committed.*
+*This creates `src/main/resources/local-secrets.properties` (untracked, from `local-secrets.properties.example`)
+with the passwords from the workspace `infra/.env` and the `backend-service` client secret from its realm file.
+Nothing secret is committed. `./sync-credentials.sh --dry-run` prints the key names it would set and writes nothing.*
 
 ### 2. Start the Server
 To launch the backend with automatic environmental validation:
@@ -44,7 +81,7 @@ To launch the backend with automatic environmental validation:
     * Verify all required Docker containers are running.
     * Test MariaDB & Postgres connectivity.
     * Validate Keycloak OIDC (Discovery & Token Grant).
-    * Check Elasticsearch and NestJS API health.
+    * Check Elasticsearch health.
 2. **Launch Quarkus**: Starts the application in dev mode (`./gradlew quarkusDev --no-daemon`) only if all checks pass.
 
 ### 3. Manual Pre-flight Check (Optional)
@@ -61,9 +98,56 @@ To follow the logs of one container, for example `keycloak-local` or `mariadb-lo
 docker logs -f <container>
 ```
 
+### Run the Server alone
+
+Without the workspace, start Quarkus directly with `./gradlew quarkusDev`. Do not use `./start-server.sh`: it runs
+`pre-flight-check.sh` first, which needs the workspace and its containers and stops without them.
+
+The `%dev` profile expects these services. The versions are the ones the workspace runs.
+
+| Service | Default address and names | Notes |
+|---|---|---|
+| MariaDB 10.11 | `127.0.0.1:3306`, database `udan`, user `udan` | TLS must be on: the JDBC URLs set `useSSL=true` (the certificate is not checked). Flyway creates the tables at start |
+| Elasticsearch 7 (7.17) | `127.0.0.1:9200` | Hibernate Search is set to version 7 |
+| Keycloak 23 | `127.0.0.1:8080`, realms `UDAN` and `UDAN-Plugin` | Confidential client `backend-service` (`quarkus.oidc.client-id`). The extension signs in to `UDAN-Plugin` with the public client `udan-extension` |
+
+1. Copy `src/main/resources/local-secrets.properties.example` to `src/main/resources/local-secrets.properties` and
+   fill in `quarkus.datasource.password` and `quarkus.oidc.credentials.secret`. The `preflight.*` keys are used by
+   `pre-flight-check.sh` only.
+2. If your services use other hosts, ports, a different database or user, set environment variables. Do not put
+   them in `local-secrets.properties` or `additional.properties`: those files rank below `application.properties`
+   and `local.properties` (see [Configuration](#configuration)), so a host, database or user written there is ignored.
+3. Start: `./gradlew quarkusDev`.
+
+```bash
+export QUARKUS_DATASOURCE_JDBC_URL='jdbc:mariadb://db.example:3306/udan?useSSL=true&trustServerCertificate=true'
+export QUARKUS_FLYWAY_JDBC_URL="$QUARKUS_DATASOURCE_JDBC_URL"
+export QUARKUS_DATASOURCE_USERNAME=udan
+export QUARKUS_HIBERNATE_SEARCH_ORM_ELASTICSEARCH_HOSTS=es.example:9200
+export QUARKUS_OIDC_AUTH_SERVER_URL=http://kc.example:8080/realms/UDAN
+export QUARKUS_OIDC_UDAN_AUTH_SERVER_URL=http://kc.example:8080/realms/UDAN
+export QUARKUS_OIDC_UDAN_PLUGIN_AUTH_SERVER_URL=http://kc.example:8080/realms/UDAN-Plugin
+./gradlew quarkusDev
+```
+
+The ranking comes from the config code (SmallRye Config 3.3.2, Quarkus 3.2). This path has not been verified by a
+full start outside the workspace. Not verified: that `./gradlew quarkusDev -D<key>=<value>` passes a system property
+to the application; use environment variables.
+
 ## Configuration
 
-Config is read from `application.properties`, the packaged `local.properties` (local-stack settings, no credentials), the untracked `local-secrets.properties` (local credentials, written by `sync-credentials.sh`) and, last, an optional `additional.properties` file or environment variables; later sources win.
+Config comes from several sources. When a key is set in more than one, the source with the higher ordinal wins:
+
+| Source | Ordinal |
+|---|---|
+| Java system properties (`-D`) | 400 |
+| Environment variables, and files named in a `QUARKUS_CONFIG_LOCATIONS` variable (the container) | 300 |
+| `config/application.properties` in the working directory | 260 |
+| `application.properties` and `local.properties` (local-stack settings, no credentials; named in `quarkus.config.locations`) | 250. For a key in both, `application.properties` wins |
+| `local-secrets.properties` (untracked local credentials, written by `sync-credentials.sh`) and a classpath `additional.properties`, both loaded by `LocalPropertiesConfigSourceProvider` | 100. They only add keys that the sources above do not set |
+
+A plain key from a higher source also beats a `%dev.` key from a lower one. For example, the environment variable
+`QUARKUS_DATASOURCE_USERNAME` (300) beats `%dev.quarkus.datasource.username` in `application.properties` (250).
 
 | Key | Default | What it does |
 |---|---|---|
@@ -75,7 +159,7 @@ Config is read from `application.properties`, the packaged `local.properties` (l
 | `udan.auth.legacy-anonymous-login` | `true` | `true`: an anonymous `POST /api/user/checkauthid` or `/checkusersession` (SDK 0.12.0 and the store build call them before they hold a token) gets a placeholder answer (`id` 0) that reads and stores nothing. `false`: `401`. Turn it off once no such client is left |
 | `quarkus.http.cors.*` | see below | Browser access |
 
-**Authentication.** Every `/api/` path needs a bearer token (`quarkus.http.auth.permission.*` in `application.properties`), except CORS preflight (`OPTIONS`), `GET /api/user/getsessionkey` and the two legacy login calls above. `/q/health` and `/q/metrics` are outside `/api/` and stay open. Who the caller is comes from the token only (`users/CurrentUser.java`), never from `authid`, `authsource` or `userauthid` in a request body: `checkauthid` returns the caller's own user row, and `checkusersession` binds the session id to the caller's own row (a session id bound to another user is left alone; the caller gets its own binding).
+**Authentication.** Every `/api/` path needs a bearer token (`quarkus.http.auth.permission.*` in `application.properties`), except CORS preflight (`OPTIONS`), `GET /api/user/getsessionkey` and the two legacy login calls above. `/q/health` is outside `/api/` and stays open. Who the caller is comes from the token only (`users/CurrentUser.java`), never from `authid`, `authsource` or `userauthid` in a request body: `checkauthid` returns the caller's own user row, and `checkusersession` binds the session id to the caller's own row (a session id bound to another user is left alone; the caller gets its own binding).
 
 **Ownership.** Recordings, click nodes, votes and click tracks are owned by the caller from the token (`CurrentUser.ownerKey()`): the `authid` for legacy (google) users, which is what existing rows hold, otherwise the numeric `user_auth_data.id`. A stored all-digit owner always means a `user_auth_data.id` (old rows from migration V1.0.3). A `usersessionid` in a request body, query or path is still accepted but ignored. Changing or deleting a recording, click node or vote someone else owns gives `403`; an unknown id gives `404`. `search/all` and `search/withPermissions` add the caller's own drafts by the token, not by the `userSessionId` parameter. Responses show a recording's `usersessionid` to its owner only (the Client uses it to show the owner's controls) and never show voter ids or the email hash.
 
@@ -98,7 +182,7 @@ curl -s -i -X OPTIONS <server>/api/user/getsessionkey -H 'Origin: chrome-extensi
 ```
 Expect `200` or `204` with `Access-Control-Allow-Origin` and `udan-realm` in `Access-Control-Allow-Headers`.
 
-**Container.** The image bakes in no database settings. Mount a properties file at `/deployments/config/additional.properties` (read-only) or pass `QUARKUS_DATASOURCE_*` and the other settings as environment variables; without them the container starts but cannot reach a database. Values there win over the packaged ones. See the comments in `src/main/docker/Dockerfile.jvm`. Every variable name (CI, scripts and these overrides) is listed in `scripts/ci/env.example`.
+**Container.** The image bakes in no database settings. Mount a properties file at `/deployments/config/additional.properties` (read-only) or pass `QUARKUS_DATASOURCE_*` and the other settings as environment variables; without them the container starts but cannot reach a database. The image names that file in the `QUARKUS_CONFIG_LOCATIONS` environment variable, so it ranks with the environment variables (300) and wins over the packaged files. See the comments in `src/main/docker/Dockerfile.jvm`. Every variable name (CI, scripts and these overrides) is listed in `scripts/ci/env.example`.
 
 ---
 > [!NOTE]  
