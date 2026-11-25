@@ -1,0 +1,169 @@
+// UDAN Server model: the Server's own components and what it talks to.
+// Self-contained. Every relation was checked against src/main/java/com/nistapp/uda/index/.
+// Validate: cd docs/likec4 && npx --yes likec4@1.61.1 validate
+// View:     cd docs/likec4 && npx --yes likec4@1.61.1 start
+
+specification {
+  element system
+  element container {
+    style {
+      shape component
+    }
+  }
+  element component {
+    style {
+      shape rectangle
+      opacity 15%
+    }
+  }
+  element database {
+    style {
+      shape cylinder
+    }
+  }
+  element external {
+    style {
+      color muted
+    }
+  }
+}
+
+model {
+  caller = external 'API callers' {
+    description 'Browser SDK and browser extension. They send a bearer token and the UDAN-Realm header'
+  }
+
+  keycloak = external 'Keycloak' {
+    description 'OIDC provider. One realm per tenant, chosen by the UDAN-Realm header'
+  }
+
+  mariadb = database 'MariaDB' {
+    description 'Relational data. Schema by Flyway (src/main/resources/db/migration/)'
+  }
+
+  elastic = database 'Elasticsearch' {
+    description 'Search indexes written and read through Hibernate Search'
+  }
+
+  udan = system 'UDAN' {
+    description 'Records and replays click sequences on web pages'
+
+    server = container 'Server' {
+      technology 'Quarkus, Java package com.nistapp.uda.index, port 11081, base path /api'
+      description 'Core REST API: click events, sequences, votes, status, search, user identity'
+
+      filters = component 'Filters and exception mappers' {
+        technology 'config/: RequireRealmFilter, XssSanitizationFilter, LoggingFilter, SecurityHeadersFilter, HealthCheckListener, mappers'
+        description 'Realm check (400), input sanitising and security headers (both off in dev), correlation id, error mapping'
+      }
+
+      tenant = component 'CustomTenantResolver' {
+        technology 'config/CustomTenantResolver.java, Quarkus OIDC'
+        description 'Reads the UDAN-Realm header and returns it as the tenant name; no default realm'
+      }
+
+      clickevents = component 'Clickevents resource' {
+        technology 'JAX-RS /clickevents'
+        description 'Events, clicked nodes, recorded sequences, delete, suggested, click tracks'
+      }
+
+      search = component 'Search resources' {
+        technology 'JAX-RS /search/*, /searchTerms'
+        description 'SearchList, SearchWithPermissions, SearchWithID, SearchWithIDWithPermissions, SearchListWithLinks, SearchTerms, OwnerFilter'
+      }
+
+      votes = component 'Votes resource' {
+        technology 'JAX-RS /votes'
+        description 'Add, read and delete votes'
+      }
+
+      sequence = component 'Sequence resource' {
+        technology 'JAX-RS /sequence (SequenceListService)'
+        description 'Update a sequence and re-index one sequence'
+      }
+
+      status = component 'Status resource' {
+        technology 'JAX-RS /status (StatusService)'
+        description 'Status CRUD and toggle-active, with a category cache'
+      }
+
+      domain = component 'Domain resource' {
+        technology 'JAX-RS /domain'
+        description 'Liveness text and domain patterns'
+      }
+
+      users = component 'User resources' {
+        technology 'JAX-RS /user, /users, /admin'
+        description 'Session key, legacy login calls, caller name, admin check'
+      }
+
+      identity = component 'Caller identity' {
+        technology 'users/CurrentUser, AuthClients, UserAccountService'
+        description 'Maps the token to the user row and the owner key'
+      }
+
+      daos = component 'Repositories' {
+        technology 'repository/: SequenceListDAO, SequenceVotesDAO, UserclicknodesRepository, UserAuthDataDAO, UserSessionDataDAO (Panache)'
+        description 'Database access for sequences, votes, click nodes and users'
+      }
+
+      statusutil = component 'SequenceListStatus' {
+        technology 'utils/SequenceListStatus.java, ApplicationScoped'
+        description 'Resolves the draft and published status ids'
+      }
+
+      searchindex = component 'Search index setup' {
+        technology 'search/: StartupReindexer, AnalysisConfigurer, PrefixIndexLayoutStrategy'
+        description 'Index names and analysis; fills the indexes at start'
+      }
+    }
+  }
+
+  // Callers and identity provider
+  caller -> udan.server.filters 'Every /api request'
+  caller -> keycloak 'Signs in, gets a token'
+  udan.server.tenant -> keycloak 'Selects the realm that validates the token'
+
+  // Resources use identity, repositories and status ids
+  udan.server.clickevents -> udan.server.daos 'Sequence and click node access'
+  udan.server.clickevents -> udan.server.statusutil 'Status ids'
+  udan.server.clickevents -> udan.server.identity 'Owner of a write'
+  udan.server.search -> udan.server.daos 'Votes lookups (SequenceVotesDAO)'
+  udan.server.search -> udan.server.statusutil 'Published status filter'
+  udan.server.search -> udan.server.identity 'Own drafts'
+  udan.server.votes -> udan.server.daos 'Votes and sequences'
+  udan.server.votes -> udan.server.identity 'Owner of a vote'
+  udan.server.sequence -> udan.server.daos 'SequenceListDAO'
+  udan.server.sequence -> udan.server.identity 'Owner check'
+  udan.server.users -> udan.server.identity 'Own user row'
+  udan.server.identity -> udan.server.daos 'UserAuthDataDAO, UserSessionDataDAO'
+
+  // Direct EntityManager use (bypasses repositories)
+  udan.server.clickevents -> mariadb 'EntityManager queries'
+  udan.server.search -> mariadb 'EntityManager queries and entity loading'
+  udan.server.votes -> mariadb 'EntityManager queries'
+  udan.server.sequence -> mariadb 'EntityManager'
+  udan.server.status -> mariadb 'EntityManager queries'
+  udan.server.domain -> mariadb 'EntityManager query'
+  udan.server.statusutil -> mariadb 'Status lookup'
+  udan.server.daos -> mariadb 'JDBC through Hibernate ORM'
+
+  // Hibernate Search
+  udan.server.search -> elastic 'SearchSession queries'
+  udan.server.sequence -> elastic 'Re-index one sequence'
+  udan.server.searchindex -> elastic 'Index layout, analysis, mass indexing'
+  udan.server.searchindex -> mariadb 'Reads rows to index'
+}
+
+views {
+  view serverInternals of udan.server {
+    title 'Server internals'
+    include udan.server.*
+    include mariadb, elastic, keycloak, caller
+  }
+
+  view serverDependencies {
+    title 'Server dependencies'
+    include caller, udan.server, mariadb, elastic, keycloak
+  }
+}

@@ -122,3 +122,6 @@ local-secrets.properties.*
 # Scratch notes and plans: the folder is tracked (via .gitkeep), its contents are not
 artefacts/*
 !artefacts/.gitkeep
+
+# LikeC4 generated output
+.likec4/

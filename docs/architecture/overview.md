@@ -66,6 +66,16 @@ flowchart LR
 
 The filter runs after CORS and before authentication ([ADR 0002](../adr/0002-tenant-from-udan-realm-header.md)).
 
+## See also
+
+- [api-routes.md](../api-routes.md): every route and its auth rule.
+- [request-filters.md](../request-filters.md): filter order and security headers.
+- [deployment-notes.md](../deployment-notes.md): OIDC and search-index settings per deployment.
+- [likec4/](../likec4/README.md): the component model (internals and dependencies) as code.
+- Database tables and their relations: the workspace data model page, once the workspace repository is public:
+  <https://github.com/Digital-Assistant/udan-workspace/blob/dev/docs/data-model.md>. Optional; this repository does
+  not need it. The Flyway migrations in `src/main/resources/db/migration/` are the source of truth.
+
 ## Repository notes
 
 Census of tracked files (`git ls-files`) on `dev` at `30007cb`; nothing was moved.
